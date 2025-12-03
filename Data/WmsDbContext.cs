@@ -148,9 +148,13 @@ namespace WMS_WEBAPI.Data
             // GoodReciptFunctions - Function olduğu için HasNoKey kullanıyoruz
             modelBuilder.Entity<FN_GoodsOpenOrders_Header>().HasNoKey().ToFunction("RII_FN_GR_OPENORDERS_HEADER");
             modelBuilder.Entity<FN_GoodsOpenOrders_Line>().HasNoKey().ToFunction("RII_FN_GR_OPENORDERS_LINE");
-            
+
             // WtFunctions temporarily disabled
-            
+            modelBuilder.Entity<FN_TransferOpenOrder_Header>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
         }
     }
 }
