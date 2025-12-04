@@ -3,7 +3,9 @@ namespace WMS_WEBAPI.DTOs
     public class BaseLineEntityDto : BaseEntityDto
     {
         public string StockCode { get; set; } = string.Empty;
+        public string? StockName { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public decimal Quantity { get; set; }
         public string? Unit { get; set; }
         public string? ErpOrderNo { get; set; }

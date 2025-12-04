@@ -28,7 +28,9 @@ namespace WMS_WEBAPI.DTOs
         public string ClientKey { get; set; } = null!;
 
         public string StockCode { get; set; } = null!;
+        public string? StockName { get; set; }
         public string YapKod { get; set; } = string.Empty;
+        public string? YapAcik { get; set; }
         public string? Unit { get; set; }
         // Açıklama alanı (maks. 100 karakter)
         [StringLength(100)]
@@ -60,7 +62,9 @@ namespace WMS_WEBAPI.DTOs
         public string ScannedBarcode { get; set; } = string.Empty;
         public decimal Quantity { get; set; }
         public string? StockCode { get; set; }
+        public string? StockName { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         // Açıklama alanı (maks. 100 karakter)
         [StringLength(100)]
         public string? Description { get; set; }

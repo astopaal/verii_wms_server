@@ -8,6 +8,7 @@ namespace WMS_WEBAPI.DTOs
         public string? StockCode { get; set; }
         public string? StockName { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public string? Description { get; set; }
     }
 
@@ -22,6 +23,7 @@ namespace WMS_WEBAPI.DTOs
         public decimal Quantity { get; set; }
         public string? StockCode { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public string? Description { get; set; }
         public string? SerialNo { get; set; }
         public string? SerialNo2 { get; set; }
@@ -41,6 +43,7 @@ namespace WMS_WEBAPI.DTOs
         public decimal? Quantity { get; set; }
         public string? StockCode { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public string? Description { get; set; }
         public string? SerialNo { get; set; }
         public string? SerialNo2 { get; set; }

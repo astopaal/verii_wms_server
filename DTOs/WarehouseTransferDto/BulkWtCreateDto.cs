@@ -10,7 +10,9 @@ namespace WMS_WEBAPI.DTOs
         public Guid? ClientGuid { get; set; }
 
         public string StockCode { get; set; } = string.Empty;
+        public string? StockName { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public int? OrderId { get; set; }
         public decimal Quantity { get; set; }
         public string? Unit { get; set; }
@@ -31,7 +33,9 @@ namespace WMS_WEBAPI.DTOs
         public Guid? ClientGroupGuid { get; set; }
 
         public string StockCode { get; set; } = string.Empty;
+        public string? StockName { get; set; }
         public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public decimal Quantity { get; set; }
         public string? SerialNo { get; set; }
         public string? SerialNo2 { get; set; }
@@ -59,6 +63,7 @@ namespace WMS_WEBAPI.DTOs
 
         // Model alanları
         public string StockCode { get; set; } = string.Empty;
+        public string? StockName { get; set; }
         public decimal Quantity { get; set; }
         public string? Unit { get; set; }
         public string? SerialNo { get; set; }

@@ -83,6 +83,13 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getAssignedTransferOrderLines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<WtAssignedTransferOrderLinesDto>>> GetAssignedTransferOrderLines(long headerId)
+        {
+            var result = await _wtHeaderService.GetAssignedTransferOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("completed-awaiting-erp-approval")]
         public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetCompletedAwaitingErpApproval()
         {

@@ -97,4 +97,12 @@ namespace WMS_WEBAPI.DTOs
 
         public byte? Type { get; set; }
     }
+
+    public class WtAssignedTransferOrderLinesDto
+    {
+        public IEnumerable<WtLineDto> Lines { get; set; } = Array.Empty<WtLineDto>();
+        public IEnumerable<WtLineSerialDto> LineSerials { get; set; } = Array.Empty<WtLineSerialDto>();
+        public IEnumerable<WtImportLineDto> ImportLines { get; set; } = Array.Empty<WtImportLineDto>();
+        public IEnumerable<WtRouteDto> Routes { get; set; } = Array.Empty<WtRouteDto>();
+    }
 }
