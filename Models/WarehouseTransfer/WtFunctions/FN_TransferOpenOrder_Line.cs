@@ -18,6 +18,8 @@ namespace WMS_WEBAPI.Models
         public int OrderID { get; set; }
         public string? StockCode { get; set; }                  // varchar(35), nullable
         public string? StockName { get; set; }                  // varchar(35), nullable
+        public string? YapKod { get; set; }                     // varchar(35), nullable
+        public string? YapAcik { get; set; }                    // varchar(35), nullable
         [MaxLength(35)]
         public string? CustomerCode { get; set; }
 
