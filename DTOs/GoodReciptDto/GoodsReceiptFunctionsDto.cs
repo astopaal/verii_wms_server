@@ -27,12 +27,13 @@ namespace WMS_WEBAPI.DTOs
         public int OrderID { get; set; }
         public string? StockCode { get; set; }
         public string? StockName { get; set; }
+        public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
         public string? CustomerCode { get; set; }
         public string? CustomerName { get; set; }
         public int BranchCode { get; set; }
         public int? TargetWh { get; set; }
         public string? ProjectCode { get; set; }
-        public string? YapKod { get; set; }
         public DateTime? OrderDate { get; set; }
         public decimal? OrderedQty { get; set; }
         public decimal? DeliveredQty { get; set; }
