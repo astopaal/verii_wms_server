@@ -25,6 +25,8 @@ namespace WMS_WEBAPI.DTOs
     {
         public string? LineClientKey { get; set; }
         public Guid? LineGroupGuid { get; set; }
+        public string? ImportLineClientKey { get; set; }
+        public Guid? ImportLineGroupGuid { get; set; }
         public string? ClientKey { get; set; }
         public Guid? ClientGroupGuid { get; set; }
 
@@ -43,6 +45,10 @@ namespace WMS_WEBAPI.DTOs
     // Wt ImportLine için line ve route korelasyon anahtarları
     public class CreateWtImportLineWithKeysDto
     {
+        // ImportLine kendi korelasyon anahtarı (route ile bağlamak için)
+        public string? ClientKey { get; set; }
+        public Guid? ClientGroupGuid { get; set; }
+
         // Line ile korelasyon
         public string? LineClientKey { get; set; }
         public Guid? LineGroupGuid { get; set; }
@@ -71,6 +77,7 @@ namespace WMS_WEBAPI.DTOs
         public CreateWtHeaderDto Header { get; set; } = null!;
 
         public List<CreateWtLineWithKeyDto>? Lines { get; set; }
+        public List<CreateWtLineSerialWithLineKeyDto>? LineSerials { get; set; }
         public List<CreateWtRouteWithLineKeyDto>? Routes { get; set; }
         public List<CreateWtImportLineWithKeysDto>? ImportLines { get; set; }
     }

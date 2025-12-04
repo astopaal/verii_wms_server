@@ -561,8 +561,136 @@ namespace WMS_WEBAPI.Services
                             }
                         }
 
-                        var routeKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-                        var routeGuidToId = new Dictionary<Guid, long>();
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<WtLineSerial>(request.LineSerials.Count);
+                            foreach (var sDto in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (sDto.LineGroupGuid.HasValue)
+                                {
+                                    var lg = sDto.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"),
+                                        400
+                                    );
+                                }
+
+                                var serial = new WtLineSerial
+                                {
+                                    LineId = lineId,
+                                    Quantity = sDto.Quantity,
+                                    SerialNo = sDto.SerialNo,
+                                    SerialNo2 = sDto.SerialNo2,
+                                    SerialNo3 = sDto.SerialNo3,
+                                    SerialNo4 = sDto.SerialNo4,
+                                    SourceCellCode = sDto.SourceCellCode,
+                                    TargetCellCode = sDto.TargetCellCode
+                                };
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.WtLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        var importLineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var importLineGuidToId = new Dictionary<Guid, long>();
+
+                        if (request.ImportLines != null && request.ImportLines.Count > 0)
+                        {
+                            var importLines = new List<WtImportLine>(request.ImportLines.Count);
+                            foreach (var importDto in request.ImportLines)
+                            {
+                                long lineId = 0;
+                                if (importDto.LineGroupGuid.HasValue)
+                                {
+                                    var lg = importDto.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"),
+                                        400
+                                    );
+                                }
+
+                                var importLine = new WtImportLine
+                                {
+                                    HeaderId = wtHeader.Id,
+                                    LineId = lineId,
+                                    StockCode = importDto.StockCode
+                                };
+                                importLines.Add(importLine);
+                            }
+
+                            await _unitOfWork.WtImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.ImportLines.Count; i++)
+                            {
+                                var key = request.ImportLines[i].ClientKey;
+                                var guid = request.ImportLines[i].ClientGroupGuid;
+                                var id = importLines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    importLineKeyToId[key!] = id;
+                                }
+                                if (guid.HasValue)
+                                {
+                                    importLineGuidToId[guid.Value] = id;
+                                }
+                            }
+                        }
+
                         if (request.Routes != null && request.Routes.Count > 0)
                         {
                             var routes = new List<WtRoute>(request.Routes.Count);
@@ -604,8 +732,45 @@ namespace WMS_WEBAPI.Services
                                     );
                                 }
 
+                                long importLineId = 0;
+                                if (rDto.ImportLineGroupGuid.HasValue)
+                                {
+                                    var ig = rDto.ImportLineGroupGuid.Value;
+                                    if (!importLineGuidToId.TryGetValue(ig, out importLineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
+                                {
+                                    if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
+                                        400
+                                    );
+                                }
+
                                 var route = new WtRoute
                                 {
+                                    ImportLineId = importLineId,
                                     LineId = lineId,
                                     Quantity = rDto.Quantity,
                                     SerialNo = rDto.SerialNo,
@@ -618,102 +783,8 @@ namespace WMS_WEBAPI.Services
                                 };
                                 routes.Add(route);
                             }
+
                             await _unitOfWork.WtRoutes.AddRangeAsync(routes);
-                            await _unitOfWork.SaveChangesAsync();
-
-                            for (int i = 0; i < request.Routes.Count; i++)
-                            {
-                                var key = request.Routes[i].ClientKey;
-                                var guid = request.Routes[i].ClientGroupGuid;
-                                var id = routes[i].Id;
-                                if (!string.IsNullOrWhiteSpace(key))
-                                {
-                                    routeKeyToId[key!] = id;
-                                }
-                                if (guid.HasValue)
-                                {
-                                    routeGuidToId[guid.Value] = id;
-                                }
-                            }
-                        }
-
-                        if (request.ImportLines != null && request.ImportLines.Count > 0)
-                        {
-                            var importLines = new List<WtImportLine>(request.ImportLines.Count);
-                            foreach (var importDto in request.ImportLines)
-                            {
-                                long lineId = 0;
-                                if (importDto.LineGroupGuid.HasValue)
-                                {
-                                    var lg = importDto.LineGroupGuid.Value;
-                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("InvalidCorrelationKey") + $": LineGroupGuid bulunamadı: {lg}",
-                                            "LineGroupGuidNotFound",
-                                            400
-                                        );
-                                    }
-                                }
-                                else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
-                                {
-                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("InvalidCorrelationKey") + $": LineClientKey bulunamadı: {importDto.LineClientKey}",
-                                            "LineClientKeyNotFound",
-                                            400
-                                        );
-                                    }
-                                }
-                                else
-                                {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("InvalidCorrelationKey") + ": ImportLine için Line referansı (LineGroupGuid veya LineClientKey) zorunlu",
-                                        "LineReferenceMissing",
-                                        400
-                                    );
-                                }
-
-                                long? routeId = null;
-                                if (importDto.RouteGroupGuid.HasValue)
-                                {
-                                    var rg = importDto.RouteGroupGuid.Value;
-                                    if (!routeGuidToId.TryGetValue(rg, out var rid))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
-                                    }
-                                    routeId = rid;
-                                }
-                                else if (!string.IsNullOrWhiteSpace(importDto.RouteClientKey))
-                                {
-                                    if (routeKeyToId.TryGetValue(importDto.RouteClientKey!, out var rid))
-                                    {
-                                        routeId = rid;
-                                    }
-                                    else
-                                    {
-                                        routeId = null;
-                                    }
-                                }
-
-                                var importLine = new WtImportLine
-                                {
-                                    HeaderId = wtHeader.Id,
-                                    LineId = lineId,
-                                    StockCode = importDto.StockCode
-                                };
-                                importLines.Add(importLine);
-                            }
-                            await _unitOfWork.WtImportLines.AddRangeAsync(importLines);
                             await _unitOfWork.SaveChangesAsync();
                         }
 
