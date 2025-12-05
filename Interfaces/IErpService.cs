@@ -24,5 +24,8 @@ namespace WMS_WEBAPI.Interfaces
         // Stok barkod işlemleri
         Task<ApiResponse<List<StokBarcodeDto>>> GetStokBarcodeAsync(string bar, int depoKodu, int modul, int kullaniciId, string barkodGrubu, int hareketTuru);
 
+        // Şube işlemleri
+        Task<ApiResponse<List<BranchDto>>> GetBranchesAsync(int? branchNo = null);
+
     }
 }

@@ -86,6 +86,10 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.SeriBarkodMu, opt => opt.MapFrom(src => src.SERI_BARKODUMU))
                 .ForMember(dest => dest.SktVarmi, opt => opt.MapFrom(src => src.SKT_VARMI))
                 .ForMember(dest => dest.IsemriNo, opt => opt.MapFrom(src => src.ISEMRI_NO));
+
+            CreateMap<RII_FN_BRANCHES, BranchDto>()
+                .ForMember(dest => dest.SubeKodu, opt => opt.MapFrom(src => src.SUBE_KODU))
+                .ForMember(dest => dest.Unvan, opt => opt.MapFrom(src => src.UNVAN));
         }
     }
 }

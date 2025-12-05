@@ -165,4 +165,10 @@ namespace WMS_WEBAPI.DTOs
         public bool? SktVarmi { get; set; }
         public string? IsemriNo { get; set; }
     }
+
+    public class BranchDto
+    {
+        public short SubeKodu { get; set; }
+        public string? Unvan { get; set; }
+    }
 }

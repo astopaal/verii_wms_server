@@ -210,5 +210,22 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<List<BranchDto>>> GetBranchesAsync(int? branchNo = null)
+        {
+            try
+            {
+                var rows = await _erpContext.Branches
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_BRANCHES({0})", branchNo)
+                    .AsNoTracking()
+                    .ToListAsync();
+                var mappedList = _mapper.Map<List<BranchDto>>(rows);
+                return ApiResponse<List<BranchDto>>.SuccessResult(mappedList, _localizationService.GetLocalizedString("BranchesRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<BranchDto>>.ErrorResult(_localizationService.GetLocalizedString("BranchesRetrievalError"), ex.Message, 500);
+            }
+        }
+
     }
 }

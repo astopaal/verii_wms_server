@@ -16,6 +16,7 @@ namespace WMS_WEBAPI.Data
         public DbSet<RII_FN_OPENGOODSFORORDERBYCUSTOMER> CustomerOrders { get; set; }
         public DbSet<RII_FN_OPENGOODSFORORDERDETAILBYORDERNUMBERS> OrderDetails { get; set; }
         public DbSet<RII_FN_STOKBARCODE> StokBarcodes { get; set; }
+        public DbSet<RII_FN_BRANCHES> Branches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +32,7 @@ namespace WMS_WEBAPI.Data
             modelBuilder.Entity<RII_FN_OPENGOODSFORORDERBYCUSTOMER>().HasNoKey();
             modelBuilder.Entity<RII_FN_OPENGOODSFORORDERDETAILBYORDERNUMBERS>().HasNoKey();
             modelBuilder.Entity<RII_FN_STOKBARCODE>().HasNoKey();
+            modelBuilder.Entity<RII_FN_BRANCHES>().HasNoKey();
 
         }
     }

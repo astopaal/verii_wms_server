@@ -69,6 +69,14 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getBranches")]
+        public async Task<ActionResult<ApiResponse<List<BranchDto>>>> GetBranches([FromQuery] int? branchNo = null)
+        {
+            var result = await _erpService.GetBranchesAsync(branchNo);
+            return StatusCode(result.StatusCode, result);
+        }
+
+
         [HttpGet("health-check")]
         [AllowAnonymous]
         public IActionResult HealthCheck()
