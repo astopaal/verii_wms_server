@@ -145,4 +145,24 @@ namespace WMS_WEBAPI.DTOs
         public bool HasNextPage => Page < TotalPages;
         public bool HasPreviousPage => Page > 1;
     }
+
+    // Stok Barkod DTO
+    public class StokBarcodeDto
+    {
+        public string? Barkod { get; set; }
+        public string? StokKodu { get; set; }
+        public string? StokAdi { get; set; }
+        public string? DepoKodu { get; set; }
+        public string? DepoAdi { get; set; }
+        public string? RafKodu { get; set; }
+        public char? Yapilandir { get; set; }
+        public int? OlcuBr { get; set; }
+        public string? OlcuAdi { get; set; }
+        public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
+        public double? Cevrim { get; set; }
+        public bool? SeriBarkodMu { get; set; }
+        public bool? SktVarmi { get; set; }
+        public string? IsemriNo { get; set; }
+    }
 }

@@ -192,8 +192,23 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<List<ProjeDto>>.ErrorResult(_localizationService.GetLocalizedString("ProjeRetrievalError"), ex.Message, 500, "Error retrieving Proje data");
             }
         }
+        public async Task<ApiResponse<List<StokBarcodeDto>>> GetStokBarcodeAsync(string bar, int depoKodu, int modul, int kullaniciId, string barkodGrubu, int hareketTuru)
+        {
+            try
+            {
+                var rows = await _erpContext.StokBarcodes
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_STOKBARCODE({0}, {1}, {2}, {3}, {4}, {5})", bar, depoKodu, modul, kullaniciId, barkodGrubu, hareketTuru)
+                    .AsNoTracking()
+                    .ToListAsync();
 
-
+                var mappedList = _mapper.Map<List<StokBarcodeDto>>(rows);
+                return ApiResponse<List<StokBarcodeDto>>.SuccessResult(mappedList, _localizationService.GetLocalizedString("StokBarcodeRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<StokBarcodeDto>>.ErrorResult(_localizationService.GetLocalizedString("StokBarcodeRetrievalError"), ex.Message, 500);
+            }
+        }
 
     }
 }

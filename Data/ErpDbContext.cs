@@ -15,6 +15,7 @@ namespace WMS_WEBAPI.Data
         public DbSet<RII_VW_PROJE> Projeler { get; set; }
         public DbSet<RII_FN_OPENGOODSFORORDERBYCUSTOMER> CustomerOrders { get; set; }
         public DbSet<RII_FN_OPENGOODSFORORDERDETAILBYORDERNUMBERS> OrderDetails { get; set; }
+        public DbSet<RII_FN_STOKBARCODE> StokBarcodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,7 @@ namespace WMS_WEBAPI.Data
             modelBuilder.Entity<RII_VW_PROJE>().HasNoKey().ToView("RII_VW_PROJE");
             modelBuilder.Entity<RII_FN_OPENGOODSFORORDERBYCUSTOMER>().HasNoKey();
             modelBuilder.Entity<RII_FN_OPENGOODSFORORDERDETAILBYORDERNUMBERS>().HasNoKey();
+            modelBuilder.Entity<RII_FN_STOKBARCODE>().HasNoKey();
 
         }
     }

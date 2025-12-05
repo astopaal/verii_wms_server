@@ -69,6 +69,23 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
                 .ForMember(dest => dest.GirisSeri, opt => opt.MapFrom(src => src.GIRIS_SERI))
                 .ForMember(dest => dest.SeriMik, opt => opt.MapFrom(src => src.SERI_MIK));
+
+            CreateMap<RII_FN_STOKBARCODE, StokBarcodeDto>()
+                .ForMember(dest => dest.Barkod, opt => opt.MapFrom(src => src.BARKOD))
+                .ForMember(dest => dest.StokKodu, opt => opt.MapFrom(src => src.STOK_KODU))
+                .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
+                .ForMember(dest => dest.DepoKodu, opt => opt.MapFrom(src => src.DEPO_KODU))
+                .ForMember(dest => dest.DepoAdi, opt => opt.MapFrom(src => src.DEPO_ADI))
+                .ForMember(dest => dest.RafKodu, opt => opt.MapFrom(src => src.RAF_KODU))
+                .ForMember(dest => dest.Yapilandir, opt => opt.MapFrom(src => src.YAPILANDIR))
+                .ForMember(dest => dest.OlcuBr, opt => opt.MapFrom(src => src.OLCU_BR))
+                .ForMember(dest => dest.OlcuAdi, opt => opt.MapFrom(src => src.OLCU_ADI))
+                .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
+                .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
+                .ForMember(dest => dest.Cevrim, opt => opt.MapFrom(src => src.CEVRIM))
+                .ForMember(dest => dest.SeriBarkodMu, opt => opt.MapFrom(src => src.SERI_BARKODUMU))
+                .ForMember(dest => dest.SktVarmi, opt => opt.MapFrom(src => src.SKT_VARMI))
+                .ForMember(dest => dest.IsemriNo, opt => opt.MapFrom(src => src.ISEMRI_NO));
         }
     }
 }

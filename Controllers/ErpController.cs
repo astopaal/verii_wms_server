@@ -56,6 +56,19 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getStokBarcode")]
+        public async Task<ActionResult<ApiResponse<List<StokBarcodeDto>>>> GetStokBarcode(
+            [FromQuery] string bar,
+            [FromQuery] int depoKodu,
+            [FromQuery] int modul,
+            [FromQuery] int kullaniciId,
+            [FromQuery] string barkodGrubu,
+            [FromQuery] int hareketTuru)
+        {
+            var result = await _erpService.GetStokBarcodeAsync(bar, depoKodu, modul, kullaniciId, barkodGrubu, hareketTuru);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("health-check")]
         [AllowAnonymous]
         public IActionResult HealthCheck()
