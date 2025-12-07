@@ -1277,6 +1277,30 @@
   <data name="WtFunctionTransferOpenOrderLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving warehouse transfer open order line information</value>
   </data>
+  <data name="WoFunctionOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Warehouse Outbound open order header information retrieved successfully</value>
+  </data>
+  <data name="WoFunctionOpenOrderHeaderRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Warehouse Outbound open order header information</value>
+  </data>
+  <data name="WoFunctionOpenOrderLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Warehouse Outbound open order line information retrieved successfully</value>
+  </data>
+  <data name="WoFunctionOpenOrderLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Warehouse Outbound open order line information</value>
+  </data>
+  <data name="WiFunctionOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Warehouse Inbound open order header information retrieved successfully</value>
+  </data>
+  <data name="WiFunctionOpenOrderHeaderRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Warehouse Inbound open order header information</value>
+  </data>
+  <data name="WiFunctionOpenOrderLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Warehouse Inbound open order line information retrieved successfully</value>
+  </data>
+  <data name="WiFunctionOpenOrderLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Warehouse Inbound open order line information</value>
+  </data>
   <data name="SitLineRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Transfer line information retrieved successfully</value>
   </data>

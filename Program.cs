@@ -153,8 +153,10 @@ builder.Services.AddScoped<IWiLineSerialService, WiLineSerialService>();
 
 // Register Inventory Count Services (temporarily disabled)
 
-// Register Function Services (Wt functions temporarily disabled)
+// Register Function Services
 builder.Services.AddScoped<IGoodReciptFunctionsService, GoodReciptFunctionsService>();
+builder.Services.AddScoped<IWoFunctionService, WoFunctionService>();
+builder.Services.AddScoped<IWiFunctionService, WiFunctionService>();
 
 // Register Background Job Services
 builder.Services.AddScoped<BackgroundJobService>();

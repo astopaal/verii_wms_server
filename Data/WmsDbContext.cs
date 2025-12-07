@@ -175,6 +175,26 @@ namespace WMS_WEBAPI.Data
             {
                 entity.HasNoKey();
             });
+
+            // WarehouseInbound Functions
+            modelBuilder.Entity<FN_WiOpenOrder_Header>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<FN_WiOpenOrder_Line>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            // WarehouseOutbound Functions
+            modelBuilder.Entity<FN_WoOpenOrder_Header>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<FN_WoOpenOrder_Line>(entity =>
+            {
+                entity.HasNoKey();
+            });
         }
     }
 }
