@@ -253,5 +253,78 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCompletionError"), ex.Message ?? string.Empty, 500);
             }
         }
+
+        public async Task<ApiResponse<IEnumerable<WoHeaderDto>>> GetAssignedOrdersAsync(long userId)
+        {
+            try
+            {
+                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
+                var headersQuery = _unitOfWork.WoHeaders.AsQueryable();
+                var terminalsQuery = _unitOfWork.WoTerminalLines.AsQueryable();
+
+                var query = headersQuery
+                    .Join(
+                        terminalsQuery,
+                        h => h.Id,
+                        t => t.HeaderId,
+                        (h, t) => new { h, t }
+                    )
+                    .Where(x => !x.h.IsDeleted && !x.h.IsCompleted && !x.t.IsDeleted && x.t.TerminalUserId == userId && x.h.BranchCode == branchCode)
+                    .Select(x => x.h)
+                    .Distinct();
+
+                var entities = await query.ToListAsync();
+                var dtos = _mapper.Map<IEnumerable<WoHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<WoHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WoHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<WoHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<WoAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId)
+        {
+            try
+            {
+                var lines = await _unitOfWork.WoLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var lineIds = lines.Select(l => l.Id).ToList();
+
+                IEnumerable<WoLineSerial> lineSerials = Array.Empty<WoLineSerial>();
+                if (lineIds.Count > 0)
+                {
+                    lineSerials = await _unitOfWork.WoLineSerials
+                        .FindAsync(x => lineIds.Contains(x.LineId) && !x.IsDeleted);
+                }
+
+                var importLines = await _unitOfWork.WoImportLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+
+                IEnumerable<WoRoute> routes = Array.Empty<WoRoute>();
+                if (importLineIds.Count > 0)
+                {
+                    routes = await _unitOfWork.WoRoutes
+                        .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
+                }
+
+                var dto = new WoAssignedOrderLinesDto
+                {
+                    Lines = _mapper.Map<IEnumerable<WoLineDto>>(lines),
+                    LineSerials = _mapper.Map<IEnumerable<WoLineSerialDto>>(lineSerials),
+                    ImportLines = _mapper.Map<IEnumerable<WoImportLineDto>>(importLines),
+                    Routes = _mapper.Map<IEnumerable<WoRouteDto>>(routes)
+                };
+
+                return ApiResponse<WoAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WoHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<WoAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
     }
 }

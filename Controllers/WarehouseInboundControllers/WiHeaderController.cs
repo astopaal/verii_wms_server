@@ -97,6 +97,20 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("assigned/{userId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<WiHeaderDto>>>> GetAssignedOrders(long userId)
+        {
+            var result = await _service.GetAssignedOrdersAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("assigned-lines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<WiAssignedOrderLinesDto>>> GetAssignedOrderLines(long headerId)
+        {
+            var result = await _service.GetAssignedOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(long id, [FromBody] UpdateWiHeaderDto updateDto)
         {

@@ -63,4 +63,12 @@ namespace WMS_WEBAPI.DTOs
         public string? TargetWarehouse { get; set; }
         public byte? Type { get; set; }
     }
+
+    public class WiAssignedOrderLinesDto
+    {
+        public IEnumerable<WiLineDto> Lines { get; set; } = Array.Empty<WiLineDto>();
+        public IEnumerable<WiLineSerialDto> LineSerials { get; set; } = Array.Empty<WiLineSerialDto>();
+        public IEnumerable<WiImportLineDto> ImportLines { get; set; } = Array.Empty<WiImportLineDto>();
+        public IEnumerable<WiRouteDto> Routes { get; set; } = Array.Empty<WiRouteDto>();
+    }
 }
