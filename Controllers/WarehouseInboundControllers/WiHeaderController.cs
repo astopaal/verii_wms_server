@@ -131,5 +131,19 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.CompleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("generate")]
+        public async Task<ActionResult<ApiResponse<WiHeaderDto>>> Generate([FromBody] GenerateWarehouseInboundOrderRequestDto request)
+        {
+            var result = await _service.GenerateWarehouseInboundOrderAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-create")]
+        public async Task<ActionResult<ApiResponse<int>>> BulkCreate([FromBody] BulkCreateWiRequestDto request)
+        {
+            var result = await _service.BulkCreateWarehouseInboundAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
