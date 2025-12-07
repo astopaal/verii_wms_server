@@ -40,13 +40,10 @@ namespace WMS_WEBAPI.DTOs
 
     public class UpdateSitHeaderDto : BaseHeaderUpdateDto
     {
-        [StringLength(50)]
-        public string? DocumentNo { get; set; }
-
-        public DateTime? DocumentDate { get; set; }
-
         [StringLength(20)]
         public string? CustomerCode { get; set; }
+
+        public DateTime? DocumentDate { get; set; }
 
         [StringLength(20)]
         public string? SourceWarehouse { get; set; }
@@ -58,5 +55,13 @@ namespace WMS_WEBAPI.DTOs
         public string? Priority { get; set; }
 
         public byte? Type { get; set; }
+    }
+
+    public class SitAssignedOrderLinesDto
+    {
+        public IEnumerable<SitLineDto> Lines { get; set; } = Array.Empty<SitLineDto>();
+        public IEnumerable<SitLineSerialDto> LineSerials { get; set; } = Array.Empty<SitLineSerialDto>();
+        public IEnumerable<SitImportLineDto> ImportLines { get; set; } = Array.Empty<SitImportLineDto>();
+        public IEnumerable<SitRouteDto> Routes { get; set; } = Array.Empty<SitRouteDto>();
     }
 }

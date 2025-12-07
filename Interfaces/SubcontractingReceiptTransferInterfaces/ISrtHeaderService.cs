@@ -16,5 +16,10 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<SrtHeaderDto>> UpdateAsync(long id, UpdateSrtHeaderDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
         Task<ApiResponse<bool>> CompleteAsync(long id);
+
+        Task<ApiResponse<IEnumerable<SrtHeaderDto>>> GetAssignedOrdersAsync(long userId);
+        Task<ApiResponse<SrtAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
+        Task<ApiResponse<SrtHeaderDto>> GenerateOrderAsync(GenerateSubcontractingReceiptOrderRequestDto request);
+        Task<ApiResponse<int>> BulkCreateSubcontractingReceiptTransferAsync(BulkCreateSrtRequestDto request);
     }
 }

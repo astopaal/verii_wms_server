@@ -103,5 +103,33 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.CompleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("assigned/{userId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<SitHeaderDto>>>> GetAssignedOrders(long userId)
+        {
+            var result = await _service.GetAssignedOrdersAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getAssignedOrderLines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<SitAssignedOrderLinesDto>>> GetAssignedOrderLines(long headerId)
+        {
+            var result = await _service.GetAssignedOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("generate")]
+        public async Task<ActionResult<ApiResponse<SitHeaderDto>>> Generate([FromBody] GenerateSubcontractingIssueOrderRequestDto request)
+        {
+            var result = await _service.GenerateOrderAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-create")]
+        public async Task<ActionResult<ApiResponse<int>>> BulkCreate([FromBody] BulkCreateSitRequestDto request)
+        {
+            var result = await _service.BulkCreateSubcontractingIssueTransferAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

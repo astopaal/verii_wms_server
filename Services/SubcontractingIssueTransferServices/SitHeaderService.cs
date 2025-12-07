@@ -272,5 +272,556 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
+
+        public async Task<ApiResponse<IEnumerable<SitHeaderDto>>> GetAssignedOrdersAsync(long userId)
+        {
+            try
+            {
+                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
+                var headersQuery = _unitOfWork.SitHeaders.AsQueryable();
+                var terminalsQuery = _unitOfWork.SitTerminalLines.AsQueryable();
+
+                var query = headersQuery
+                    .Join(
+                        terminalsQuery,
+                        h => h.Id,
+                        t => t.HeaderId,
+                        (h, t) => new { h, t }
+                    )
+                    .Where(x => !x.h.IsDeleted && !x.h.IsCompleted && !x.t.IsDeleted && x.t.TerminalUserId == userId && x.h.BranchCode == branchCode)
+                    .Select(x => x.h)
+                    .Distinct();
+
+                var entities = await query.ToListAsync();
+                var dtos = _mapper.Map<IEnumerable<SitHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<SitAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId)
+        {
+            try
+            {
+                var lines = await _unitOfWork.SitLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var lineIds = lines.Select(l => l.Id).ToList();
+
+                IEnumerable<SitLineSerial> lineSerials = Array.Empty<SitLineSerial>();
+                if (lineIds.Count > 0)
+                {
+                    lineSerials = await _unitOfWork.SitLineSerials
+                        .FindAsync(x => lineIds.Contains(x.LineId) && !x.IsDeleted);
+                }
+
+                var importLines = await _unitOfWork.SitImportLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+
+                IEnumerable<SitRoute> routes = Array.Empty<SitRoute>();
+                if (importLineIds.Count > 0)
+                {
+                    routes = await _unitOfWork.SitRoutes
+                        .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
+                }
+
+                var dto = new SitAssignedOrderLinesDto
+                {
+                    Lines = _mapper.Map<IEnumerable<SitLineDto>>(lines),
+                    LineSerials = _mapper.Map<IEnumerable<SitLineSerialDto>>(lineSerials),
+                    ImportLines = _mapper.Map<IEnumerable<SitImportLineDto>>(importLines),
+                    Routes = _mapper.Map<IEnumerable<SitRouteDto>>(routes)
+                };
+
+                return ApiResponse<SitAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<SitAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<SitHeaderDto>> GenerateOrderAsync(GenerateSubcontractingIssueOrderRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var header = _mapper.Map<SitHeader>(request.Header);
+                        await _unitOfWork.SitHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var lineGuidToId = new Dictionary<Guid, long>();
+
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<SitLine>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                var line = new SitLine
+                                {
+                                    HeaderId = header.Id,
+                                    StockCode = l.StockCode,
+                                    Quantity = l.Quantity,
+                                    Unit = l.Unit,
+                                    ErpOrderNo = l.ErpOrderNo,
+                                    ErpOrderId = l.ErpOrderId,
+                                    Description = l.Description
+                                };
+                                lines.Add(line);
+                            }
+                            await _unitOfWork.SitLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                var guid = request.Lines[i].ClientGuid;
+                                var id = lines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key!] = id;
+                                }
+                                if (guid.HasValue)
+                                {
+                                    lineGuidToId[guid.Value] = id;
+                                }
+                            }
+                        }
+
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<SitLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (s.LineGroupGuid.HasValue)
+                                {
+                                    var lg = s.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<SitHeaderDto>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<SitHeaderDto>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<SitHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        400
+                                    );
+                                }
+
+                                var serial = new SitLineSerial
+                                {
+                                    LineId = lineId,
+                                    Quantity = s.Quantity,
+                                    SerialNo = s.SerialNo,
+                                    SerialNo2 = s.SerialNo2,
+                                    SerialNo3 = s.SerialNo3,
+                                    SerialNo4 = s.SerialNo4,
+                                    SourceCellCode = s.SourceCellCode,
+                                    TargetCellCode = s.TargetCellCode
+                                };
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.SitLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                        {
+                            var tlines = new List<SitTerminalLine>(request.TerminalLines.Count);
+                            foreach (var t in request.TerminalLines)
+                            {
+                                tlines.Add(new SitTerminalLine
+                                {
+                                    HeaderId = header.Id,
+                                    TerminalUserId = t.TerminalUserId
+                                });
+                            }
+                            await _unitOfWork.SitTerminalLines.AddRangeAsync(tlines);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        await _unitOfWork.CommitTransactionAsync();
+
+                        var dto = _mapper.Map<SitHeaderDto>(header);
+                        return ApiResponse<SitHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitHeaderCreatedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<SitHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<int>> BulkCreateSubcontractingIssueTransferAsync(BulkCreateSitRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var header = _mapper.Map<SitHeader>(request.Header);
+                        await _unitOfWork.SitHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var lineGuidToId = new Dictionary<Guid, long>();
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<SitLine>(request.Lines.Count);
+                            foreach (var lineDto in request.Lines)
+                            {
+                                var line = new SitLine
+                                {
+                                    HeaderId = header.Id,
+                                    StockCode = lineDto.StockCode,
+                                    YapKod = lineDto.YapKod,
+                                    Quantity = lineDto.Quantity,
+                                    Unit = lineDto.Unit,
+                                    ErpOrderNo = lineDto.ErpOrderNo,
+                                    ErpOrderId = lineDto.ErpOrderId,
+                                    Description = lineDto.Description
+                                };
+                                lines.Add(line);
+                            }
+                            await _unitOfWork.SitLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                var guid = request.Lines[i].ClientGuid;
+                                var id = lines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key!] = id;
+                                }
+                                if (guid.HasValue)
+                                {
+                                    lineGuidToId[guid.Value] = id;
+                                }
+                            }
+                        }
+
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<SitLineSerial>(request.LineSerials.Count);
+                            foreach (var sDto in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (sDto.LineGroupGuid.HasValue)
+                                {
+                                    var lg = sDto.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        400
+                                    );
+                                }
+
+                                var serial = new SitLineSerial
+                                {
+                                    LineId = lineId,
+                                    Quantity = sDto.Quantity,
+                                    SerialNo = sDto.SerialNo,
+                                    SerialNo2 = sDto.SerialNo2,
+                                    SerialNo3 = sDto.SerialNo3,
+                                    SerialNo4 = sDto.SerialNo4,
+                                    SourceCellCode = sDto.SourceCellCode,
+                                    TargetCellCode = sDto.TargetCellCode
+                                };
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.SitLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        var importLineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var importLineGuidToId = new Dictionary<Guid, long>();
+                        var routeKeyToImportLineId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var routeGuidToImportLineId = new Dictionary<Guid, long>();
+
+                        if (request.ImportLines != null && request.ImportLines.Count > 0)
+                        {
+                            var importLines = new List<SitImportLine>(request.ImportLines.Count);
+                            foreach (var importDto in request.ImportLines)
+                            {
+                                long lineId = 0;
+                                if (importDto.LineGroupGuid.HasValue)
+                                {
+                                    var lg = importDto.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        400
+                                    );
+                                }
+
+                                var importLine = new SitImportLine
+                                {
+                                    HeaderId = header.Id,
+                                    LineId = lineId,
+                                    StockCode = importDto.StockCode
+                                };
+                                importLines.Add(importLine);
+                            }
+
+                            await _unitOfWork.SitImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.ImportLines.Count; i++)
+                            {
+                                var id = importLines[i].Id;
+                                var key1 = request.ImportLines[i].ClientKey;
+                                var guid1 = request.ImportLines[i].ClientGroupGuid;
+                                if (!string.IsNullOrWhiteSpace(key1))
+                                {
+                                    importLineKeyToId[key1!] = id;
+                                }
+                                if (guid1.HasValue)
+                                {
+                                    importLineGuidToId[guid1.Value] = id;
+                                }
+
+                                var key2 = request.ImportLines[i].RouteClientKey;
+                                var guid2 = request.ImportLines[i].RouteGroupGuid;
+                                if (!string.IsNullOrWhiteSpace(key2))
+                                {
+                                    routeKeyToImportLineId[key2!] = id;
+                                }
+                                if (guid2.HasValue)
+                                {
+                                    routeGuidToImportLineId[guid2.Value] = id;
+                                }
+                            }
+                        }
+
+                        if (request.Routes != null && request.Routes.Count > 0)
+                        {
+                            var routes = new List<SitRoute>(request.Routes.Count);
+                            foreach (var rDto in request.Routes)
+                            {
+                                long lineId = 0;
+                                if (rDto.LineGroupGuid.HasValue)
+                                {
+                                    var lg = rDto.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(rDto.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                        400
+                                    );
+                                }
+
+                                long importLineId = 0;
+                                if (rDto.ImportLineGroupGuid.HasValue)
+                                {
+                                    var ig = rDto.ImportLineGroupGuid.Value;
+                                    if (!importLineGuidToId.TryGetValue(ig, out importLineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
+                                {
+                                    if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+                                else
+                                {
+                                    if (rDto.ClientGroupGuid.HasValue)
+                                    {
+                                        var rg = rDto.ClientGroupGuid.Value;
+                                        if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
+                                        {
+                                            await _unitOfWork.RollbackTransactionAsync();
+                                            return ApiResponse<int>.ErrorResult(
+                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                                400
+                                            );
+                                        }
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
+                                    {
+                                        if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
+                                        {
+                                            await _unitOfWork.RollbackTransactionAsync();
+                                            return ApiResponse<int>.ErrorResult(
+                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                                400
+                                            );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
+                                            400
+                                        );
+                                    }
+                                }
+
+                                var route = new SitRoute
+                                {
+                                    ImportLineId = importLineId,
+                                    Quantity = rDto.Quantity,
+                                    SerialNo = rDto.SerialNo,
+                                    SerialNo2 = rDto.SerialNo2,
+                                    SourceWarehouse = rDto.SourceWarehouse,
+                                    TargetWarehouse = rDto.TargetWarehouse,
+                                    SourceCellCode = rDto.SourceCellCode,
+                                    TargetCellCode = rDto.TargetCellCode,
+                                    Description = rDto.Description
+                                };
+                                routes.Add(route);
+                            }
+
+                            await _unitOfWork.SitRoutes.AddRangeAsync(routes);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        await _unitOfWork.CommitTransactionAsync();
+                        return ApiResponse<int>.SuccessResult(1, _localizationService.GetLocalizedString("OperationSuccessful"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var inner = ex.InnerException?.Message ?? string.Empty;
+                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : ($"{ex.Message} | Inner: {inner}");
+                return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), combined ?? string.Empty, 500);
+            }
+        }
     }
 }

@@ -38,4 +38,12 @@ namespace WMS_WEBAPI.DTOs
 
         public byte? Type { get; set; }
     }
+
+    public class SrtAssignedOrderLinesDto
+    {
+        public IEnumerable<SrtLineDto> Lines { get; set; } = Array.Empty<SrtLineDto>();
+        public IEnumerable<SrtLineSerialDto> LineSerials { get; set; } = Array.Empty<SrtLineSerialDto>();
+        public IEnumerable<SrtImportLineDto> ImportLines { get; set; } = Array.Empty<SrtImportLineDto>();
+        public IEnumerable<SrtRouteDto> Routes { get; set; } = Array.Empty<SrtRouteDto>();
+    }
 }
