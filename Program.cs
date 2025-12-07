@@ -131,6 +131,8 @@ builder.Services.AddScoped<ISrtLineService, SrtLineService>();
 builder.Services.AddScoped<ISrtImportLineService, SrtImportLineService>();
 builder.Services.AddScoped<ISrtRouteService, SrtRouteService>();
 builder.Services.AddScoped<ISrtTerminalLineService, SrtTerminalLineService>();
+builder.Services.AddScoped<ISitFunctionService, SitFunctionService>();
+builder.Services.AddScoped<ISrtFunctionService, SrtFunctionService>();
 builder.Services.AddScoped<ISrtLineSerialService, SrtLineSerialService>();
 
 // Register Warehouse Outbound Services
