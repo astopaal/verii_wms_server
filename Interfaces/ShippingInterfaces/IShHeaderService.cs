@@ -1,0 +1,14 @@
+using WMS_WEBAPI.DTOs;
+
+namespace WMS_WEBAPI.Interfaces
+{
+    public interface IShHeaderService
+    {
+        Task<ApiResponse<IEnumerable<ShHeaderDto>>> GetAllAsync();
+        Task<ApiResponse<ShHeaderDto>> GetByIdAsync(long id);
+        Task<ApiResponse<ShHeaderDto>> CreateAsync(CreateShHeaderDto createDto);
+        Task<ApiResponse<ShHeaderDto>> UpdateAsync(long id, UpdateShHeaderDto updateDto);
+        Task<ApiResponse<bool>> SoftDeleteAsync(long id);
+        Task<ApiResponse<bool>> CompleteAsync(long id);
+    }
+}

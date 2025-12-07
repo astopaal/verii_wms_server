@@ -85,6 +85,12 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<WiRoute>? _wiRoutes;
         private IGenericRepository<WiTerminalLine>? _wiTerminalLines;
         private IGenericRepository<WiLineSerial>? _wiLineSerials;
+        private IGenericRepository<ShHeader>? _shHeaders;
+        private IGenericRepository<ShLine>? _shLines;
+        private IGenericRepository<ShImportLine>? _shImportLines;
+        private IGenericRepository<ShRoute>? _shRoutes;
+        private IGenericRepository<ShTerminalLine>? _shTerminalLines;
+        private IGenericRepository<ShLineSerial>? _shLineSerials;
 
         // InventoryCount repository instances
         private IGenericRepository<IcHeader>? _icHeaders;
@@ -272,6 +278,25 @@ namespace WMS_WEBAPI.UnitOfWork
 
         public IGenericRepository<WiLineSerial> WiLineSerials =>
             _wiLineSerials ??= new GenericRepository<WiLineSerial>(_context, _httpContextAccessor);
+
+        // Shipping repository properties
+        public IGenericRepository<ShHeader> ShHeaders =>
+            _shHeaders ??= new GenericRepository<ShHeader>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShLine> ShLines =>
+            _shLines ??= new GenericRepository<ShLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShImportLine> ShImportLines =>
+            _shImportLines ??= new GenericRepository<ShImportLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShRoute> ShRoutes =>
+            _shRoutes ??= new GenericRepository<ShRoute>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShTerminalLine> ShTerminalLines =>
+            _shTerminalLines ??= new GenericRepository<ShTerminalLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShLineSerial> ShLineSerials =>
+            _shLineSerials ??= new GenericRepository<ShLineSerial>(_context, _httpContextAccessor);
 
         // InventoryCount repository properties
         public IGenericRepository<IcHeader> ICHeaders =>

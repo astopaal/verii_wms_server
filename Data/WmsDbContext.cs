@@ -72,6 +72,14 @@ namespace WMS_WEBAPI.Data
         public DbSet<WiRoute> WiRoutes { get; set; }
         public DbSet<WiTerminalLine> WiTerminalLines { get; set; }
 
+        // Shipping DbSets
+        public DbSet<ShHeader> ShHeaders { get; set; }
+        public DbSet<ShLine> ShLines { get; set; }
+        public DbSet<ShImportLine> ShImportLines { get; set; }
+        public DbSet<ShRoute> ShRoutes { get; set; }
+        public DbSet<ShTerminalLine> ShTerminalLines { get; set; }
+        public DbSet<ShLineSerial> ShLineSerials { get; set; }
+
         // InventoryCount DbSets
         public DbSet<IcHeader> ICHeaders { get; set; }
         public DbSet<IcImportLine> IcImportLines { get; set; }
@@ -141,6 +149,14 @@ namespace WMS_WEBAPI.Data
             modelBuilder.ApplyConfiguration(new WiRouteConfiguration());
             modelBuilder.ApplyConfiguration(new WiTerminalLineConfiguration());
 
+            // Shipping configurations
+            modelBuilder.ApplyConfiguration(new ShHeaderConfiguration());
+            modelBuilder.ApplyConfiguration(new ShLineConfiguration());
+            modelBuilder.ApplyConfiguration(new ShImportLineConfiguration());
+            modelBuilder.ApplyConfiguration(new ShRouteConfiguration());
+            modelBuilder.ApplyConfiguration(new ShTerminalLineConfiguration());
+            modelBuilder.ApplyConfiguration(new ShLineSerialConfiguration());
+
             modelBuilder.ApplyConfiguration(new NotificationConfiguration());
 
             // InventoryCount configurations temporarily disabled
@@ -192,6 +208,16 @@ namespace WMS_WEBAPI.Data
                 entity.HasNoKey();
             });
             modelBuilder.Entity<FN_WoOpenOrder_Line>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            // Shipping Functions
+            modelBuilder.Entity<FN_ShOpenOrder_Header>(entity =>
+            {
+                entity.HasNoKey();
+            });
+            modelBuilder.Entity<FN_ShOpenOrder_Line>(entity =>
             {
                 entity.HasNoKey();
             });

@@ -83,6 +83,14 @@ namespace WMS_WEBAPI.UnitOfWork
         IGenericRepository<WiTerminalLine> WiTerminalLines { get; }
         IGenericRepository<WiLineSerial> WiLineSerials { get; }
 
+        // Shipping repositories
+        IGenericRepository<ShHeader> ShHeaders { get; }
+        IGenericRepository<ShLine> ShLines { get; }
+        IGenericRepository<ShImportLine> ShImportLines { get; }
+        IGenericRepository<ShRoute> ShRoutes { get; }
+        IGenericRepository<ShTerminalLine> ShTerminalLines { get; }
+        IGenericRepository<ShLineSerial> ShLineSerials { get; }
+
         // InventoryCount repositories
         IGenericRepository<IcHeader> ICHeaders { get; }
         IGenericRepository<IcImportLine> IcImportLines { get; }
