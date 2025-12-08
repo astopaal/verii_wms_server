@@ -47,7 +47,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpDelete("{id}/soft")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDelete(long id)
         {
             var result = await _service.SoftDeleteAsync(id);
