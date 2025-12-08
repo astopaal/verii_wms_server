@@ -251,6 +251,62 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<IEnumerable<T>>> PopulateWareHouseCode<T>(IEnumerable<T> dtos)
+        {
+            try
+            {
+                var list = (dtos ?? Array.Empty<T>()).ToList();
+                var srcCodeProp = typeof(T).GetProperty("SourceWarehouse");
+                var srcNameProp = typeof(T).GetProperty("SourceWarehouseName");
+                var tgtCodeProp = typeof(T).GetProperty("TargetWarehouse");
+                var tgtNameProp = typeof(T).GetProperty("TargetWarehouseName");
+
+                var subeFromContext = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string;
+                var subeKodu = string.IsNullOrWhiteSpace(subeFromContext) ? null : subeFromContext;
+
+                var rows = await _erpContext.Depos
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_DEPO({0}, {1})", null, subeKodu)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var depos = _mapper.Map<List<DepoDto>>(rows);
+                var nameByCode = depos
+                    .GroupBy(d => d.DepoKodu.ToString().Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => g.First().DepoIsmi ?? string.Empty, StringComparer.OrdinalIgnoreCase);
+
+                foreach (var dto in list)
+                {
+                    // SourceWarehouse/SourceWarehouseName
+                    if (srcCodeProp != null && srcNameProp != null)
+                    {
+                        var codeObj = srcCodeProp.GetValue(dto);
+                        var codeStr = codeObj == null ? null : codeObj.ToString()?.Trim();
+                        if (!string.IsNullOrEmpty(codeStr) && nameByCode.TryGetValue(codeStr!, out var nm))
+                        {
+                            srcNameProp.SetValue(dto, nm);
+                        }
+                    }
+
+                    // TargetWarehouse/TargetWarehouseName
+                    if (tgtCodeProp != null && tgtNameProp != null)
+                    {
+                        var codeObj = tgtCodeProp.GetValue(dto);
+                        var codeStr = codeObj == null ? null : codeObj.ToString()?.Trim();
+                        if (!string.IsNullOrEmpty(codeStr) && nameByCode.TryGetValue(codeStr!, out var nm))
+                        {
+                            tgtNameProp.SetValue(dto, nm);
+                        }
+                    }
+                }
+
+                return ApiResponse<IEnumerable<T>>.SuccessResult(list, _localizationService.GetLocalizedString("DepoRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<T>>.ErrorResult(_localizationService.GetLocalizedString("DepoRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
         // Proje işlemleri
         public async Task<ApiResponse<List<ProjeDto>>> GetProjelerAsync()
         {
