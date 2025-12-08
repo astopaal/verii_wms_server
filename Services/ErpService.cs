@@ -173,6 +173,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+
         // Depo işlemleri
         public async Task<ApiResponse<List<DepoDto>>> GetDeposAsync(short? depoKodu)
         {

@@ -14,12 +14,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public WtImportLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public WtImportLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<WtImportLineDto>>> GetAllAsync()
@@ -29,7 +31,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtImportLines
                     .FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -50,7 +59,13 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var dto = _mapper.Map<WtImportLineDto>(entity);
-                return ApiResponse<WtImportLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+                var enrichedSingle = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enrichedSingle.Success)
+                {
+                    return ApiResponse<WtImportLineDto>.ErrorResult(enrichedSingle.Message, enrichedSingle.ExceptionMessage, enrichedSingle.StatusCode);
+                }
+                var finalDto = enrichedSingle.Data?.FirstOrDefault() ?? dto;
+                return ApiResponse<WtImportLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -65,7 +80,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtImportLines
                     .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -80,7 +102,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtImportLines
                     .FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -165,7 +194,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtImportLines
                     .FindAsync(x => x.LineId == lineId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -185,7 +221,14 @@ namespace WMS_WEBAPI.Services
                     : await _unitOfWork.WtImportLines.FindAsync(x => importLineIds.Contains(x.Id) && !x.IsDeleted);
 
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -221,6 +264,22 @@ namespace WMS_WEBAPI.Services
                     items.Add(dto);
                 }
 
+                var importLineDtos = items.Select(i => i.ImportLine).ToList();
+                var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+                var enrichedList = enriched.Data?.ToList() ?? importLineDtos;
+                for (int i = 0; i < items.Count && i < enrichedList.Count; i++)
+                {
+                    items[i].ImportLine = enrichedList[i];
+                }
+
                 return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.SuccessResult(
                     items,
                     _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully")
@@ -248,7 +307,14 @@ namespace WMS_WEBAPI.Services
                     : await _unitOfWork.WtImportLines.FindAsync(x => x.LineId.HasValue && lineIds.Contains(x.LineId.Value) && !x.IsDeleted);
 
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -264,7 +330,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtImportLines
                     .FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtImportLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
+
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
+                return ApiResponse<IEnumerable<WtImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {

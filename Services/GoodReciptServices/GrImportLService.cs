@@ -85,9 +85,15 @@ namespace WMS_WEBAPI.Services
             {
                 var grImportLs = await _unitOfWork.GrImportLines.GetAllAsync();
                 var grImportLDtos = _mapper.Map<IEnumerable<GrImportLDto>>(grImportLs);
+
+                var enriched = await _erpService.PopulateStockNamesAsync(grImportLDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
                 
                 return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    grImportLDtos, 
+                    enriched.Data ?? grImportLDtos, 
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }
@@ -118,9 +124,16 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var grImportLDto = _mapper.Map<GrImportLDto>(grImportL);
+
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { grImportLDto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<GrImportLDto?>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                var finalDto = enriched.Data?.FirstOrDefault() ?? grImportLDto;
                 
                 return ApiResponse<GrImportLDto?>.SuccessResult(
-                    grImportLDto,
+                    finalDto,
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }
@@ -140,9 +153,15 @@ namespace WMS_WEBAPI.Services
             {
                 var grImportLs = await _unitOfWork.GrImportLines.FindAsync(x => x.HeaderId == headerId);
                 var grImportLDtos = _mapper.Map<IEnumerable<GrImportLDto>>(grImportLs);
+
+                var enriched = await _erpService.PopulateStockNamesAsync(grImportLDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
                 
                 return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    grImportLDtos,
+                    enriched.Data ?? grImportLDtos,
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }
@@ -194,9 +213,15 @@ namespace WMS_WEBAPI.Services
             {
                 var grImportLs = await _unitOfWork.GrImportLines.FindAsync(x => x.LineId == lineId);
                 var grImportLDtos = _mapper.Map<IEnumerable<GrImportLDto>>(grImportLs);
+
+                var enriched = await _erpService.PopulateStockNamesAsync(grImportLDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
                 
                 return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    grImportLDtos,
+                    enriched.Data ?? grImportLDtos,
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }
@@ -216,9 +241,15 @@ namespace WMS_WEBAPI.Services
             {
                 var grImportLs = await _unitOfWork.GrImportLines.FindAsync(x => x.StockCode == stockCode);
                 var grImportLDtos = _mapper.Map<IEnumerable<GrImportLDto>>(grImportLs);
-                
+
+                var enriched = await _erpService.PopulateStockNamesAsync(grImportLDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
                 return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    grImportLDtos,
+                    enriched.Data ?? grImportLDtos,
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }
@@ -338,8 +369,14 @@ namespace WMS_WEBAPI.Services
                 var importLines = await _unitOfWork.GrImportLines.FindAsync(x => x.HeaderId == headerId);
                 var importLineDtos = _mapper.Map<IEnumerable<GrImportLDto>>(importLines);
 
+                var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+
                 return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    importLineDtos,
+                    enriched.Data ?? importLineDtos,
                     _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
                 );
             }

@@ -2,13 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WMS_WEBAPI.DTOs
 {
-    public class WtImportLineDto
+    public class WtImportLineDto : BaseImportLineEntityDto
     {
         public long Id { get; set; }
         public long LineId { get; set; }
         public long RouteId { get; set; }
-        public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public string? Unit { get; set; }
         public string? CellCode { get; set; }
         public string? CellName { get; set; }
