@@ -168,37 +168,18 @@ namespace WMS_WEBAPI.Services
 
                 var dtos = _mapper.Map<IEnumerable<GrImportLWithRoutesDto>>(items);
 
-                var neededCodes = dtos
-                    .Select(d => d.StockCode)
-                    .Concat(dtos.SelectMany(d => d.Routes ?? new List<GrRouteDto>()).Select(r => r.StockCode))
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Select(s => s!.Trim())
-                    .Distinct()
-                    .ToList();
-
-                var erpStocksResp = await _erpService.GetStoksByCodesAsync(neededCodes);
-                var erpStocks = erpStocksResp.Data ?? new List<StokDto>();
-                var stockNameByCode = erpStocks
-                    .GroupBy(s => s.StokKodu)
-                    .ToDictionary(g => g.Key, g => g.First().StokAdi);
-
-                foreach (var dto in dtos)
+                var enrichedResp = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enrichedResp.Success)
                 {
-                    if (!string.IsNullOrWhiteSpace(dto.StockCode) && stockNameByCode.TryGetValue(dto.StockCode, out var name))
-                    {
-                        dto.StockName = name;
-                    }
-                    if (dto.Routes != null)
-                    {
-                        foreach (var route in dto.Routes)
-                        {
-                            if (!string.IsNullOrWhiteSpace(route.StockCode) && stockNameByCode.TryGetValue(route.StockCode, out var rname))
-                            {
-                                route.StockName = rname;
-                            }
-                        }
-                    }
+                    return ApiResponse<IEnumerable<GrImportLWithRoutesDto>>.ErrorResult(
+                        enrichedResp.Message,
+                        enrichedResp.ExceptionMessage,
+                        enrichedResp.StatusCode
+                    );
                 }
+                
+                dtos = enrichedResp.Data ?? dtos;
+
                 return ApiResponse<IEnumerable<GrImportLWithRoutesDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)

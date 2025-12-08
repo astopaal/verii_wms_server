@@ -4,11 +4,6 @@ namespace WMS_WEBAPI.DTOs
     public class GrRouteDto : BaseRouteEntityDto
     {
         public long ImportLineId { get; set; }
-        public long? LineId { get; set; }
-        public string? StockCode { get; set; }
-        public string? StockName { get; set; }
-        public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public string? Description { get; set; }
     }
 

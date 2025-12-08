@@ -13,7 +13,7 @@ namespace WMS_WEBAPI.Interfaces
 
         // Stok işlemleri
         Task<ApiResponse<List<StokDto>>> GetStoksAsync(string? stokKodu);
-        Task<ApiResponse<List<StokDto>>> GetStoksByCodesAsync(IEnumerable<string> stokKodlari);
+        Task<ApiResponse<IEnumerable<T>>> PopulateStockNamesAsync<T>(IEnumerable<T> dtos) where T : BaseImportLineEntityDto;
 
         // Depo işlemleri
         Task<ApiResponse<List<DepoDto>>> GetDeposAsync(short? depoKodu);

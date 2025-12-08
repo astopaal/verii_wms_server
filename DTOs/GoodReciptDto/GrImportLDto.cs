@@ -10,7 +10,6 @@ namespace WMS_WEBAPI.DTOs
 
     public class GrImportLWithRoutesDto : GrImportLDto
     {
-        public string? StockName { get; set; }
         public List<GrRouteDto> Routes { get; set; } = new List<GrRouteDto>();
     }
 

@@ -11,7 +11,6 @@ namespace WMS_WEBAPI.Mappings
             CreateMap<GrRoute, GrRouteDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.ScannedBarcode, opt => opt.MapFrom(src => src.ScannedBarcode))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
@@ -31,7 +30,6 @@ namespace WMS_WEBAPI.Mappings
 
             CreateMap<CreateGrRouteDto, GrRoute>()
                 .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.ScannedBarcode, opt => opt.MapFrom(src => src.ScannedBarcode))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))

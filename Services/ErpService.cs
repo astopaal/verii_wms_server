@@ -123,18 +123,23 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<List<StokDto>>> GetStoksByCodesAsync(IEnumerable<string> stokKodlari)
+        
+
+        
+
+        public async Task<ApiResponse<IEnumerable<T>>> PopulateStockNamesAsync<T>(IEnumerable<T> dtos) where T : BaseImportLineEntityDto
         {
             try
             {
-                var codes = (stokKodlari ?? Array.Empty<string>())
+                var list = (dtos ?? Array.Empty<T>()).ToList();
+                var neededCodes = list
+                    .Select(d => d.StockCode)
                     .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Select(s => s.Trim())
+                    .Select(s => s!.Trim())
                     .Distinct()
                     .ToList();
-
-                var stokParam = codes.Count == 0 ? null : string.Join(",", codes);
-
+                    
+                var stokParam = neededCodes.Count == 0 ? null : string.Join(",", neededCodes);
                 var subeFromContext = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string;
                 var subeCsv = string.IsNullOrWhiteSpace(subeFromContext)
                     ? null
@@ -145,13 +150,26 @@ namespace WMS_WEBAPI.Services
                     .AsNoTracking()
                     .ToListAsync();
 
-                var mappedResult = _mapper.Map<List<StokDto>>(result);
+                var data = _mapper.Map<List<StokDto>>(result);
+                var stockNameByCode = data
+                    .Where(s => !string.IsNullOrWhiteSpace(s.StokKodu))
+                    .GroupBy(s => s.StokKodu!.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => g.First().StokAdi ?? string.Empty, StringComparer.OrdinalIgnoreCase);
 
-                return ApiResponse<List<StokDto>>.SuccessResult(mappedResult, _localizationService.GetLocalizedString("StokRetrievedSuccessfully"));
+                foreach (var dto in list)
+                {
+                    var code = dto.StockCode?.Trim();
+                    if (!string.IsNullOrEmpty(code) && stockNameByCode.TryGetValue(code, out var name))
+                    {
+                        dto.StockName = name;
+                    }
+                }
+
+                return ApiResponse<IEnumerable<T>>.SuccessResult(list, _localizationService.GetLocalizedString("StokRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<StokDto>>.ErrorResult(_localizationService.GetLocalizedString("StokRetrievalError"), ex.Message, 500, "Error retrieving Stok data");
+                return ApiResponse<IEnumerable<T>>.ErrorResult(_localizationService.GetLocalizedString("StokRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
