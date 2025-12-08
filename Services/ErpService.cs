@@ -251,7 +251,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<T>>> PopulateWareHouseCode<T>(IEnumerable<T> dtos)
+        public async Task<ApiResponse<IEnumerable<T>>> PopulateWarehouseNamesAsync<T>(IEnumerable<T> dtos)
         {
             try
             {

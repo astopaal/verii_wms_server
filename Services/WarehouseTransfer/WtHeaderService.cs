@@ -105,6 +105,13 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
 
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
+
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -132,6 +139,14 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<WtHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dto = enrichedCustomer.Data?.FirstOrDefault() ?? dto;
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(new[] { dto });
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<WtHeaderDto>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dto = enrichedWarehouse.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -155,6 +170,13 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -181,6 +203,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -205,6 +233,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -336,6 +370,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -357,6 +397,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)

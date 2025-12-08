@@ -17,7 +17,7 @@ namespace WMS_WEBAPI.Interfaces
 
         // Depo işlemleri
         Task<ApiResponse<List<DepoDto>>> GetDeposAsync(short? depoKodu);
-        Task<ApiResponse<IEnumerable<T>>> PopulateWareHouseCode<T>(IEnumerable<T> dtos);
+        Task<ApiResponse<IEnumerable<T>>> PopulateWarehouseNamesAsync<T>(IEnumerable<T> dtos);
 
         // Proje işlemleri
         Task<ApiResponse<List<ProjeDto>>> GetProjelerAsync();

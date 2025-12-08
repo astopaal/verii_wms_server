@@ -14,13 +14,15 @@ namespace WMS_WEBAPI.Services
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IErpService _erpService;
 
-        public ShHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor)
+        public ShHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
             _httpContextAccessor = httpContextAccessor;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<ShHeaderDto>>> GetAllAsync()
@@ -29,6 +31,21 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.ShHeaders.GetAllAsync();
                 var dtos = _mapper.Map<IEnumerable<ShHeaderDto>>(entities);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<ShHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<ShHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
+
                 return ApiResponse<IEnumerable<ShHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -48,6 +65,18 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<ShHeaderDto>.ErrorResult(nf, nf, 404);
                 }
                 var dto = _mapper.Map<ShHeaderDto>(entity);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<ShHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dto = enrichedCustomer.Data?.FirstOrDefault() ?? dto;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(new[] { dto });
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<ShHeaderDto>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dto = enrichedWarehouse.Data?.FirstOrDefault() ?? dto;
                 return ApiResponse<ShHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -158,6 +187,18 @@ namespace WMS_WEBAPI.Services
 
                 var entities = await query.ToListAsync();
                 var dtos = _mapper.Map<IEnumerable<ShHeaderDto>>(entities);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<ShHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<ShHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<ShHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("ShHeaderAssignedOrdersRetrievedSuccessfully"));
             }
             catch (Exception ex)

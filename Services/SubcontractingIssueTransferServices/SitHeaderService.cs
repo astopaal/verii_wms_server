@@ -40,6 +40,13 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
 
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
+
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -90,6 +97,13 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedCustomer.Data?.ToList() ?? dtos;
 
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<PagedResponse<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
+
                 var result = new PagedResponse<SitHeaderDto>(dtos, totalCount, pageNumber, pageSize);
                 return ApiResponse<PagedResponse<SitHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
@@ -116,6 +130,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<SitHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dto = enrichedCustomer.Data?.FirstOrDefault() ?? dto;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(new[] { dto });
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<SitHeaderDto>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dto = enrichedWarehouse.Data?.FirstOrDefault() ?? dto;
                 return ApiResponse<SitHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -130,6 +150,18 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitHeaders.FindAsync(x => x.BranchCode == branchCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitHeaderDto>>(entities);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -145,6 +177,18 @@ namespace WMS_WEBAPI.Services
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
                 var entities = await _unitOfWork.SitHeaders.FindAsync(x => x.PlannedDate >= startDate && x.PlannedDate <= endDate && !x.IsDeleted && x.BranchCode == branchCode);
                 var dtos = _mapper.Map<IEnumerable<SitHeaderDto>>(entities);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -167,6 +211,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -187,6 +237,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -202,6 +258,18 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitHeaders.FindAsync(x => x.ERPReferenceNumber == documentNo && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitHeaderDto>>(entities);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -334,6 +402,12 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
                 dtos = enrichedCustomer.Data ?? dtos;
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
                 return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
