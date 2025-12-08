@@ -6,5 +6,6 @@ namespace WMS_WEBAPI.Interfaces
     {
         Task<ApiResponse<List<TransferOpenOrderHeaderDto>>> GetShippingOpenOrderHeaderAsync(string customerCode);
         Task<ApiResponse<List<TransferOpenOrderLineDto>>> GetShippingOpenOrderLineAsync(string siparisNoCsv);
+        
     }
 }
