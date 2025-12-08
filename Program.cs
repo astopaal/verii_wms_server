@@ -131,7 +131,6 @@ builder.Services.AddScoped<ISrtLineService, SrtLineService>();
 builder.Services.AddScoped<ISrtImportLineService, SrtImportLineService>();
 builder.Services.AddScoped<ISrtRouteService, SrtRouteService>();
 builder.Services.AddScoped<ISrtTerminalLineService, SrtTerminalLineService>();
-builder.Services.AddScoped<ISitFunctionService, SitFunctionService>();
 builder.Services.AddScoped<ISrtFunctionService, SrtFunctionService>();
 builder.Services.AddScoped<ISrtLineSerialService, SrtLineSerialService>();
 
@@ -151,7 +150,15 @@ builder.Services.AddScoped<IWiRouteService, WiRouteService>();
 builder.Services.AddScoped<IWiTerminalLineService, WiTerminalLineService>();
 builder.Services.AddScoped<IWiLineSerialService, WiLineSerialService>();
 
-// Register Inventory Count Services (temporarily disabled)
+// Register Shipping Services
+builder.Services.AddScoped<IShHeaderService, ShHeaderService>();
+builder.Services.AddScoped<IShFunctionService, ShFunctionService>();
+builder.Services.AddScoped<IShLineService, ShLineService>();
+builder.Services.AddScoped<IShImportLineService, ShImportLineService>();
+builder.Services.AddScoped<IShRouteService, ShRouteService>();
+builder.Services.AddScoped<IShTerminalLineService, ShTerminalLineService>();
+builder.Services.AddScoped<IShLineSerialService, ShLineSerialService>();
+
 
 // Register Function Services
 builder.Services.AddScoped<IGoodReciptFunctionsService, GoodReciptFunctionsService>();
