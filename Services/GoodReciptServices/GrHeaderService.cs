@@ -70,28 +70,16 @@ namespace WMS_WEBAPI.Services
 
                 var dtos = _mapper.Map<List<GrHeaderDto>>(items);
 
-                var codes = dtos
-                    .Select(d => d.CustomerCode)
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Select(c => c.Trim())
-                    .Distinct()
-                    .ToList();
-                if (codes.Count > 0)
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
                 {
-                    var carisResp = await _erpService.GetCarisByCodesAsync(codes);
-                    var caris = carisResp.Data ?? new List<CariDto>();
-                    var nameByCode = caris.GroupBy(c => c.CariKod).ToDictionary(g => g.Key, g => g.First().CariIsim);
-                    foreach (var d in dtos)
-                    {
-                        if (nameByCode.TryGetValue(d.CustomerCode, out var nm)) d.CustomerName = nm;
-                    }
+                    return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
+                dtos = enrichedCustomer.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<GrHeaderDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<GrHeaderDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<GrHeaderDto>>.SuccessResult(result,_localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -110,27 +98,14 @@ namespace WMS_WEBAPI.Services
                 var grHeaders = await _unitOfWork.GrHeaders.FindAsync(x => x.BranchCode == branchCode);
                 var grHeaderDtos = _mapper.Map<List<GrHeaderDto>>(grHeaders);
 
-                var codes = grHeaderDtos
-                    .Select(d => d.CustomerCode)
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Select(c => c.Trim())
-                    .Distinct()
-                    .ToList();
-                if (codes.Count > 0)
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
+                if (!enrichedCustomer.Success)
                 {
-                    var carisResp = await _erpService.GetCarisByCodesAsync(codes);
-                    var caris = carisResp.Data ?? new List<CariDto>();
-                    var nameByCode = caris.GroupBy(c => c.CariKod).ToDictionary(g => g.Key, g => g.First().CariIsim);
-                    foreach (var d in grHeaderDtos)
-                    {
-                        if (nameByCode.TryGetValue(d.CustomerCode, out var nm)) d.CustomerName = nm;
-                    }
+                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
-                
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(
-                    grHeaderDtos, 
-                    _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully")
-                );
+
+                var resultDtos = enrichedCustomer.Data?.ToList() ?? grHeaderDtos;
+                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -154,13 +129,12 @@ namespace WMS_WEBAPI.Services
                 }
                 var grHeaderDto = _mapper.Map<GrHeaderDto>(grHeader);
 
-                if (!string.IsNullOrWhiteSpace(grHeaderDto.CustomerCode))
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { grHeaderDto });
+                if (!enrichedCustomer.Success)
                 {
-                    var carisResp = await _erpService.GetCarisByCodesAsync(new[] { grHeaderDto.CustomerCode });
-                    var caris = carisResp.Data ?? new List<CariDto>();
-                    var nm = caris.FirstOrDefault()?.CariIsim;
-                    grHeaderDto.CustomerName = nm;
+                    return ApiResponse<GrHeaderDto?>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
                 }
+                grHeaderDto = enrichedCustomer.Data?.FirstOrDefault();
                 return ApiResponse<GrHeaderDto?>.SuccessResult(grHeaderDto,_localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -178,18 +152,11 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var grHeaderDto = _mapper.Map<GrHeaderDto>(grHeader);
-                return ApiResponse<GrHeaderDto>.SuccessResult(
-                    grHeaderDto,
-                    _localizationService.GetLocalizedString("GrHeaderCreatedSuccessfully")
-                );
+                return ApiResponse<GrHeaderDto>.SuccessResult(grHeaderDto,_localizationService.GetLocalizedString("GrHeaderCreatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrHeaderDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderCreationError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"),ex.Message,500);
             }
         }
 
@@ -259,11 +226,13 @@ namespace WMS_WEBAPI.Services
                     .FindAsync(x => x.CustomerCode == customerCode && x.BranchCode == branchCode);
                 
                 var grHeaderDtos = _mapper.Map<IEnumerable<GrHeaderDto>>(grHeaders);
-                
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(
-                    grHeaderDtos,
-                    _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully")
-                );
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                var resultDtos = enrichedCustomer.Data ?? grHeaderDtos;
+                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -284,11 +253,13 @@ namespace WMS_WEBAPI.Services
                     .FindAsync(x => x.BranchCode == branchCode);
 
                 var grHeaderDtos = _mapper.Map<IEnumerable<GrHeaderDto>>(grHeaders);
-
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(
-                    grHeaderDtos,
-                    _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully")
-                );
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                var resultDtos = enrichedCustomer.Data ?? grHeaderDtos;
+                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -309,11 +280,13 @@ namespace WMS_WEBAPI.Services
                     .FindAsync(x => x.PlannedDate >= startDate && x.PlannedDate <= endDate && x.BranchCode == branchCode);
                 
                 var grHeaderDtos = _mapper.Map<IEnumerable<GrHeaderDto>>(grHeaders);
-                
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(
-                    grHeaderDtos,
-                    _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully")
-                );
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                var resultDtos = enrichedCustomer.Data ?? grHeaderDtos;
+                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {

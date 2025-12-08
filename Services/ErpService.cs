@@ -173,6 +173,61 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<IEnumerable<T>>> PopulateCustomerNamesAsync<T>(IEnumerable<T> dtos)
+        {
+            try
+            {
+                var list = (dtos ?? Array.Empty<T>()).ToList();
+                var codeProp = typeof(T).GetProperty("CustomerCode");
+                var nameProp = typeof(T).GetProperty("CustomerName");
+
+                var codes = codeProp == null
+                    ? new List<string>()
+                    : list
+                        .Select(d => codeProp.GetValue(d) as string)
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Select(s => s!.Trim())
+                        .Distinct()
+                        .ToList();
+
+                var cariParam = codes.Count == 0 ? null : string.Join(",", codes);
+
+                var subeFromContext = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string;
+                var subeCsv = string.IsNullOrWhiteSpace(subeFromContext)
+                    ? null
+                    : string.Join(",", subeFromContext.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)));
+
+                var result = await _erpContext.Caris
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_CARI({0}, {1})", cariParam, subeCsv)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var data = _mapper.Map<List<CariDto>>(result);
+                var nameByCode = data
+                    .Where(c => !string.IsNullOrWhiteSpace(c.CariKod))
+                    .GroupBy(c => c.CariKod.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => g.First().CariIsim ?? string.Empty, StringComparer.OrdinalIgnoreCase);
+
+                if (codeProp != null && nameProp != null)
+                {
+                    foreach (var dto in list)
+                    {
+                        var code = codeProp.GetValue(dto) as string;
+                        var trimmed = code?.Trim();
+                        if (!string.IsNullOrEmpty(trimmed) && nameByCode.TryGetValue(trimmed, out var nm))
+                        {
+                            nameProp.SetValue(dto, nm);
+                        }
+                    }
+                }
+
+                return ApiResponse<IEnumerable<T>>.SuccessResult(list, _localizationService.GetLocalizedString("CariRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<T>>.ErrorResult(_localizationService.GetLocalizedString("CariRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
 
         // Depo işlemleri
         public async Task<ApiResponse<List<DepoDto>>> GetDeposAsync(short? depoKodu)

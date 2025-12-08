@@ -16,13 +16,15 @@ namespace WMS_WEBAPI.Services
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IErpService _erpService;
 
-        public WtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor)
+        public WtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
             _httpContextAccessor = httpContextAccessor;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetPagedAsync(
@@ -65,6 +67,13 @@ namespace WMS_WEBAPI.Services
 
                 var dtos = _mapper.Map<List<WtHeaderDto>>(items);
 
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<PagedResponse<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data?.ToList() ?? dtos;
+
                 var result = new PagedResponse<WtHeaderDto>(dtos, totalCount, pageNumber, pageSize);
 
                 return ApiResponse<PagedResponse<WtHeaderDto>>.SuccessResult(
@@ -88,6 +97,14 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => !x.IsDeleted && x.BranchCode == branchCode);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
+
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -100,8 +117,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entity = await _unitOfWork.WtHeaders
-                    .GetByIdAsync(id);
+                var entity = await _unitOfWork.WtHeaders.GetByIdAsync(id);
 
                 if (entity == null || entity.IsDeleted)
                 {
@@ -110,6 +126,12 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var dto = _mapper.Map<WtHeaderDto>(entity);
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<WtHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dto = enrichedCustomer.Data?.FirstOrDefault() ?? dto;
                 return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -126,6 +148,13 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => x.DocumentNo == documentNo && !x.IsDeleted && x.BranchCode == branchCode);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -145,6 +174,13 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders  
                     .FindAsync(x => (x.SourceWarehouse == warehouse || x.TargetWarehouse == warehouse) && !x.IsDeleted && x.BranchCode == branchCode);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -162,6 +198,13 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => x.DocumentDate >= startDate && x.DocumentDate <= endDate && !x.IsDeleted && x.BranchCode == branchCode);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -287,6 +330,12 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => x.BranchCode == branchCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -302,6 +351,12 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => x.CustomerCode == customerCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -331,6 +386,12 @@ namespace WMS_WEBAPI.Services
 
                 var entities = await query.ToListAsync();
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderAssignedOrdersRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -397,6 +458,12 @@ namespace WMS_WEBAPI.Services
                 var entities = await _unitOfWork.WtHeaders
                     .FindAsync(x => x.DocumentType == documentType && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
                 return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)

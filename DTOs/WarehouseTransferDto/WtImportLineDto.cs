@@ -4,7 +4,6 @@ namespace WMS_WEBAPI.DTOs
 {
     public class WtImportLineDto : BaseImportLineEntityDto
     {
-        public long Id { get; set; }
         public long LineId { get; set; }
         public long RouteId { get; set; }
         public string? Unit { get; set; }
@@ -46,18 +45,6 @@ namespace WMS_WEBAPI.DTOs
         public DateTime? CompletedDate { get; set; }
         
         public string? Notes { get; set; }
-        public long? CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public long? UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public long? DeletedBy { get; set; }
-        public DateTime? DeletedDate { get; set; }
-        
-        // Full user information properties
-        public string? CreatedByFullUser { get; set; }
-        public string? UpdatedByFullUser { get; set; }
-        public string? DeletedByFullUser { get; set; }
     }
 
     public class CreateWtImportLineDto

@@ -9,7 +9,7 @@ namespace WMS_WEBAPI.Interfaces
 
         // Cari işlemleri
         Task<ApiResponse<List<CariDto>>> GetCarisAsync(string? cariKodu);
-        Task<ApiResponse<List<CariDto>>> GetCarisByCodesAsync(IEnumerable<string> cariKodlari);
+        Task<ApiResponse<IEnumerable<T>>> PopulateCustomerNamesAsync<T>(IEnumerable<T> dtos);
 
         // Stok işlemleri
         Task<ApiResponse<List<StokDto>>> GetStoksAsync(string? stokKodu);
