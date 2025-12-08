@@ -9,7 +9,9 @@ namespace WMS_WEBAPI.DTOs
         public string? CustomerCode { get; set; }
         public string? CustomerName { get; set; }
         public string? SourceWarehouse { get; set; }
+        public string? SourceWarehouseName { get; set; }
         public string? TargetWarehouse { get; set; }
+        public string? TargetWarehouseName { get; set; }
         public byte Type { get; set; }
     }
 

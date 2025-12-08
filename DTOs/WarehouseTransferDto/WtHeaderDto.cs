@@ -13,7 +13,9 @@ namespace WMS_WEBAPI.DTOs
         public string? CustomerCode { get; set; }
         public string? CustomerName { get; set; }
         public string? SourceWarehouse { get; set; }
+        public string? SourceWarehouseName { get; set; }
         public string? TargetWarehouse { get; set; }
+        public string? TargetWarehouseName { get; set; }
         public string? Priority { get; set; }
         public string YearCode { get; set; } = string.Empty;
         public string? Description1 { get; set; }
