@@ -390,6 +390,30 @@
   <data name="GrImportLNotFound" xml:space="preserve">
     <value>Goods Receipt Import Line not found</value>
   </data>
+  <data name="GrImportLRetrievedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Import Line information retrieved successfully</value>
+  </data>
+  <data name="GrImportLRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Goods Receipt Import Line information</value>
+  </data>
+  <data name="GrImportLCreatedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Import Line created successfully</value>
+  </data>
+  <data name="GrImportLCreationError" xml:space="preserve">
+    <value>Error occurred while creating Goods Receipt Import Line</value>
+  </data>
+  <data name="GrImportLUpdatedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Import Line updated successfully</value>
+  </data>
+  <data name="GrImportLUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Goods Receipt Import Line</value>
+  </data>
+  <data name="GrImportLDeletedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Import Line deleted successfully</value>
+  </data>
+  <data name="GrImportLDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Goods Receipt Import Line</value>
+  </data>
   <data name="GrImportSerialLineCreatedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Serial Line created successfully</value>
   </data>
@@ -1432,5 +1456,219 @@
   </data>
   <data name="PtImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Production Transfer import line deleted successfully</value>
+  </data>
+  <data name="NotificationCreatedSuccessfully" xml:space="preserve">
+    <value>Notification created successfully</value>
+  </data>
+  <data name="NotificationCreationError" xml:space="preserve">
+    <value>Error occurred while creating notification</value>
+  </data>
+  <data name="NotificationRecipientsRequired" xml:space="preserve">
+    <value>At least one recipient is required</value>
+  </data>
+  <data name="NotificationBulkCreatedSuccessfully" xml:space="preserve">
+    <value>Bulk notifications created successfully</value>
+  </data>
+  <data name="NotificationBulkCreationError" xml:space="preserve">
+    <value>Error occurred during bulk notification creation</value>
+  </data>
+  <data name="NotificationRetrievedSuccessfully" xml:space="preserve">
+    <value>Notification information retrieved successfully</value>
+  </data>
+  <data name="NotificationRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving notification information</value>
+  </data>
+  <data name="NotificationNotFound" xml:space="preserve">
+    <value>Notification not found</value>
+  </data>
+  <data name="NotificationMarkedReadSuccessfully" xml:space="preserve">
+    <value>Notification marked as read successfully</value>
+  </data>
+  <data name="NotificationMarkReadError" xml:space="preserve">
+    <value>Error occurred while marking notification as read</value>
+  </data>
+ 
+  <data name="ShHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Header information retrieved successfully</value>
+  </data>
+  <data name="ShHeaderErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Shipping Header</value>
+  </data>
+  <data name="ShHeaderNotFound" xml:space="preserve">
+    <value>Shipping Header not found</value>
+  </data>
+  <data name="ShHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Header created successfully</value>
+  </data>
+  <data name="ShHeaderCreationError" xml:space="preserve">
+    <value>Error occurred while creating Shipping Header</value>
+  </data>
+  <data name="ShHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Header updated successfully</value>
+  </data>
+  <data name="ShHeaderUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Shipping Header</value>
+  </data>
+  <data name="ShHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Header deleted successfully</value>
+  </data>
+  <data name="ShHeaderDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Shipping Header</value>
+  </data>
+  <data name="ShHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Shipping Header completed successfully</value>
+  </data>
+  <data name="ShHeaderCompletionError" xml:space="preserve">
+    <value>Error occurred while completing Shipping Header</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned shipping orders retrieved successfully</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned shipping orders</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned shipping order lines retrieved successfully</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned shipping order lines</value>
+  </data>
+  <data name="ShHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key</value>
+  </data>
+  <data name="ShHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>LineGroupGuid not found</value>
+  </data>
+  <data name="ShHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>LineClientKey not found</value>
+  </data>
+  <data name="ShHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Line reference is required</value>
+  </data>
+  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Shipping order generated successfully</value>
+  </data>
+  <data name="ShHeaderGenerateError" xml:space="preserve">
+    <value>Error occurred while generating shipping order</value>
+  </data>
+  <data name="ShHeaderRouteGroupGuidNotFound" xml:space="preserve">
+    <value>RouteGroupGuid not found</value>
+  </data>
+  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
+    <value>Bulk Shipping creation completed successfully</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Error occurred during bulk Shipping creation</value>
+  </data>
+  <data name="ShFunctionOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping open order header information retrieved successfully</value>
+  </data>
+  <data name="ShFunctionOpenOrderHeaderRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving shipping open order header information</value>
+  </data>
+  <data name="ShFunctionOpenOrderLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping open order line information retrieved successfully</value>
+  </data>
+  <data name="ShFunctionOpenOrderLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving shipping open order line information</value>
+  </data>
+  <data name="ShLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Line information retrieved successfully</value>
+  </data>
+  <data name="ShLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Shipping Line information</value>
+  </data>
+  <data name="ShLineNotFound" xml:space="preserve">
+    <value>Shipping Line not found</value>
+  </data>
+  <data name="ShLineCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Line created successfully</value>
+  </data>
+  <data name="ShLineCreationError" xml:space="preserve">
+    <value>Error occurred while creating Shipping Line</value>
+  </data>
+  <data name="ShLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Line updated successfully</value>
+  </data>
+  <data name="ShLineUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Shipping Line</value>
+  </data>
+  <data name="ShLineDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Line deleted successfully</value>
+  </data>
+  <data name="ShLineDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Shipping Line</value>
+  </data>
+  <data name="ShRouteRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Route information retrieved successfully</value>
+  </data>
+  <data name="ShRouteErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Shipping Route</value>
+  </data>
+  <data name="ShRouteNotFound" xml:space="preserve">
+    <value>Shipping Route not found</value>
+  </data>
+  <data name="ShRouteCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Route created successfully</value>
+  </data>
+  <data name="ShRouteUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Route updated successfully</value>
+  </data>
+  <data name="ShRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Route deleted successfully</value>
+  </data>
+  <data name="ShImportLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Import Line information retrieved successfully</value>
+  </data>
+  <data name="ShImportLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Shipping Import Line</value>
+  </data>
+  <data name="ShImportLineNotFound" xml:space="preserve">
+    <value>Shipping Import Line not found</value>
+  </data>
+  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Import Line created successfully</value>
+  </data>
+  <data name="ShImportLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Import Line updated successfully</value>
+  </data>
+  <data name="ShImportLineDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Import Line deleted successfully</value>
+  </data>
+  <data name="ShLineSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Line Serial information retrieved successfully</value>
+  </data>
+  <data name="ShLineSerialErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Shipping Line Serial</value>
+  </data>
+  <data name="ShLineSerialNotFound" xml:space="preserve">
+    <value>Shipping Line Serial not found</value>
+  </data>
+  <data name="ShLineSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Line Serial created successfully</value>
+  </data>
+  <data name="ShLineSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Line Serial updated successfully</value>
+  </data>
+  <data name="ShLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Line Serial deleted successfully</value>
+  </data>
+  <data name="ShTerminalLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Shipping Terminal Line information retrieved successfully</value>
+  </data>
+  <data name="ShTerminalLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Shipping Terminal Line</value>
+  </data>
+  <data name="ShTerminalLineNotFound" xml:space="preserve">
+    <value>Shipping Terminal Line not found</value>
+  </data>
+  <data name="ShTerminalLineCreatedSuccessfully" xml:space="preserve">
+    <value>Shipping Terminal Line created successfully</value>
+  </data>
+  <data name="ShTerminalLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Shipping Terminal Line updated successfully</value>
+  </data>
+  <data name="ShTerminalLineDeletedSuccessfully" xml:space="preserve">
+    <value>Shipping Terminal Line deleted successfully</value>
   </data>
 </root>

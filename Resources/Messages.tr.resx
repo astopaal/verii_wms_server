@@ -400,6 +400,30 @@
   <data name="GrImportLNotFound" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı bulunamadı</value>
   </data>
+  <data name="GrImportLRetrievedSuccessfully" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı bilgisi başarıyla getirildi</value>
+  </data>
+  <data name="GrImportLRetrievalError" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="GrImportLCreatedSuccessfully" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı başarıyla oluşturuldu</value>
+  </data>
+  <data name="GrImportLCreationError" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı oluşturulurken hata oluştu</value>
+  </data>
+  <data name="GrImportLUpdatedSuccessfully" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı başarıyla güncellendi</value>
+  </data>
+  <data name="GrImportLUpdateError" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı güncellenirken hata oluştu</value>
+  </data>
+  <data name="GrImportLDeletedSuccessfully" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı başarıyla silindi</value>
+  </data>
+  <data name="GrImportLDeletionError" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı silinirken hata oluştu</value>
+  </data>
   <data name="GrImportSerialLineCreatedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Seri Satırı başarıyla oluşturuldu</value>
   </data>
@@ -478,6 +502,219 @@
   </data>
   <data name="RecordDeletedSuccessfully" xml:space="preserve">
     <value>Kayıt başarıyla silindi</value>
+  </data>
+  <data name="NotificationCreatedSuccessfully" xml:space="preserve">
+    <value>Bildirim başarıyla oluşturuldu</value>
+  </data>
+  <data name="NotificationCreationError" xml:space="preserve">
+    <value>Bildirim oluşturulurken hata oluştu</value>
+  </data>
+  <data name="NotificationRecipientsRequired" xml:space="preserve">
+    <value>En az bir alıcı gereklidir</value>
+  </data>
+  <data name="NotificationBulkCreatedSuccessfully" xml:space="preserve">
+    <value>Toplu bildirimler başarıyla oluşturuldu</value>
+  </data>
+  <data name="NotificationBulkCreationError" xml:space="preserve">
+    <value>Toplu bildirim oluşturulurken hata oluştu</value>
+  </data>
+  <data name="NotificationRetrievedSuccessfully" xml:space="preserve">
+    <value>Bildirim bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="NotificationRetrievalError" xml:space="preserve">
+    <value>Bildirim bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="NotificationNotFound" xml:space="preserve">
+    <value>Bildirim bulunamadı</value>
+  </data>
+  <data name="NotificationMarkedReadSuccessfully" xml:space="preserve">
+    <value>Bildirim okundu olarak işaretlendi</value>
+  </data>
+  <data name="NotificationMarkReadError" xml:space="preserve">
+    <value>Bildirim okundu olarak işaretlenirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Başlık bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShHeaderErrorOccurred" xml:space="preserve">
+    <value>Sevkiyat Başlık işleminde hata oluştu</value>
+  </data>
+  <data name="ShHeaderNotFound" xml:space="preserve">
+    <value>Sevkiyat Başlık bulunamadı</value>
+  </data>
+  <data name="ShHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Başlık başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShHeaderCreationError" xml:space="preserve">
+    <value>Sevkiyat Başlık oluşturulurken hata oluştu</value>
+  </data>
+  <data name="ShHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Başlık başarıyla güncellendi</value>
+  </data>
+  <data name="ShHeaderUpdateError" xml:space="preserve">
+    <value>Sevkiyat Başlık güncellenirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Başlık başarıyla silindi</value>
+  </data>
+  <data name="ShHeaderDeletionError" xml:space="preserve">
+    <value>Sevkiyat Başlık silinirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Başlık başarıyla tamamlandı</value>
+  </data>
+  <data name="ShHeaderCompletionError" xml:space="preserve">
+    <value>Sevkiyat Başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış sevkiyat siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanmış sevkiyat siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış sevkiyat sipariş satırları başarıyla getirildi</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanmış sevkiyat sipariş satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Geçersiz ilişkilendirme anahtarı</value>
+  </data>
+  <data name="ShHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>LineGroupGuid bulunamadı</value>
+  </data>
+  <data name="ShHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>LineClientKey bulunamadı</value>
+  </data>
+  <data name="ShHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Satır referansı gerekli</value>
+  </data>
+  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat emri başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShHeaderGenerateError" xml:space="preserve">
+    <value>Sevkiyat emri oluşturulurken hata oluştu</value>
+  </data>
+  <data name="ShHeaderRouteGroupGuidNotFound" xml:space="preserve">
+    <value>RouteGroupGuid bulunamadı</value>
+  </data>
+  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
+    <value>Toplu Sevkiyat oluşturma başarıyla tamamlandı</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Toplu Sevkiyat oluşturma sırasında hata oluştu</value>
+  </data>
+  <data name="ShFunctionOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat açık sipariş başlık bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShFunctionOpenOrderHeaderRetrievalError" xml:space="preserve">
+    <value>Sevkiyat açık sipariş başlık bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="ShFunctionOpenOrderLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat açık sipariş satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShFunctionOpenOrderLineRetrievalError" xml:space="preserve">
+    <value>Sevkiyat açık sipariş satır bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="ShLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShLineRetrievalError" xml:space="preserve">
+    <value>Sevkiyat Satır bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="ShLineNotFound" xml:space="preserve">
+    <value>Sevkiyat Satır bulunamadı</value>
+  </data>
+  <data name="ShLineCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShLineCreationError" xml:space="preserve">
+    <value>Sevkiyat Satır oluşturulurken hata oluştu</value>
+  </data>
+  <data name="ShLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır başarıyla güncellendi</value>
+  </data>
+  <data name="ShLineUpdateError" xml:space="preserve">
+    <value>Sevkiyat Satır güncellenirken hata oluştu</value>
+  </data>
+  <data name="ShLineDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır başarıyla silindi</value>
+  </data>
+  <data name="ShLineDeletionError" xml:space="preserve">
+    <value>Sevkiyat Satır silinirken hata oluştu</value>
+  </data>
+  <data name="ShRouteRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Rota bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShRouteErrorOccurred" xml:space="preserve">
+    <value>Sevkiyat Rota işleminde hata oluştu</value>
+  </data>
+  <data name="ShRouteNotFound" xml:space="preserve">
+    <value>Sevkiyat Rota bulunamadı</value>
+  </data>
+  <data name="ShRouteCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Rota başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShRouteUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Rota başarıyla güncellendi</value>
+  </data>
+  <data name="ShRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Rota başarıyla silindi</value>
+  </data>
+  <data name="ShImportLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShImportLineErrorOccurred" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır işleminde hata oluştu</value>
+  </data>
+  <data name="ShImportLineNotFound" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır bulunamadı</value>
+  </data>
+  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShImportLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır başarıyla güncellendi</value>
+  </data>
+  <data name="ShImportLineDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat İthalat Satır başarıyla silindi</value>
+  </data>
+  <data name="ShLineSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır Seri bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShLineSerialErrorOccurred" xml:space="preserve">
+    <value>Sevkiyat Satır Seri işleminde hata oluştu</value>
+  </data>
+  <data name="ShLineSerialNotFound" xml:space="preserve">
+    <value>Sevkiyat Satır Seri bulunamadı</value>
+  </data>
+  <data name="ShLineSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır Seri başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShLineSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır Seri başarıyla güncellendi</value>
+  </data>
+  <data name="ShLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Satır Seri başarıyla silindi</value>
+  </data>
+  <data name="ShTerminalLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="ShTerminalLineErrorOccurred" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır işleminde hata oluştu</value>
+  </data>
+  <data name="ShTerminalLineNotFound" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır bulunamadı</value>
+  </data>
+  <data name="ShTerminalLineCreatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="ShTerminalLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır başarıyla güncellendi</value>
+  </data>
+  <data name="ShTerminalLineDeletedSuccessfully" xml:space="preserve">
+    <value>Sevkiyat Terminal Satır başarıyla silindi</value>
   </data>
   <data name="UpdateSuccess" xml:space="preserve">
     <value>Güncelleme başarıyla tamamlandı</value>
