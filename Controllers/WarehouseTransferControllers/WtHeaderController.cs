@@ -108,5 +108,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _wtHeaderService.GenerateWarehouseTransferOrderAsync(request);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("approval/{id}")]
+        public async Task<ActionResult<ApiResponse<WtHeaderDto>>> SetApproval(long id, [FromQuery] bool approved)
+        {
+            var result = await _wtHeaderService.SetApprovalAsync(id, approved);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

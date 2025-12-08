@@ -788,6 +788,12 @@
   <data name="WtHeaderGenerateError" xml:space="preserve">
     <value>Error occurred while generating Warehouse Transfer</value>
   </data>
+  <data name="WtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approval status updated successfully</value>
+  </data>
+  <data name="WtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating approval status</value>
+  </data>
   <data name="PtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Production Transfer Header information retrieved successfully</value>
   </data>

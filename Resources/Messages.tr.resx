@@ -133,6 +133,12 @@
   <data name="WtHeaderGenerateError" xml:space="preserve">
     <value>Depo Transferi oluşturulurken hata oluştu</value>
   </data>
+  <data name="WtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Onay durumu başarıyla güncellendi</value>
+  </data>
+  <data name="WtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Onay durumu güncellenirken hata oluştu</value>
+  </data>
   <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
     <value>Proje bilgileri başarıyla getirildi</value>
   </data>

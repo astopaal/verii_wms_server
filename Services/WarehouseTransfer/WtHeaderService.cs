@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System.Security.Claims;
 using WMS_WEBAPI.DTOs;
 using Microsoft.AspNetCore.Http;
 using WMS_WEBAPI.Interfaces;
@@ -419,6 +420,48 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<WtHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.WtHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("WtHeaderNotFound");
+                    return ApiResponse<WtHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("WtHeaderApprovalUpdateError");
+                    return ApiResponse<WtHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.WtHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<WtHeaderDto>(entity);
+                return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+        
         public async Task<ApiResponse<WtHeaderDto>> GenerateWarehouseTransferOrderAsync(GenerateWarehouseTransferOrderRequestDto request)
         {
             try

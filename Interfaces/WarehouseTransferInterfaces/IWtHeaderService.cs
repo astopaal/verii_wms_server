@@ -22,5 +22,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WtAssignedTransferOrderLinesDto>> GetAssignedTransferOrderLinesAsync(long headerId);
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetCompletedAwaitingErpApprovalAsync();
         Task<ApiResponse<WtHeaderDto>> GenerateWarehouseTransferOrderAsync(GenerateWarehouseTransferOrderRequestDto request);
+        Task<ApiResponse<WtHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }
