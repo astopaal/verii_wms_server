@@ -2,17 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WMS_WEBAPI.DTOs
 {
-    public class ShTerminalLineDto
+    public class ShTerminalLineDto : BaseEntityDto
     {
-        public long Id { get; set; }
         public long HeaderId { get; set; }
         public long TerminalUserId { get; set; }
-        public long? CreatedBy { get; set; }
-        public long? UpdatedBy { get; set; }
-        public long? DeletedBy { get; set; }
-        public string? CreatedByFullUser { get; set; }
-        public string? UpdatedByFullUser { get; set; }
-        public string? DeletedByFullUser { get; set; }
     }
 
     public class CreateShTerminalLineDto

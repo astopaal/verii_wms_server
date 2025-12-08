@@ -9,9 +9,9 @@ namespace WMS_WEBAPI.Mappings
         public ShImportLineProfile()
         {
             CreateMap<ShImportLine, ShImportLineDto>()
+                .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
-                .ForMember(dest => dest.ProductDescription, opt => opt.MapFrom(src => src.Description1))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
