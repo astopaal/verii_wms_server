@@ -127,19 +127,25 @@ namespace WMS_WEBAPI.Services
 
         
 
-        public async Task<ApiResponse<IEnumerable<T>>> PopulateStockNamesAsync<T>(IEnumerable<T> dtos) where T : BaseImportLineEntityDto
+        public async Task<ApiResponse<IEnumerable<T>>> PopulateStockNamesAsync<T>(IEnumerable<T> dtos)
         {
             try
             {
+                
+                var codeProp = typeof(T).GetProperty("StockCode");
+                var nameProp = typeof(T).GetProperty("StockName");
+                
                 var list = (dtos ?? Array.Empty<T>()).ToList();
-                var neededCodes = list
-                    .Select(d => d.StockCode)
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Select(s => s!.Trim())
-                    .Distinct()
-                    .ToList();
+                var codes = codeProp == null
+                    ? new List<string>()
+                    : list
+                        .Select(d => codeProp.GetValue(d) as string)
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Select(s => s!.Trim())
+                        .Distinct()
+                        .ToList();
                     
-                var stokParam = neededCodes.Count == 0 ? null : string.Join(",", neededCodes);
+                var stokParam = codes.Count == 0 ? null : string.Join(",", codes);
                 var subeFromContext = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string;
                 var subeCsv = string.IsNullOrWhiteSpace(subeFromContext)
                     ? null
@@ -156,12 +162,16 @@ namespace WMS_WEBAPI.Services
                     .GroupBy(s => s.StokKodu!.Trim(), StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(g => g.Key, g => g.First().StokAdi ?? string.Empty, StringComparer.OrdinalIgnoreCase);
 
-                foreach (var dto in list)
+                if (codeProp != null && nameProp != null)
                 {
-                    var code = dto.StockCode?.Trim();
-                    if (!string.IsNullOrEmpty(code) && stockNameByCode.TryGetValue(code, out var name))
+                    foreach (var dto in list)
                     {
-                        dto.StockName = name;
+                        var code = codeProp.GetValue(dto) as string;
+                        var trimmed = code?.Trim();
+                        if (!string.IsNullOrEmpty(trimmed) && stockNameByCode.TryGetValue(trimmed, out var nm))
+                        {
+                            nameProp.SetValue(dto, nm);
+                        }
                     }
                 }
 

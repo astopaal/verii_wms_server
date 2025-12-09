@@ -87,6 +87,14 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.SktVarmi, opt => opt.MapFrom(src => src.SKT_VARMI))
                 .ForMember(dest => dest.IsemriNo, opt => opt.MapFrom(src => src.ISEMRI_NO));
 
+            CreateMap<RII_FN_STOKYAPKOD, StokYapKodDto>()
+                .ForMember(dest => dest.IsletmeKodu, opt => opt.MapFrom(src => src.ISLETME_KODU))
+                .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
+                .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
+                .ForMember(dest => dest.RevizyapKod, opt => opt.MapFrom(src => src.REVIZYAPKOD))
+                .ForMember(dest => dest.YplndrStokKod, opt => opt.MapFrom(src => src.YPLNDRSTOKKOD))
+                .ForMember(dest => dest.SubeKodu, opt => opt.MapFrom(src => src.SUBE_KODU));
+
             CreateMap<RII_FN_BRANCHES, BranchDto>()
                 .ForMember(dest => dest.SubeKodu, opt => opt.MapFrom(src => src.SUBE_KODU))
                 .ForMember(dest => dest.Unvan, opt => opt.MapFrom(src => src.UNVAN));

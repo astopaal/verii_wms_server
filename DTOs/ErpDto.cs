@@ -171,4 +171,15 @@ namespace WMS_WEBAPI.DTOs
         public short SubeKodu { get; set; }
         public string? Unvan { get; set; }
     }
+
+    // Stok Yap Kod DTO
+    public class StokYapKodDto
+    {
+        public short IsletmeKodu { get; set; }
+        public string YapKod { get; set; } = string.Empty;
+        public string YapAcik { get; set; } = string.Empty;
+        public string? RevizyapKod { get; set; }
+        public string? YplndrStokKod { get; set; }
+        public short SubeKodu { get; set; }
+    }
 }
