@@ -12,12 +12,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public SrtLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public SrtLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<SrtLineDto>>> GetAllAsync()
@@ -26,7 +28,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SrtLines.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SrtLineDto>>(entities);
-                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -63,6 +70,12 @@ namespace WMS_WEBAPI.Services
                 var totalCount = await query.CountAsync();
                 var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
                 var dtos = _mapper.Map<List<SrtLineDto>>(items);
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
                 var result = new PagedResponse<SrtLineDto>(dtos, totalCount, pageNumber, pageSize);
                 return ApiResponse<PagedResponse<SrtLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
@@ -83,7 +96,13 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<SrtLineDto>.ErrorResult(nf, nf, 404);
                 }
                 var dto = _mapper.Map<SrtLineDto>(entity);
-                return ApiResponse<SrtLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<SrtLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                var finalDto = enriched.Data?.FirstOrDefault() ?? dto;
+                return ApiResponse<SrtLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -97,7 +116,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SrtLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SrtLineDto>>(entities);
-                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -111,7 +135,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SrtLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SrtLineDto>>(entities);
-                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -125,7 +154,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SrtLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SrtLineDto>>(entities);
-                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SrtLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {

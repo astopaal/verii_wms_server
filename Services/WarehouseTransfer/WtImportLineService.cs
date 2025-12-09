@@ -59,12 +59,12 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var dto = _mapper.Map<WtImportLineDto>(entity);
-                var enrichedSingle = await _erpService.PopulateStockNamesAsync(new[] { dto });
-                if (!enrichedSingle.Success)
+                var enrichedStock = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enrichedStock.Success)
                 {
-                    return ApiResponse<WtImportLineDto>.ErrorResult(enrichedSingle.Message, enrichedSingle.ExceptionMessage, enrichedSingle.StatusCode);
+                    return ApiResponse<WtImportLineDto>.ErrorResult(enrichedStock.Message, enrichedStock.ExceptionMessage, enrichedStock.StatusCode);
                 }
-                var finalDto = enrichedSingle.Data?.FirstOrDefault() ?? dto;
+                var finalDto = enrichedStock.Data?.FirstOrDefault() ?? dto;
                 return ApiResponse<WtImportLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)

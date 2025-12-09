@@ -134,8 +134,11 @@ namespace WMS_WEBAPI.Services
                 
                 var codeProp = typeof(T).GetProperty("StockCode");
                 var nameProp = typeof(T).GetProperty("StockName");
-                
+                var yapCodeProp = typeof(T).GetProperty("YapKod");
+                var yapNameProp = typeof(T).GetProperty("YapAcik");
+
                 var list = (dtos ?? Array.Empty<T>()).ToList();
+                
                 var codes = codeProp == null
                     ? new List<string>()
                     : list
@@ -144,8 +147,19 @@ namespace WMS_WEBAPI.Services
                         .Select(s => s!.Trim())
                         .Distinct()
                         .ToList();
-                    
+
                 var stokParam = codes.Count == 0 ? null : string.Join(",", codes);
+
+                var yapKodlar = yapCodeProp == null
+                    ? new List<string>()
+                    : list
+                        .Select(d => yapCodeProp.GetValue(d) as string)
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Select(s => s!.Trim())
+                        .Distinct()
+                        .ToList();
+                var yapParam = yapKodlar.Count == 0 ? null : string.Join(",", yapKodlar);
+
                 var subeFromContext = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string;
                 var subeCsv = string.IsNullOrWhiteSpace(subeFromContext)
                     ? null
@@ -162,15 +176,38 @@ namespace WMS_WEBAPI.Services
                     .GroupBy(s => s.StokKodu!.Trim(), StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(g => g.Key, g => g.First().StokAdi ?? string.Empty, StringComparer.OrdinalIgnoreCase);
 
-                if (codeProp != null && nameProp != null)
+                var resultYapkod = await _erpContext.StokYapKod
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_STOKYAPKOD({0}, {1})", yapParam, subeCsv)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var dataYapKod = _mapper.Map<List<StokYapKodDto>>(resultYapkod);
+                
+                var yapNameByCode = dataYapKod
+                    .Where(c => !string.IsNullOrWhiteSpace(c.YapKod))
+                    .GroupBy(c => c.YapKod.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => g.First().YapAcik ?? string.Empty, StringComparer.OrdinalIgnoreCase);
+
+                foreach (var dto in list)
                 {
-                    foreach (var dto in list)
+                    //Stok koduna göre adını doldur
+                    if (codeProp != null && nameProp != null)
                     {
                         var code = codeProp.GetValue(dto) as string;
                         var trimmed = code?.Trim();
                         if (!string.IsNullOrEmpty(trimmed) && stockNameByCode.TryGetValue(trimmed, out var nm))
                         {
                             nameProp.SetValue(dto, nm);
+                        }
+                    }
+                    //Yapılandırma Koduna göre adını doldur
+                    if (yapCodeProp != null && yapNameProp != null)
+                    {
+                        var yapCode = yapCodeProp.GetValue(dto) as string;
+                        var trimmedYap = yapCode?.Trim();
+                        if (!string.IsNullOrEmpty(trimmedYap) && yapNameByCode.TryGetValue(trimmedYap, out var yapNm))
+                        {
+                            yapNameProp.SetValue(dto, yapNm);
                         }
                     }
                 }
@@ -218,10 +255,11 @@ namespace WMS_WEBAPI.Services
                     .GroupBy(c => c.CariKod.Trim(), StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(g => g.Key, g => g.First().CariIsim ?? string.Empty, StringComparer.OrdinalIgnoreCase);
 
-                if (codeProp != null && nameProp != null)
-                {
-                    foreach (var dto in list)
-                    {
+ 
+                foreach (var dto in list)
+                {      
+                     if (codeProp != null && nameProp != null)
+                      {
                         var code = codeProp.GetValue(dto) as string;
                         var trimmed = code?.Trim();
                         if (!string.IsNullOrEmpty(trimmed) && nameByCode.TryGetValue(trimmed, out var nm))

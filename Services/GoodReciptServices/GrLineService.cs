@@ -13,15 +13,18 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
         public GrLineService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<PagedResponse<GrLineDto>>> GetPagedAsync(
@@ -61,6 +64,15 @@ namespace WMS_WEBAPI.Services
                     .ToListAsync();
 
                 var dtos = _mapper.Map<List<GrLineDto>>(items);
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<GrLineDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<GrLineDto>(dtos, totalCount, pageNumber, pageSize);
 
@@ -84,8 +96,18 @@ namespace WMS_WEBAPI.Services
                 var lines = await _unitOfWork.GrLines.GetAllAsync();
                 var lineDtos = _mapper.Map<IEnumerable<GrLineDto>>(lines);
 
+                var enriched = await _erpService.PopulateStockNamesAsync(lineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+
                 return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(
-                    lineDtos,
+                    enriched.Data ?? lineDtos,
                     _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
                 );
             }
@@ -115,8 +137,20 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var lineDto = _mapper.Map<GrLineDto>(line);
+
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { lineDto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<GrLineDto>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+                var finalDto = enriched.Data?.FirstOrDefault() ?? lineDto;
+
                 return ApiResponse<GrLineDto>.SuccessResult(
-                    lineDto,
+                    finalDto,
                     _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
                 );
             }
@@ -137,8 +171,18 @@ namespace WMS_WEBAPI.Services
                 var lines = await _unitOfWork.GrLines.FindAsync(x => x.HeaderId == headerId);
                 var lineDtos = _mapper.Map<IEnumerable<GrLineDto>>(lines);
 
+                var enriched = await _erpService.PopulateStockNamesAsync(lineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+
                 return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(
-                    lineDtos,
+                    enriched.Data ?? lineDtos,
                     _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
                 );
             }

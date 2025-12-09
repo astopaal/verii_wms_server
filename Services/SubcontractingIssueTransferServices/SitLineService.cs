@@ -12,12 +12,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public SitLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public SitLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<PagedResponse<SitLineDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
@@ -52,6 +54,12 @@ namespace WMS_WEBAPI.Services
                 var totalCount = await query.CountAsync();
                 var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
                 var dtos = _mapper.Map<List<SitLineDto>>(items);
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
                 var result = new PagedResponse<SitLineDto>(dtos, totalCount, pageNumber, pageSize);
                 return ApiResponse<PagedResponse<SitLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
@@ -67,7 +75,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitLines.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -85,7 +98,13 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<SitLineDto>.ErrorResult(_localizationService.GetLocalizedString("SitLineNotFound"), _localizationService.GetLocalizedString("SitLineNotFound"), 404);
                 }
                 var dto = _mapper.Map<SitLineDto>(entity);
-                return ApiResponse<SitLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<SitLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                var finalDto = enriched.Data?.FirstOrDefault() ?? dto;
+                return ApiResponse<SitLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -99,7 +118,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -113,7 +137,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -127,7 +156,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.SitLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {

@@ -12,12 +12,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public WiLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public WiLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<WiLineDto>>> GetAllAsync()
@@ -26,7 +28,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.WiLines.GetAllAsync();
                 var dtos = _mapper.Map<IEnumerable<WiLineDto>>(entities);
-                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -54,6 +61,12 @@ namespace WMS_WEBAPI.Services
                 var totalCount = await query.CountAsync();
                 var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
                 var dtos = _mapper.Map<List<WiLineDto>>(items);
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
                 var result = new PagedResponse<WiLineDto>(dtos, totalCount, pageNumber, pageSize);
                 return ApiResponse<PagedResponse<WiLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
@@ -70,7 +83,13 @@ namespace WMS_WEBAPI.Services
                 var entity = await _unitOfWork.WiLines.GetByIdAsync(id);
                 if (entity == null) return ApiResponse<WiLineDto>.ErrorResult(_localizationService.GetLocalizedString("WiLineNotFound"), _localizationService.GetLocalizedString("WiLineNotFound"), 404);
                 var dto = _mapper.Map<WiLineDto>(entity);
-                return ApiResponse<WiLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<WiLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                var finalDto = enriched.Data?.FirstOrDefault() ?? dto;
+                return ApiResponse<WiLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -84,7 +103,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.WiLines.FindAsync(x => x.HeaderId == headerId);
                 var dtos = _mapper.Map<IEnumerable<WiLineDto>>(entities);
-                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -98,7 +122,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.WiLines.FindAsync(x => x.StockCode == stockCode);
                 var dtos = _mapper.Map<IEnumerable<WiLineDto>>(entities);
-                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
@@ -112,7 +141,12 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.WiLines.FindAsync(x => x.ErpOrderNo == erpOrderNo);
                 var dtos = _mapper.Map<IEnumerable<WiLineDto>>(entities);
-                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
