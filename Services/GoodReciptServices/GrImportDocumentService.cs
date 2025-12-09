@@ -61,16 +61,11 @@ namespace WMS_WEBAPI.Services
 
                 var result = new PagedResponse<GrImportDocumentDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<GrImportDocumentDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<GrImportDocumentDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<GrImportDocumentDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentGetAllError"),
-                    ex.Message,
-                    500);
+                return ApiResponse<PagedResponse<GrImportDocumentDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentGetAllError"), ex.Message, 500);
             }
         }
 
@@ -81,18 +76,11 @@ namespace WMS_WEBAPI.Services
                 var documents = await _unitOfWork.GrImportDocuments.GetAllAsync();
                 var documentDtos = _mapper.Map<IEnumerable<GrImportDocumentDto>>(documents);
 
-                return ApiResponse<IEnumerable<GrImportDocumentDto>>.SuccessResult(
-                    documentDtos,
-                    _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportDocumentDto>>.SuccessResult(documentDtos, _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportDocumentDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentGetAllError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportDocumentDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentGetAllError"), ex.Message, 500);
             }
         }
 
@@ -103,27 +91,15 @@ namespace WMS_WEBAPI.Services
                 var document = await _unitOfWork.GrImportDocuments.GetByIdAsync(id);
                 if (document == null)
                 {
-                    return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrImportDocumentNotFound"),
-                        "Record not found",
-                        404,
-                        "GrImportDocument not found"
-                    );
+                    return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentNotFound"), "Record not found", 404, "GrImportDocument not found");
                 }
 
                 var documentDto = _mapper.Map<GrImportDocumentDto>(document);
-                return ApiResponse<GrImportDocumentDto>.SuccessResult(
-                    documentDto,
-                    _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully")
-                );
+                return ApiResponse<GrImportDocumentDto>.SuccessResult(documentDto, _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentGetByIdError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentGetByIdError"), ex.Message, 500);
             }
         }
 
@@ -134,18 +110,11 @@ namespace WMS_WEBAPI.Services
                 var documents = await _unitOfWork.GrImportDocuments.FindAsync(d => d.HeaderId == headerId);
                 var documentDtos = _mapper.Map<IEnumerable<GrImportDocumentDto>>(documents);
 
-                return ApiResponse<IEnumerable<GrImportDocumentDto>>.SuccessResult(
-                    documentDtos,
-                    _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportDocumentDto>>.SuccessResult(documentDtos, _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportDocumentDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentGetByHeaderIdError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportDocumentDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentGetByHeaderIdError"), ex.Message, 500);
             }
         }
 
@@ -157,12 +126,7 @@ namespace WMS_WEBAPI.Services
                 var headerExists = await _unitOfWork.GrHeaders.ExistsAsync((int)createDto.HeaderId);
                 if (!headerExists)
                 {
-                    return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrImportDocumentInvalidHeaderId"),
-                        "Invalid header ID",
-                        404,
-                        "Header not found"
-                    );
+                    return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentInvalidHeaderId"), "Invalid header ID", 404, "Header not found");
                 }
 
                 var document = _mapper.Map<GrImportDocument>(createDto);
@@ -170,18 +134,11 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var documentDto = _mapper.Map<GrImportDocumentDto>(createdDocument);
-                return ApiResponse<GrImportDocumentDto>.SuccessResult(
-                    documentDto,
-                    _localizationService.GetLocalizedString("GrImportDocumentCreatedSuccessfully")
-                );
+                return ApiResponse<GrImportDocumentDto>.SuccessResult(documentDto, _localizationService.GetLocalizedString("GrImportDocumentCreatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentCreateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentCreateError"), ex.Message, 500);
             }
         }
 
@@ -192,24 +149,14 @@ namespace WMS_WEBAPI.Services
                 var document = await _unitOfWork.GrImportDocuments.GetByIdAsync(id);
                 if (document == null)
                 {
-                    return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrImportDocumentNotFound"),
-                        "Record not found",
-                        404,
-                        "GrImportDocument not found"
-                    );
+                    return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentNotFound"), "Record not found", 404, "GrImportDocument not found");
                 }
 
                 // HeaderId'nin geçerli olup olmadığını kontrol et
                 var headerExists = await _unitOfWork.GrHeaders.ExistsAsync((int)updateDto.HeaderId);
                 if (!headerExists)
                 {
-                    return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrImportDocumentInvalidHeaderId"),
-                        "Invalid header ID",
-                        404,
-                        "Header not found"
-                    );
+                    return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentInvalidHeaderId"), "Invalid header ID", 404, "Header not found");
                 }
 
                 _mapper.Map(updateDto, document);
@@ -217,18 +164,11 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var documentDto = _mapper.Map<GrImportDocumentDto>(document);
-                return ApiResponse<GrImportDocumentDto>.SuccessResult(
-                    documentDto,
-                    _localizationService.GetLocalizedString("GrImportDocumentUpdatedSuccessfully")
-                );
+                return ApiResponse<GrImportDocumentDto>.SuccessResult(documentDto, _localizationService.GetLocalizedString("GrImportDocumentUpdatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportDocumentDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentUpdateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportDocumentDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentUpdateError"), ex.Message, 500);
             }
         }
 
@@ -239,29 +179,17 @@ namespace WMS_WEBAPI.Services
                 var document = await _unitOfWork.GrImportDocuments.GetByIdAsync(id);
                 if (document == null)
                 {
-                    return ApiResponse<bool>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrImportDocumentNotFound"),
-                        "Record not found",
-                        404,
-                        "GrImportDocument not found"
-                    );
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentNotFound"), "Record not found", 404, "GrImportDocument not found");
                 }
 
                 await _unitOfWork.GrImportDocuments.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
 
-                return ApiResponse<bool>.SuccessResult(
-                    true,
-                    _localizationService.GetLocalizedString("GrImportDocumentDeletedSuccessfully")
-                );
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrImportDocumentDeletedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentDeleteError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentDeleteError"), ex.Message, 500);
             }
         }
 
@@ -270,18 +198,11 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var exists = await _unitOfWork.GrImportDocuments.ExistsAsync((int)id);
-                return ApiResponse<bool>.SuccessResult(
-                    exists,
-                    _localizationService.GetLocalizedString("GrImportDocumentExistsCheckCompleted")
-                );
+                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("GrImportDocumentExistsCheckCompleted"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportDocumentExistsCheckError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentExistsCheckError"), ex.Message, 500);
             }
         }
     }

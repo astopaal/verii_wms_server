@@ -83,10 +83,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderRetrievalError"),
-                    ex.Message,
-                    500);
+                return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -109,11 +106,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -182,11 +175,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrHeaderDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderUpdateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderUpdateError"), ex.Message, 500);
             }
         }
 
@@ -209,11 +198,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderSoftDeletionError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderSoftDeletionError"), ex.Message, 500);
             }
         }
 
@@ -236,11 +221,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -263,11 +244,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -290,11 +267,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrHeaderRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
             }
         }
 

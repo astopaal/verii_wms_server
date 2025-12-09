@@ -51,11 +51,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 

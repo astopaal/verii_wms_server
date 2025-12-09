@@ -66,16 +66,11 @@ namespace WMS_WEBAPI.Services
 
                 var result = new PagedResponse<GrImportLDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<GrImportLDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<GrImportLDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500);
+                return ApiResponse<PagedResponse<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -92,18 +87,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    enriched.Data ?? grImportLDtos, 
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? grImportLDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -116,11 +104,7 @@ namespace WMS_WEBAPI.Services
                 if (grImportL == null)
                 {
                     var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
-                    return ApiResponse<GrImportLDto?>.ErrorResult(
-                        nf,
-                        nf,
-                        404
-                    );
+                    return ApiResponse<GrImportLDto?>.ErrorResult(nf, nf, 404);
                 }
 
                 var grImportLDto = _mapper.Map<GrImportLDto>(grImportL);
@@ -132,18 +116,11 @@ namespace WMS_WEBAPI.Services
                 }
                 var finalDto = enriched.Data?.FirstOrDefault() ?? grImportLDto;
                 
-                return ApiResponse<GrImportLDto?>.SuccessResult(
-                    finalDto,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<GrImportLDto?>.SuccessResult(finalDto, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportLDto?>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportLDto?>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -160,18 +137,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    enriched.Data ?? grImportLDtos,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? grImportLDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -190,12 +160,8 @@ namespace WMS_WEBAPI.Services
                 var enrichedResp = await _erpService.PopulateStockNamesAsync(dtos);
                 if (!enrichedResp.Success)
                 {
-                    return ApiResponse<IEnumerable<GrImportLWithRoutesDto>>.ErrorResult(
-                        enrichedResp.Message,
-                        enrichedResp.ExceptionMessage,
-                        enrichedResp.StatusCode
-                    );
-                }
+                return ApiResponse<IEnumerable<GrImportLWithRoutesDto>>.ErrorResult(enrichedResp.Message, enrichedResp.ExceptionMessage, enrichedResp.StatusCode);
+            }
                 
                 dtos = enrichedResp.Data ?? dtos;
 
@@ -220,18 +186,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    enriched.Data ?? grImportLDtos,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? grImportLDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -248,18 +207,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
 
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    enriched.Data ?? grImportLDtos,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? grImportLDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
 
@@ -275,18 +227,11 @@ namespace WMS_WEBAPI.Services
                 
                 var grImportLDto = _mapper.Map<GrImportLDto>(grImportL);
                 
-                return ApiResponse<GrImportLDto>.SuccessResult(
-                    grImportLDto,
-                    _localizationService.GetLocalizedString("GrImportLCreatedSuccessfully")
-                );
+                return ApiResponse<GrImportLDto>.SuccessResult(grImportLDto, _localizationService.GetLocalizedString("GrImportLCreatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportLDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLCreationError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportLDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportLCreationError"), ex.Message, 500);
             }
         }
 
@@ -299,11 +244,7 @@ namespace WMS_WEBAPI.Services
                 if (existingGrImportL == null)
                 {
                     var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
-                    return ApiResponse<GrImportLDto>.ErrorResult(
-                        nf,
-                        nf,
-                        404
-                    );
+                    return ApiResponse<GrImportLDto>.ErrorResult(nf, nf, 404);
                 }
 
                 _mapper.Map(updateDto, existingGrImportL);
@@ -314,18 +255,11 @@ namespace WMS_WEBAPI.Services
                 
                 var grImportLDto = _mapper.Map<GrImportLDto>(existingGrImportL);
                 
-                return ApiResponse<GrImportLDto>.SuccessResult(
-                    grImportLDto,
-                    _localizationService.GetLocalizedString("GrImportLUpdatedSuccessfully")
-                );
+                return ApiResponse<GrImportLDto>.SuccessResult(grImportLDto, _localizationService.GetLocalizedString("GrImportLUpdatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrImportLDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLUpdateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrImportLDto>.ErrorResult(_localizationService.GetLocalizedString("GrImportLUpdateError"), ex.Message, 500);
             }
         }
 
@@ -337,28 +271,17 @@ namespace WMS_WEBAPI.Services
                 if (!exists)
                 {
                     var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
-                    return ApiResponse<bool>.ErrorResult(
-                        nf,
-                        nf,
-                        404
-                    );
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
                 }
 
                 await _unitOfWork.GrImportLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 
-                return ApiResponse<bool>.SuccessResult(
-                    true,
-                    _localizationService.GetLocalizedString("GrImportLDeletedSuccessfully")
-                );
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrImportLDeletedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLDeletionError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportLDeletionError"), ex.Message, 500);
             }
         }
 
@@ -375,18 +298,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
 
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(
-                    enriched.Data ?? importLineDtos,
-                    _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? importLineDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrImportLRetrievalError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
             }
         }
         

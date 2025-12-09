@@ -67,25 +67,17 @@ namespace WMS_WEBAPI.Services
                 var enriched = await _erpService.PopulateStockNamesAsync(dtos);
                 if (!enriched.Success)
                 {
-                    return ApiResponse<PagedResponse<GrLineDto>>.ErrorResult(
-                        enriched.Message,
-                        enriched.ExceptionMessage,
-                        enriched.StatusCode);
+                    return ApiResponse<PagedResponse<GrLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<GrLineDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<GrLineDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<GrLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<GrLineDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineGetAllError"),
-                    ex.Message,
-                    500);
+                return ApiResponse<PagedResponse<GrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("GrLineGetAllError"), ex.Message, 500);
             }
         }
 
@@ -99,25 +91,14 @@ namespace WMS_WEBAPI.Services
                 var enriched = await _erpService.PopulateStockNamesAsync(lineDtos);
                 if (!enriched.Success)
                 {
-                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
-                        enriched.Message,
-                        enriched.ExceptionMessage,
-                        enriched.StatusCode
-                    );
+                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
 
-                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(
-                    enriched.Data ?? lineDtos,
-                    _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(enriched.Data ?? lineDtos, _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineGetAllError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("GrLineGetAllError"), ex.Message, 500);
             }
         }
 
@@ -128,12 +109,7 @@ namespace WMS_WEBAPI.Services
                 var line = await _unitOfWork.GrLines.GetByIdAsync(id);
                 if (line == null)
                 {
-                    return ApiResponse<GrLineDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrLineNotFound"),
-                        "Record not found",
-                        404,
-                        "GrLine not found"
-                    );
+                    return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrLineNotFound"), "Record not found", 404, "GrLine not found");
                 }
 
                 var lineDto = _mapper.Map<GrLineDto>(line);
@@ -141,26 +117,15 @@ namespace WMS_WEBAPI.Services
                 var enriched = await _erpService.PopulateStockNamesAsync(new[] { lineDto });
                 if (!enriched.Success)
                 {
-                    return ApiResponse<GrLineDto>.ErrorResult(
-                        enriched.Message,
-                        enriched.ExceptionMessage,
-                        enriched.StatusCode
-                    );
+                    return ApiResponse<GrLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 var finalDto = enriched.Data?.FirstOrDefault() ?? lineDto;
 
-                return ApiResponse<GrLineDto>.SuccessResult(
-                    finalDto,
-                    _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
-                );
+                return ApiResponse<GrLineDto>.SuccessResult(finalDto, _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrLineDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineGetByIdError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrLineGetByIdError"), ex.Message, 500);
             }
         }
 
@@ -174,25 +139,14 @@ namespace WMS_WEBAPI.Services
                 var enriched = await _erpService.PopulateStockNamesAsync(lineDtos);
                 if (!enriched.Success)
                 {
-                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
-                        enriched.Message,
-                        enriched.ExceptionMessage,
-                        enriched.StatusCode
-                    );
+                    return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
 
-                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(
-                    enriched.Data ?? lineDtos,
-                    _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(enriched.Data ?? lineDtos, _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineGetByHeaderIdError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("GrLineGetByHeaderIdError"), ex.Message, 500);
             }
         }
 
@@ -204,12 +158,7 @@ namespace WMS_WEBAPI.Services
                 var headerExists = await _unitOfWork.GrHeaders.ExistsAsync((int)createDto.HeaderId);
                 if (!headerExists)
                 {
-                    return ApiResponse<GrLineDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrHeaderNotFound"),
-                        "Header not found",
-                        400,
-                        "GrHeader not found"
-                    );
+                    return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderNotFound"), "Header not found", 400, "GrHeader not found");
                 }
 
                 var line = _mapper.Map<GrLine>(createDto);
@@ -218,18 +167,11 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var lineDto = _mapper.Map<GrLineDto>(line);
-                return ApiResponse<GrLineDto>.SuccessResult(
-                    lineDto,
-                    _localizationService.GetLocalizedString("GrLineCreatedSuccessfully")
-                );
+                return ApiResponse<GrLineDto>.SuccessResult(lineDto, _localizationService.GetLocalizedString("GrLineCreatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrLineDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineCreateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrLineCreateError"), ex.Message, 500);
             }
         }
 
@@ -240,24 +182,14 @@ namespace WMS_WEBAPI.Services
                 var existingLine = await _unitOfWork.GrLines.GetByIdAsync(id);
                 if (existingLine == null)
                 {
-                    return ApiResponse<GrLineDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrLineNotFound"),
-                        "Record not found",
-                        404,
-                        "GrLine not found"
-                    );
+                    return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrLineNotFound"), "Record not found", 404, "GrLine not found");
                 }
 
                 // Header'ın var olup olmadığını kontrol et
                 var headerExists = await _unitOfWork.GrHeaders.ExistsAsync((int)updateDto.HeaderId);
                 if (!headerExists)
                 {
-                    return ApiResponse<GrLineDto>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrHeaderNotFound"),
-                        "Header not found",
-                        400,
-                        "GrHeader not found"
-                    );
+                    return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderNotFound"), "Header not found", 400, "GrHeader not found");
                 }
 
                 _mapper.Map(updateDto, existingLine);
@@ -266,18 +198,11 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var lineDto = _mapper.Map<GrLineDto>(existingLine);
-                return ApiResponse<GrLineDto>.SuccessResult(
-                    lineDto,
-                    _localizationService.GetLocalizedString("GrLineUpdatedSuccessfully")
-                );
+                return ApiResponse<GrLineDto>.SuccessResult(lineDto, _localizationService.GetLocalizedString("GrLineUpdatedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrLineDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineUpdateError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<GrLineDto>.ErrorResult(_localizationService.GetLocalizedString("GrLineUpdateError"), ex.Message, 500);
             }
         }
 
@@ -288,29 +213,17 @@ namespace WMS_WEBAPI.Services
                 var line = await _unitOfWork.GrLines.GetByIdAsync(id);
                 if (line == null)
                 {
-                    return ApiResponse<bool>.ErrorResult(
-                        _localizationService.GetLocalizedString("GrLineNotFound"),
-                        "Record not found",
-                        404,
-                        "GrLine not found"
-                    );
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineNotFound"), "Record not found", 404, "GrLine not found");
                 }
 
                 await _unitOfWork.GrLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
 
-                return ApiResponse<bool>.SuccessResult(
-                    true,
-                    _localizationService.GetLocalizedString("GrLineDeletedSuccessfully")
-                );
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrLineDeletedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineDeleteError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineDeleteError"), ex.Message, 500);
             }
         }
 
@@ -319,18 +232,11 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var exists = await _unitOfWork.GrLines.ExistsAsync((int)id);
-                return ApiResponse<bool>.SuccessResult(
-                    exists,
-                    _localizationService.GetLocalizedString("GrLineExistsCheckCompleted")
-                );
+                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("GrLineExistsCheckCompleted"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineExistsError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineExistsError"), ex.Message, 500);
             }
         }
 
@@ -342,18 +248,11 @@ namespace WMS_WEBAPI.Services
                 var lines = await _unitOfWork.GrLines.FindAsync(x => x.HeaderId == headerId);
                 var lineDtos = _mapper.Map<IEnumerable<GrLineDto>>(lines);
 
-                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(
-                    lineDtos,
-                    _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.SuccessResult(lineDtos, _localizationService.GetLocalizedString("GrLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("GrLineGetByHeaderIdError"),
-                    ex.Message,
-                    500
-                );
+                return ApiResponse<IEnumerable<GrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("GrLineGetByHeaderIdError"), ex.Message, 500);
             }
         }
         

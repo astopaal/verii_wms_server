@@ -74,16 +74,11 @@ namespace WMS_WEBAPI.Services
 
                 var result = new PagedResponse<WtLineDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<WtLineDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<WtLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<WtLineDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("WtLineErrorOccurred"),
-                    ex.Message ?? string.Empty,
-                    500);
+                return ApiResponse<PagedResponse<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -91,8 +86,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
 
                 var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
@@ -143,8 +137,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
 
                 var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
@@ -166,8 +159,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
 
                 var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
@@ -190,8 +182,7 @@ namespace WMS_WEBAPI.Services
             try
             {
                 // WtLine model doesn't have SerialNo property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
 
                 var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
@@ -214,8 +205,7 @@ namespace WMS_WEBAPI.Services
             try
             {
                 // WtLine model doesn't have Warehouse property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
 
                 var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
@@ -261,7 +251,6 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var entity = _mapper.Map<WtLine>(createDto);
-                entity.CreatedDate = DateTime.UtcNow;
                 entity.IsDeleted = false;
 
                 await _unitOfWork.WtLines.AddAsync(entity);
@@ -326,8 +315,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
+                var entities = await _unitOfWork.WtLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);   
                 return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
             }

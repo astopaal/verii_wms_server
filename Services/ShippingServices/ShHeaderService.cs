@@ -243,18 +243,11 @@ namespace WMS_WEBAPI.Services
                     Routes = _mapper.Map<IEnumerable<ShRouteDto>>(routes)
                 };
 
-                return ApiResponse<ShAssignedOrderLinesDto>.SuccessResult(
-                    dto,
-                    _localizationService.GetLocalizedString("ShHeaderAssignedOrderLinesRetrievedSuccessfully")
-                );
+                return ApiResponse<ShAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("ShHeaderAssignedOrderLinesRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<ShAssignedOrderLinesDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("ShHeaderAssignedOrderLinesRetrievalError"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<ShAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -322,11 +315,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<ShHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
@@ -334,21 +323,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<ShHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<ShHeaderDto>.ErrorResult(
-                                        _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new ShLineSerial
@@ -464,11 +445,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
@@ -476,21 +453,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new ShLineSerial
@@ -527,11 +496,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
@@ -539,21 +504,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var importLine = new ShImportLine
@@ -607,11 +564,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.LineClientKey))
@@ -619,21 +572,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
                                 long importLineId = 0;
@@ -643,11 +588,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineGuidToId.TryGetValue(ig, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
@@ -655,11 +596,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else
@@ -670,11 +607,7 @@ namespace WMS_WEBAPI.Services
                                         if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
@@ -682,21 +615,13 @@ namespace WMS_WEBAPI.Services
                                         if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
 

@@ -243,11 +243,7 @@ namespace WMS_WEBAPI.Services
                 var header = await _unitOfWork.WtHeaders.GetByIdAsync(headerId);
                 if (header == null || header.IsDeleted)
                 {
-                    return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.ErrorResult(
-                        _localizationService.GetLocalizedString("WtHeaderNotFound"),
-                        _localizationService.GetLocalizedString("WtHeaderNotFound"),
-                        404
-                    );
+                    return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderNotFound"), _localizationService.GetLocalizedString("WtHeaderNotFound"), 404);
                 }
 
                 var importLines = await _unitOfWork.WtImportLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
@@ -280,18 +276,11 @@ namespace WMS_WEBAPI.Services
                     items[i].ImportLine = enrichedList[i];
                 }
 
-                return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.SuccessResult(
-                    items,
-                    _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully")
-                );
+                return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.SuccessResult(items, _localizationService.GetLocalizedString("WtImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("WtImportLineErrorOccurred"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<IEnumerable<WtImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -353,14 +342,10 @@ namespace WMS_WEBAPI.Services
                 {
                     // 1) Header kaydı aktiflik kontrolu
                     var header = await _unitOfWork.WtHeaders.GetByIdAsync(request.HeaderId);
-                    if (header == null || header.IsDeleted)
-                    {
-                        return ApiResponse<WtImportLineDto>.ErrorResult(
-                            _localizationService.GetLocalizedString("WtHeaderNotFound"),
-                            _localizationService.GetLocalizedString("WtHeaderNotFound"),
-                            404
-                        );
-                    }
+                if (header == null || header.IsDeleted)
+                {
+                    return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderNotFound"), _localizationService.GetLocalizedString("WtHeaderNotFound"), 404);
+                }
 
                     // 2) line stok ve yapkod uyumluluğu kontrolu
                     var lineControl = await _unitOfWork.WtImportLines
@@ -375,11 +360,7 @@ namespace WMS_WEBAPI.Services
 
                         if (lineCounter == 0)
                         {
-                            return ApiResponse<WtImportLineDto>.ErrorResult(
-                                _localizationService.GetLocalizedString("WtImportLineStokCodeAndYapCodeNotMatch"),
-                                _localizationService.GetLocalizedString("WtImportLineStokCodeAndYapCodeNotMatch"),
-                                404
-                            );
+                            return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineStokCodeAndYapCodeNotMatch"), _localizationService.GetLocalizedString("WtImportLineStokCodeAndYapCodeNotMatch"), 404);
                         }
                     }
                   
@@ -394,11 +375,7 @@ namespace WMS_WEBAPI.Services
                         var lineSerialCounter = lineSerialControl.Count(x => x.SerialNo == request.SerialNo);
                         if (lineSerialCounter == 0)
                         {
-                            return ApiResponse<WtImportLineDto>.ErrorResult(
-                                _localizationService.GetLocalizedString("WtImportLineSerialNotMatch"),
-                                _localizationService.GetLocalizedString("WtImportLineSerialNotMatch"),
-                                404
-                            );
+                            return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineSerialNotMatch"), _localizationService.GetLocalizedString("WtImportLineSerialNotMatch"), 404);
                         }
                     }
 
@@ -425,11 +402,7 @@ namespace WMS_WEBAPI.Services
                     // Eğer miktar 0 ise hata döndür
                     if (request.Quantity <= 0)
                     {
-                        return ApiResponse<WtImportLineDto>.ErrorResult(
-                            _localizationService.GetLocalizedString("WtImportLineQuantityInvalid"),
-                            _localizationService.GetLocalizedString("WtImportLineQuantityInvalid"),
-                            400
-                        );
+                        return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineQuantityInvalid"), _localizationService.GetLocalizedString("WtImportLineQuantityInvalid"), 400);
                     }
 
                     // 6) Import line bulma ve miktarı güncelleme işlemi
@@ -483,19 +456,12 @@ namespace WMS_WEBAPI.Services
                     var dto = _mapper.Map<WtImportLineDto>(importLine);
 
                     scope.Complete();
-                    return ApiResponse<WtImportLineDto>.SuccessResult(
-                        dto,
-                        _localizationService.GetLocalizedString("WtImportLineCreatedSuccessfully")
-                    );
+                    return ApiResponse<WtImportLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtImportLineCreatedSuccessfully"));
                 }
             }
             catch (Exception ex)
             {
-                return ApiResponse<WtImportLineDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("WtImportLineErrorOccurred"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 
