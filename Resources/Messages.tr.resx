@@ -500,7 +500,10 @@
   <data name="RecordNotFound" xml:space="preserve">
     <value>Kayıt bulunamadı</value>
   </data>
+  <!-- #region Common.Generic -->
+  <!-- Ortak / Genel mesajlar -->
   <data name="RecordCreatedSuccessfully" xml:space="preserve">
+    
     <value>Kayıt başarıyla oluşturuldu</value>
   </data>
   <data name="RecordUpdatedSuccessfully" xml:space="preserve">
@@ -539,6 +542,7 @@
   <data name="NotificationMarkReadError" xml:space="preserve">
     <value>Bildirim okundu olarak işaretlenirken hata oluştu</value>
   </data>
+  <!-- #region Shipping.Header -->
   <data name="ShHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -611,6 +615,8 @@
   <data name="ShHeaderBulkCreateError" xml:space="preserve">
     <value>Toplu Sevkiyat oluşturma sırasında hata oluştu</value>
   </data>
+  <!-- #endregion Shipping.Header -->
+  <!-- #region Shipping.Function.OpenOrder -->
   <data name="ShFunctionOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat açık sipariş başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -623,6 +629,8 @@
   <data name="ShFunctionOpenOrderLineRetrievalError" xml:space="preserve">
     <value>Sevkiyat açık sipariş satır bilgileri getirilirken hata oluştu</value>
   </data>
+  <!-- #endregion Shipping.Function.OpenOrder -->
+  <!-- #region Shipping.Line -->
   <data name="ShLineRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Satır bilgileri başarıyla getirildi</value>
   </data>
@@ -650,6 +658,8 @@
   <data name="ShLineDeletionError" xml:space="preserve">
     <value>Sevkiyat Satır silinirken hata oluştu</value>
   </data>
+  <!-- #endregion Shipping.Line -->
+  <!-- #region Shipping.Route -->
   <data name="ShRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Rota bilgileri başarıyla getirildi</value>
   </data>
@@ -668,6 +678,8 @@
   <data name="ShRouteDeletedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Rota başarıyla silindi</value>
   </data>
+  <!-- #endregion Shipping.Route -->
+  <!-- #region Shipping.ImportLine -->
   <data name="ShImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat İthalat Satır bilgileri başarıyla getirildi</value>
   </data>
@@ -686,6 +698,8 @@
   <data name="ShImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Sevkiyat İthalat Satır başarıyla silindi</value>
   </data>
+  <!-- #endregion Shipping.ImportLine -->
+  <!-- #region Shipping.LineSerial -->
   <data name="ShLineSerialRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Satır Seri bilgileri başarıyla getirildi</value>
   </data>
@@ -704,6 +718,8 @@
   <data name="ShLineSerialDeletedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Satır Seri başarıyla silindi</value>
   </data>
+  <!-- #endregion Shipping.LineSerial -->
+  <!-- #region Shipping.TerminalLine -->
   <data name="ShTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Terminal Satır bilgileri başarıyla getirildi</value>
   </data>
@@ -722,14 +738,20 @@
   <data name="ShTerminalLineDeletedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Terminal Satır başarıyla silindi</value>
   </data>
+  <!-- #endregion Shipping.TerminalLine -->
   <data name="UpdateSuccess" xml:space="preserve">
     <value>Güncelleme başarıyla tamamlandı</value>
   </data>
   <data name="DeleteSuccess" xml:space="preserve">
     <value>Silme işlemi başarıyla tamamlandı</value>
   </data>
+  <!-- #endregion Common.Generic -->
   <!-- Subcontracting Issue Transfer Messages -->
+  <!-- #region SIT -->
+  <!-- Sevkiyat Açık Sipariş (SIT) / Header, Route, Line, ImportLine -->
+  <!-- #region SIT.Header -->
   <data name="SitHeaderRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Alt yüklenici çıkış başlık bilgileri başarıyla getirildi</value>
   </data>
   <data name="SitHeaderErrorOccurred" xml:space="preserve">
@@ -750,6 +772,8 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık bulunamadı</value>
   </data>
+  <!-- #endregion SIT.Header -->
+  <!-- #region SIT.Route -->
   <data name="SitRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış rota bilgileri başarıyla getirildi</value>
   </data>
@@ -759,7 +783,12 @@
   <data name="SitRouteNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış rota bulunamadı</value>
   </data>
+  <!-- #endregion SIT.Route -->
+  <!-- #endregion SIT -->
+  <!-- Sevkiyat Açık Sipariş (SIT) / Line -->
+  <!-- #region SIT.Line -->
   <data name="SitLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Alt yüklenici çıkış satır bilgileri başarıyla getirildi</value>
   </data>
   <data name="SitLineErrorOccurred" xml:space="preserve">
@@ -777,6 +806,8 @@
   <data name="SitLineNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış satır bulunamadı</value>
   </data>
+  <!-- #endregion SIT.Line -->
+  <!-- #region SIT.TerminalLine -->
   <data name="SitTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış terminal satır bilgileri başarıyla getirildi</value>
   </data>
@@ -795,7 +826,11 @@
   <data name="SitTerminalLineNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış terminal satır bulunamadı</value>
   </data>
+  <!-- #endregion SIT.TerminalLine -->
+  <!-- Sevkiyat Açık Sipariş (SIT) / ImportLine -->
+  <!-- #region SIT.ImportLine -->
   <data name="SitImportLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Alt yüklenici çıkış ithalat satır bilgileri başarıyla getirildi</value>
   </data>
   <data name="SitImportLineErrorOccurred" xml:space="preserve">
@@ -813,6 +848,7 @@
   <data name="SitImportLineNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış ithalat satır bulunamadı</value>
   </data>
+  <!-- #endregion SIT.ImportLine -->
   
   <!-- UserAuthority Service Messages -->
   <data name="NotFound" xml:space="preserve">
@@ -829,7 +865,9 @@
   </data>
   
   <!-- Additional Service Messages -->
+  <!-- Ortak / Genel mesajlar (tekrar grup) -->
   <data name="RecordCreatedSuccessfully" xml:space="preserve">
+    
     <value>Kayıt başarıyla oluşturuldu</value>
   </data>
   <data name="RecordUpdatedSuccessfully" xml:space="preserve">
@@ -945,7 +983,11 @@
   <data name="MobilemenuLineNotFound" xml:space="preserve">
     <value>Mobil menü satır bulunamadı</value>
   </data>
+  <!-- #region WT -->
+  <!-- Depo Transferi (WT) / Header -->
+  <!-- #region WT.Header -->
   <data name="WtHeaderRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Depolar arası transfer başlık bilgileri başarıyla getirildi</value>
   </data>
   <data name="WtHeaderRetrievalError" xml:space="preserve">
@@ -1005,6 +1047,8 @@
   <data name="WtHeaderRouteGroupGuidNotFound" xml:space="preserve">
     <value>RouteGroupGuid bulunamadı</value>
   </data>
+  <!-- #endregion WT.Header -->
+  <!-- #region PT.Header -->
   <data name="PtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Üretim transfer başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -1038,6 +1082,8 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Üretim transfer başlık bulunamadı</value>
   </data>
+  <!-- #endregion PT.Header -->
+  <!-- #region SRT.Header -->
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -1047,6 +1093,8 @@
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık bulunamadı</value>
   </data>
+  <!-- #endregion SRT.Header -->
+  <!-- #region PT.Route -->
   <data name="PtRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Üretim transfer rota bilgileri başarıyla getirildi</value>
   </data>
@@ -1074,12 +1122,17 @@
   <data name="PtRouteNotFound" xml:space="preserve">
     <value>Üretim transfer rota bulunamadı</value>
   </data>
+  <!-- #endregion PT.Route -->
+  <!-- Depo Transferi (WT) / Route -->
+  <!-- #region WT.Route -->
   <data name="WtRouteRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Depolar arası transfer rota bilgileri başarıyla getirildi</value>
   </data>
   <data name="WtRouteRetrievalError" xml:space="preserve">
     <value>Depolar arası transfer rota bilgileri getirilirken hata oluştu</value>
   </data>
+  <!-- #endregion WT.Route -->
   <data name="SrtLineRetrievedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul transfer satır bilgileri başarıyla getirildi</value>
   </data>
@@ -1092,6 +1145,7 @@
   <data name="SrtRouteRetrievalError" xml:space="preserve">
     <value>Alt yüklenici kabul transfer rota bilgileri getirilirken hata oluştu</value>
   </data>
+  <!-- #region WO.Header -->
   <data name="WoHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Depo çıkış başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -1125,6 +1179,8 @@
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Depo çıkış başlık bulunamadı</value>
   </data>
+  <!-- #endregion WO.Header -->
+  <!-- #region WO.Route -->
   <data name="WoRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Depo çıkış rota bilgileri başarıyla getirildi</value>
   </data>
@@ -1152,12 +1208,16 @@
   <data name="WoRouteNotFound" xml:space="preserve">
     <value>Depo çıkış rota bulunamadı</value>
   </data>
+  <!-- #endregion WO.Route -->
+  <!-- #region Platform.UserGroupMatch -->
   <data name="PlatformUserGroupMatchRetrievedSuccessfully" xml:space="preserve">
     <value>Platform kullanıcı grup eşleşmesi bilgileri başarıyla getirildi</value>
   </data>
   <data name="PlatformUserGroupMatchRetrievalError" xml:space="preserve">
     <value>Platform kullanıcı grup eşleşmesi bilgileri getirilirken hata oluştu</value>
   </data>
+  <!-- #endregion Platform.UserGroupMatch -->
+  <!-- #region Platform.PageGroup -->
   <data name="PlatformPageGroupRetrievedSuccessfully" xml:space="preserve">
     <value>Platform sayfa grubu bilgileri başarıyla getirildi</value>
   </data>
@@ -1185,6 +1245,8 @@
   <data name="PlatformPageGroupNotFound" xml:space="preserve">
     <value>Platform sayfa grubu bulunamadı</value>
   </data>
+  <!-- #endregion Platform.PageGroup -->
+  <!-- #region Sidebar.Header -->
   <data name="SidebarmenuHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Sidebar menü başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -1200,6 +1262,8 @@
   <data name="SidebarmenuHeaderNotFound" xml:space="preserve">
     <value>Sidebar menü başlık bulunamadı</value>
   </data>
+  <!-- #endregion Sidebar.Header -->
+  <!-- #region Mobile.UserGroupMatch -->
   <data name="MobileUserGroupMatchRetrievedSuccessfully" xml:space="preserve">
     <value>Mobil kullanıcı grup eşleşmesi bilgileri başarıyla getirildi</value>
   </data>
@@ -1227,6 +1291,8 @@
   <data name="MobileUserGroupMatchNotFound" xml:space="preserve">
     <value>Mobil kullanıcı grup eşleşmesi bulunamadı</value>
   </data>
+  <!-- #endregion Mobile.UserGroupMatch -->
+  <!-- #region Sidebar.Line -->
   <data name="SidebarmenuLineRetrievedSuccessfully" xml:space="preserve">
     <value>Sidebar menü satır bilgileri başarıyla getirildi</value>
   </data>
@@ -1254,6 +1320,8 @@
   <data name="SidebarmenuLineNotFound" xml:space="preserve">
     <value>Sidebar menü satır bulunamadı</value>
   </data>
+  <!-- #endregion Sidebar.Line -->
+  <!-- #region PT.Line -->
   <data name="PtLineRetrievedSuccessfully" xml:space="preserve">
     <value>Üretim transfer satır bilgileri başarıyla getirildi</value>
   </data>
@@ -1281,6 +1349,8 @@
   <data name="PtLineNotFound" xml:space="preserve">
     <value>Üretim transfer satır bulunamadı</value>
   </data>
+  <!-- #endregion PT.Line -->
+  <!-- #region SRT.Line.Additional -->
   <data name="SrtLineCreatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul transfer satır başarıyla oluşturuldu</value>
   </data>
@@ -1302,13 +1372,19 @@
   <data name="SrtLineNotFound" xml:space="preserve">
     <value>Alt yüklenici kabul transfer satır bulunamadı</value>
   </data>
+  <!-- #endregion SRT.Line.Additional -->
   <data name="WtRouteErrorOccurred" xml:space="preserve">
     <value>Depolar arası transfer rota işlemi sırasında hata oluştu</value>
   </data>
+  <!-- Depo Transferi (WT) / Route (tekrar grup) -->
   <data name="WtRouteRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Depolar arası transfer rota bilgileri başarıyla getirildi</value>
   </data>
+  <!-- Depo Transferi (WT) / Line -->
+  <!-- #region WT.Line -->
   <data name="WtLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Depolar arası transfer satır bilgileri başarıyla getirildi</value>
   </data>
   <data name="WtLineErrorOccurred" xml:space="preserve">
@@ -1326,6 +1402,8 @@
   <data name="WtLineNotFound" xml:space="preserve">
     <value>Depolar arası transfer satır bulunamadı</value>
   </data>
+  <!-- #endregion WT.Line -->
+  <!-- #region WT.ImportLine -->
   <data name="WtImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Depolar arası transfer import satır bilgileri başarıyla getirildi</value>
   </data>
@@ -1353,6 +1431,8 @@
   <data name="WtImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Depolar arası transfer import satır başarıyla silindi</value>
   </data>
+  <!-- #endregion WT.ImportLine -->
+  <!-- #endregion WT -->
   <data name="WtImportLineNotFound" xml:space="preserve">
     <value>Depolar arası transfer import satır bulunamadı</value>
   </data>
@@ -1506,6 +1586,7 @@
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık tamamlanırken hata oluştu</value>
   </data>
+  <!-- #region WT.Function.OpenOrder -->
   <data name="WtFunctionTransferOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Depolar arası transfer açık sipariş başlık bilgileri başarıyla getirildi</value>
   </data>
@@ -1518,7 +1599,11 @@
   <data name="WtFunctionTransferOpenOrderLineRetrievalError" xml:space="preserve">
     <value>Depolar arası transfer açık sipariş satır bilgileri getirilirken hata oluştu</value>
   </data>
+  <!-- #endregion WT.Function.OpenOrder -->
+  <!-- Sevkiyat Açık Sipariş (SIT) / Eski grup -->
+  <!-- #region SIT.Legacy -->
   <data name="SitLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Alt yüklenici çıkış transfer satır bilgileri başarıyla getirildi</value>
   </data>
   <data name="SitLineRetrievalError" xml:space="preserve">
@@ -1542,6 +1627,8 @@
   <data name="SitRouteNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış transfer rota bulunamadı</value>
   </data>
+  <!-- #endregion SIT.Legacy -->
+  <!-- #region Auth -->
   <data name="AuthUserAlreadyExists" xml:space="preserve">
     <value>Kullanıcı zaten mevcut</value>
   </data>
@@ -1551,6 +1638,7 @@
   <data name="AuthRegistrationFailed" xml:space="preserve">
     <value>Kayıt başarısız</value>
   </data>
+  <!-- #endregion Auth -->
   <data name="SidebarmenuHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Sidebar menü başlık başarıyla oluşturuldu</value>
   </data>
@@ -1635,6 +1723,7 @@
   <data name="PtImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Üretim transfer ithalat satırı bilgisi başarıyla getirildi</value>
   </data>
+  <!-- #region PT.ImportLine -->
   <data name="PtImportLineErrorOccurred" xml:space="preserve">
     <value>Üretim transfer ithalat satırı işlenirken hata oluştu</value>
   </data>
@@ -1650,4 +1739,171 @@
   <data name="PtImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Üretim transfer ithalat satırı başarıyla silindi</value>
   </data>
+  <!-- #endregion PT.ImportLine -->
+  <data name="PrHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrHeaderRetrievalError" xml:space="preserve">
+    <value>Üretim başlık bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderNotFound" xml:space="preserve">
+    <value>Üretim başlık bulunamadı</value>
+  </data>
+  <!-- #region Production -->
+  <!-- #region Production.PrHeader -->
+  <!-- Production / PrHeader -->
+  <data name="PrHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrHeaderCreationError" xml:space="preserve">
+    <value>Üretim başlık oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PrHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık başarıyla güncellendi</value>
+  </data>
+  <data name="PrHeaderUpdateError" xml:space="preserve">
+    <value>Üretim başlık güncellenirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık başarıyla silindi</value>
+  </data>
+  <data name="PrHeaderDeletionError" xml:space="preserve">
+    <value>Üretim başlık silinirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık başarıyla tamamlandı</value>
+  </data>
+  <data name="PrHeaderCompletionError" xml:space="preserve">
+    <value>Üretim başlık tamamlanırken hata oluştu</value>
+  </data>
+  <!-- #endregion Production.PrHeader -->
+
+  <!-- #region Production.PrLine -->
+  <!-- Production / PrLine -->
+  <data name="PrLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrLineRetrievalError" xml:space="preserve">
+    <value>Üretim satır bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PrLineNotFound" xml:space="preserve">
+    <value>Üretim satır bulunamadı</value>
+  </data>
+  <data name="PrLineCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrLineCreationError" xml:space="preserve">
+    <value>Üretim satır oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PrLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim satır başarıyla güncellendi</value>
+  </data>
+  <data name="PrLineUpdateError" xml:space="preserve">
+    <value>Üretim satır güncellenirken hata oluştu</value>
+  </data>
+  <data name="PrLineDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim satır başarıyla silindi</value>
+  </data>
+  <data name="PrLineDeletionError" xml:space="preserve">
+    <value>Üretim satır silinirken hata oluştu</value>
+  </data>
+  <!-- #endregion Production.PrLine -->
+
+  <!-- #region Production.PrImportLine -->
+  <!-- Production / PrImportLine -->
+  <data name="PrImportLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim ithalat satırı bilgisi başarıyla getirildi</value>
+  </data>
+  <data name="PrImportLineErrorOccurred" xml:space="preserve">
+    <value>Üretim ithalat satırı işlenirken hata oluştu</value>
+  </data>
+  <data name="PrImportLineNotFound" xml:space="preserve">
+    <value>Üretim ithalat satırı bulunamadı</value>
+  </data>
+  <data name="PrImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim ithalat satırı başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrImportLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim ithalat satırı başarıyla güncellendi</value>
+  </data>
+  <data name="PrImportLineDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim ithalat satırı başarıyla silindi</value>
+  </data>
+  <!-- #endregion Production.PrImportLine -->
+
+  <!-- #region Production.PrRoute -->
+  <!-- Production / PrRoute -->
+  <data name="PrRouteRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim rota bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrRouteRetrievalError" xml:space="preserve">
+    <value>Üretim rota bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PrRouteNotFound" xml:space="preserve">
+    <value>Üretim rota bulunamadı</value>
+  </data>
+  <data name="PrRouteCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim rota başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrRouteCreationError" xml:space="preserve">
+    <value>Üretim rota oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PrRouteUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim rota başarıyla güncellendi</value>
+  </data>
+  <data name="PrRouteUpdateError" xml:space="preserve">
+    <value>Üretim rota güncellenirken hata oluştu</value>
+  </data>
+  <data name="PrRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim rota başarıyla silindi</value>
+  </data>
+  <data name="PrRouteDeletionError" xml:space="preserve">
+    <value>Üretim rota silinirken hata oluştu</value>
+  </data>
+  <!-- #endregion Production.PrRoute -->
+
+  <!-- #region Production.PrTerminalLine -->
+  <!-- Production / PrTerminalLine -->
+  <data name="PrTerminalLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim terminal satırı bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrTerminalLineErrorOccurred" xml:space="preserve">
+    <value>Üretim terminal satırı işlenirken hata oluştu</value>
+  </data>
+  <data name="PrTerminalLineNotFound" xml:space="preserve">
+    <value>Üretim terminal satırı bulunamadı</value>
+  </data>
+  <data name="PrTerminalLineCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim terminal satırı başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrTerminalLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim terminal satırı başarıyla güncellendi</value>
+  </data>
+  <data name="PrTerminalLineDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim terminal satırı başarıyla silindi</value>
+  </data>
+  <!-- #endregion Production.PrTerminalLine -->
+
+  <!-- #region Production.PrLineSerial -->
+  <!-- Production / PrLineSerial -->
+  <data name="PrLineSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim satır seri bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrLineSerialErrorOccurred" xml:space="preserve">
+    <value>Üretim satır seri işlenirken hata oluştu</value>
+  </data>
+  <data name="PrLineSerialNotFound" xml:space="preserve">
+    <value>Üretim satır seri bulunamadı</value>
+  </data>
+  <data name="PrLineSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim satır seri başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrLineSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim satır seri başarıyla güncellendi</value>
+  </data>
+  <data name="PrLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim satır seri başarıyla silindi</value>
+  </data>
+  <!-- #endregion Production.PrLineSerial -->
+  <!-- #endregion Production -->
 </root>

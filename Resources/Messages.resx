@@ -60,6 +60,7 @@
   </resheader>
   
   <!-- Authentication Messages -->
+  <!-- #region Auth.Generic -->
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>
   </data>
@@ -84,6 +85,7 @@
   <data name="UnauthorizedAccess" xml:space="preserve">
     <value>Unauthorized access</value>
   </data>
+  <!-- #endregion Auth.Generic -->
   
   <!-- General Messages -->
   <data name="InternalServerError" xml:space="preserve">
@@ -97,56 +99,72 @@
   </data>
   
   <!-- ERP Service Messages -->
+  <!-- #region ERP.OnHandQuantity -->
   <data name="OnHandQuantityRetrievedSuccessfully" xml:space="preserve">
     <value>OnHandQuantity information retrieved successfully</value>
   </data>
   <data name="OnHandQuantityRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving OnHandQuantity information</value>
   </data>
+  <!-- #endregion ERP.OnHandQuantity -->
+  <!-- #region ERP.Cari -->
   <data name="CariRetrievedSuccessfully" xml:space="preserve">
     <value>Customer information retrieved successfully</value>
   </data>
   <data name="CariRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving customer information</value>
   </data>
+  <!-- #endregion ERP.Cari -->
+  <!-- #region ERP.Stok -->
   <data name="StokRetrievedSuccessfully" xml:space="preserve">
     <value>Stock information retrieved successfully</value>
   </data>
   <data name="StokRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving stock information</value>
   </data>
+  <!-- #endregion ERP.Stok -->
+  <!-- #region ERP.Depo -->
   <data name="DepoRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse information retrieved successfully</value>
   </data>
   <data name="DepoRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving warehouse information</value>
   </data>
+  <!-- #endregion ERP.Depo -->
+  <!-- #region ERP.Proje -->
   <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
     <value>Project information retrieved successfully</value>
   </data>
   <data name="ProjeRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving project information</value>
   </data>
+  <!-- #endregion ERP.Proje -->
+  <!-- #region ERP.CustomerOrder -->
   <data name="CustomerOrderRetrievedSuccessfully" xml:space="preserve">
     <value>Customer order information retrieved successfully</value>
   </data>
   <data name="CustomerOrderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving customer order information</value>
   </data>
+  <!-- #endregion ERP.CustomerOrder -->
+  <!-- #region ERP.OrderDetail -->
   <data name="OrderDetailRetrievedSuccessfully" xml:space="preserve">
     <value>Order detail information retrieved successfully</value>
   </data>
   <data name="OrderDetailRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving order detail information</value>
   </data>
+  <!-- #endregion ERP.OrderDetail -->
   <data name="GrHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Header information retrieved successfully</value>
   </data>
   <data name="GrHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Receipt Header information</value>
   </data>
+  <!-- #region GR.Header -->
   
   <!-- GrImportDocument Messages -->
+  <!-- #region GrImportDocument -->
   <data name="Success" xml:space="preserve">
     <value>Operation completed successfully</value>
   </data>
@@ -186,8 +204,10 @@
   <data name="ProfileRetrievedSuccessfully" xml:space="preserve">
     <value>Profile information retrieved successfully</value>
   </data>
+  <!-- #endregion GrImportDocument -->
   
   <!-- GrLine Messages -->
+  <!-- #region GR.Line -->
   <data name="GrLineRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Line information retrieved successfully</value>
   </data>
@@ -224,6 +244,7 @@
   <data name="GrHeaderNotFoundForLine" xml:space="preserve">
     <value>Goods Receipt Header not found for this line</value>
   </data>
+  <!-- #endregion GR.Line -->
   
   <!-- Additional GrHeader Messages -->
   <data name="GrHeaderNotFound" xml:space="preserve">
@@ -250,7 +271,9 @@
   <data name="GrHeaderSoftDeletionError" xml:space="preserve">
     <value>Error occurred while soft deleting Goods Receipt Header</value>
   </data>
+  <!-- #endregion GR.Header -->
   <!-- Inventorycount Service Messages -->
+  <!-- #region IC.Header -->
   <data name="IcHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Inventory Count Header information retrieved successfully</value>
   </data>
@@ -269,6 +292,8 @@
   <data name="IcHeaderNotFound" xml:space="preserve">
     <value>Inventory Count Header not found</value>
   </data>
+  <!-- #endregion IC.Header -->
+  <!-- #region IC.ImportLine -->
   <data name="IcImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Inventory Count Import Line information retrieved successfully</value>
   </data>
@@ -287,6 +312,8 @@
   <data name="IcImportLineNotFound" xml:space="preserve">
     <value>Inventory Count Import Line not found</value>
   </data>
+  <!-- #endregion IC.ImportLine -->
+  <!-- #region IC.Route -->
   <data name="IcRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Inventory Count Route information retrieved successfully</value>
   </data>
@@ -305,6 +332,8 @@
   <data name="IcRouteNotFound" xml:space="preserve">
     <value>Inventory Count Route not found</value>
   </data>
+  <!-- #endregion IC.Route -->
+  <!-- #region IC.TerminalLine -->
   <data name="IcTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Inventory Count Terminal Line information retrieved successfully</value>
   </data>
@@ -323,8 +352,10 @@
   <data name="IcTerminalLineNotFound" xml:space="preserve">
     <value>Inventory Count Terminal Line not found</value>
   </data>
+  <!-- #endregion IC.TerminalLine -->
   
   <!-- Additional GrLine Messages -->
+  <!-- #region GR.Line.Duplicate -->
   <data name="GrLineGetAllError" xml:space="preserve">
     <value>Error occurred while retrieving all Goods Receipt Lines</value>
   </data>
@@ -334,7 +365,9 @@
   <data name="GrLineGetByHeaderIdError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Receipt Lines by Header ID</value>
   </data>
+  <!-- #endregion GR.Line.Duplicate -->
   <!-- Warehouse Inbound Messages -->
+  <!-- #region WI.Header -->
   <data name="WiHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Header information retrieved successfully</value>
   </data>
@@ -356,6 +389,7 @@
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Warehouse Inbound Header not found</value>
   </data>
+  <!-- #endregion WI.Header -->
   <data name="GrLineExistsError" xml:space="preserve">
     <value>Error occurred while checking Goods Receipt Line existence</value>
   </data>
@@ -372,6 +406,7 @@
   </data>
   
   <!-- GrImportSerialLine Messages -->
+  <!-- #region GrImportSerialLine -->
   <data name="GrImportSerialLineRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Serial Line information retrieved successfully</value>
   </data>
@@ -438,8 +473,10 @@
   <data name="GrImportSerialLineExistsCheckError" xml:space="preserve">
     <value>Error occurred while checking Goods Receipt Import Serial Line existence</value>
   </data>
+  <!-- #endregion GrImportSerialLine -->
   
   <!-- JWT Service Messages -->
+  <!-- #region JWT -->
   <data name="TokenGeneratedSuccessfully" xml:space="preserve">
     <value>Token generated successfully</value>
   </data>
@@ -449,8 +486,13 @@
   <data name="TokenGenerationFailedMessage" xml:space="preserve">
     <value>Token generation failed</value>
   </data>
+  <!-- #endregion JWT -->
   <!-- Subcontracting Issue Transfer Messages -->
+  <!-- #region SIT -->
+  <!-- Shipping Open Order (SIT) / Header, Route, Line, ImportLine -->
+  <!-- #region SIT.Header -->
   <data name="SitHeaderRetrievedSuccessfully" xml:space="preserve">
+  
     <value>Subcontracting Issue Header information retrieved successfully</value>
   </data>
   <data name="SitHeaderErrorOccurred" xml:space="preserve">
@@ -471,16 +513,22 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Subcontracting Issue Header not found</value>
   </data>
+  <!-- #endregion SIT.Header -->
   <data name="SitRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Route information retrieved successfully</value>
   </data>
+  <!-- #region SIT.Route -->
   <data name="SitRouteErrorOccurred" xml:space="preserve">
     <value>Error occurred in Subcontracting Issue Route operation</value>
   </data>
   <data name="SitRouteNotFound" xml:space="preserve">
     <value>Subcontracting Issue Route not found</value>
   </data>
+  <!-- #endregion SIT.Route -->
+  <!-- Shipping Open Order (SIT) / Line -->
+  <!-- #region SIT.Line -->
   <data name="SitLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Subcontracting Issue Line information retrieved successfully</value>
   </data>
   <data name="SitLineErrorOccurred" xml:space="preserve">
@@ -498,9 +546,11 @@
   <data name="SitLineNotFound" xml:space="preserve">
     <value>Subcontracting Issue Line not found</value>
   </data>
+  <!-- #endregion SIT.Line -->
   <data name="SitTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Terminal Line information retrieved successfully</value>
   </data>
+  <!-- #region SIT.TerminalLine -->
   <data name="SitTerminalLineErrorOccurred" xml:space="preserve">
     <value>Error occurred in Subcontracting Issue Terminal Line operation</value>
   </data>
@@ -516,7 +566,10 @@
   <data name="SitTerminalLineNotFound" xml:space="preserve">
     <value>Subcontracting Issue Terminal Line not found</value>
   </data>
-  <data name="SitImportLineRetrievedSuccessfully" xml:space="preserve">
+  <!-- #endregion SIT.TerminalLine -->
+  <!-- Shipping Open Order (SIT) / ImportLine -->
+  <!-- #region SIT.ImportLine -->
+  <data name="SitImportLineRetrievedSuccessfully" xml:space="preserve">  
     <value>Subcontracting Issue Import Line information retrieved successfully</value>
   </data>
   <data name="SitImportLineErrorOccurred" xml:space="preserve">
@@ -534,8 +587,10 @@
   <data name="SitImportLineNotFound" xml:space="preserve">
     <value>Subcontracting Issue Import Line not found</value>
   </data>
+  <!-- #endregion SIT.ImportLine -->
   
   <!-- Common Service Messages -->
+  <!-- #region Common.Service -->
   <data name="DataRetrievedSuccessfully" xml:space="preserve">
     <value>Data retrieved successfully</value>
   </data>
@@ -569,6 +624,10 @@
   <data name="RecordNotFound" xml:space="preserve">
     <value>Record not found</value>
   </data>
+  <!-- #endregion Common.Service -->
+  
+  <!-- #region Common.Generic -->
+  <!-- Common / Generic messages -->
   <data name="RecordCreatedSuccessfully" xml:space="preserve">
     <value>Record created successfully</value>
   </data>
@@ -584,6 +643,7 @@
   <data name="DeleteSuccess" xml:space="preserve">
     <value>Delete completed successfully</value>
   </data>
+  <!-- #endregion Common.Generic -->
   
   <!-- UserAuthority Service Messages -->
   <data name="NotFound" xml:space="preserve">
@@ -600,7 +660,9 @@
   </data>
   
   <!-- Additional Service Messages -->
+  <!-- Common / Generic messages (duplicate group) -->
   <data name="RecordCreatedSuccessfully" xml:space="preserve">
+    
     <value>Record created successfully</value>
   </data>
   <data name="RecordUpdatedSuccessfully" xml:space="preserve">
@@ -617,6 +679,7 @@
   </data>
   
   <!-- Auth Controller Messages -->
+  <!-- #region Auth.Controller -->
   <data name="Error.User.InvalidCredentials" xml:space="preserve">
     <value>Invalid username or password</value>
   </data>
@@ -626,21 +689,27 @@
   <data name="Error.User.LoginFailed" xml:space="preserve">
     <value>Login failed</value>
   </data>
+  <!-- #endregion Auth.Controller -->
   <data name="GoodReciptFunctionsHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Open Orders Header information retrieved successfully</value>
   </data>
+  <!-- #region GoodsOpenOrders.Header -->
   <data name="GoodReciptFunctionsHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Open Orders Header information</value>
   </data>
+  <!-- #endregion GoodsOpenOrders.Header -->
   <data name="GoodReciptFunctionsLineRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Open Orders Line information retrieved successfully</value>
   </data>
+  <!-- #region GoodsOpenOrders.Line -->
   <data name="GoodReciptFunctionsLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Open Orders Line information</value>
   </data>
+  <!-- #endregion GoodsOpenOrders.Line -->
   <data name="GrImportDocumentRetrievedSuccessfully" xml:space="preserve">
     <value>Import document information retrieved successfully</value>
   </data>
+  <!-- #region GrImportDocument -->
   <data name="GrImportDocumentGetAllError" xml:space="preserve">
     <value>Error occurred while retrieving import documents</value>
   </data>
@@ -680,9 +749,11 @@
   <data name="GrImportDocumentNotFound" xml:space="preserve">
     <value>Import document not found</value>
   </data>
+  <!-- #endregion GrImportDocument -->
   <data name="MobilemenuHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Mobile menu header information retrieved successfully</value>
   </data>
+  <!-- #region MobileMenu.Header -->
   <data name="MobilemenuHeaderErrorOccurred" xml:space="preserve">
     <value>Error occurred in Mobile menu header operation</value>
   </data>
@@ -698,9 +769,11 @@
   <data name="MobilemenuHeaderNotFound" xml:space="preserve">
     <value>Mobile menu header not found</value>
   </data>
+  <!-- #endregion MobileMenu.Header -->
   <data name="MobilemenuLineRetrievedSuccessfully" xml:space="preserve">
     <value>Mobile menu line information retrieved successfully</value>
   </data>
+  <!-- #region MobileMenu.Line -->
   <data name="MobilemenuLineErrorOccurred" xml:space="preserve">
     <value>Error occurred in Mobile menu line operation</value>
   </data>
@@ -716,7 +789,12 @@
   <data name="MobilemenuLineNotFound" xml:space="preserve">
     <value>Mobile menu line not found</value>
   </data>
+  <!-- #endregion MobileMenu.Line -->
+  <!-- #region WT -->
+  <!-- Warehouse Transfer (WT) / Header -->
+  <!-- #region WT.Header -->
   <data name="WtHeaderRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Warehouse Transfer Header information retrieved successfully</value>
   </data>
   <data name="WtHeaderRetrievalError" xml:space="preserve">
@@ -794,9 +872,11 @@
   <data name="WtHeaderApprovalUpdateError" xml:space="preserve">
     <value>Error occurred while updating approval status</value>
   </data>
+  <!-- #endregion WT.Header -->
   <data name="PtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Production Transfer Header information retrieved successfully</value>
   </data>
+  <!-- #region PT.Header -->
   <data name="PtHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Production Transfer Header information</value>
   </data>
@@ -827,42 +907,56 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Production Transfer Header not found</value>
   </data>
+  <!-- #endregion PT.Header -->
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Header information retrieved successfully</value>
   </data>
+  <!-- #region SRT.Header -->
   <data name="SrtHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Subcontracting Receipt Transfer Header information</value>
   </data>
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Header not found</value>
   </data>
+  <!-- #endregion SRT.Header -->
   <data name="PtRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Production Transfer Route information retrieved successfully</value>
   </data>
+  <!-- #region PT.Route -->
   <data name="PtRouteRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Production Transfer Route information</value>
   </data>
+  <!-- #endregion PT.Route -->
+  <!-- Warehouse Transfer (WT) / Route -->
+  <!-- #region WT.Route -->
   <data name="WtRouteRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Warehouse Transfer Route information retrieved successfully</value>
   </data>
   <data name="WtRouteRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Transfer Route information</value>
   </data>
+  <!-- #endregion WT.Route -->
   <data name="SrtLineRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Line information retrieved successfully</value>
   </data>
+  <!-- #region SRT.Line -->
   <data name="SrtLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Subcontracting Receipt Transfer Line information</value>
   </data>
+  <!-- #endregion SRT.Line -->
   <data name="SrtRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Route information retrieved successfully</value>
   </data>
+  <!-- #region SRT.Route -->
   <data name="SrtRouteRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Subcontracting Receipt Transfer Route information</value>
   </data>
+  <!-- #endregion SRT.Route -->
   <data name="WoHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Header information retrieved successfully</value>
   </data>
+  <!-- #region WO.Header -->
   <data name="WoHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Outbound Header information</value>
   </data>
@@ -893,9 +987,11 @@
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Warehouse Outbound Header not found</value>
   </data>
+  <!-- #endregion WO.Header -->
   <data name="WoRouteRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Route information retrieved successfully</value>
   </data>
+  <!-- #region WO.Route -->
   <data name="WoRouteRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Outbound Route information</value>
   </data>
@@ -920,15 +1016,18 @@
   <data name="WoRouteNotFound" xml:space="preserve">
     <value>Warehouse Outbound Route not found</value>
   </data>
+  <!-- #endregion WO.Route -->
   <data name="PlatformUserGroupMatchRetrievedSuccessfully" xml:space="preserve">
     <value>Platform user group match information retrieved successfully</value>
   </data>
+  <!-- #region Platform.UserGroupMatch -->
   <data name="PlatformUserGroupMatchRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving platform user group match information</value>
   </data>
   <data name="PlatformPageGroupRetrievedSuccessfully" xml:space="preserve">
     <value>Platform page group information retrieved successfully</value>
   </data>
+  <!-- #region Platform.PageGroup -->
   <data name="PlatformPageGroupRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving platform page group information</value>
   </data>
@@ -953,9 +1052,11 @@
   <data name="PlatformPageGroupNotFound" xml:space="preserve">
     <value>Platform page group not found</value>
   </data>
+  <!-- #endregion Platform.PageGroup -->
   <data name="SidebarmenuHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Sidebar menu header information retrieved successfully</value>
   </data>
+  <!-- #region SidebarMenu.Header -->
   <data name="SidebarmenuHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving sidebar menu header information</value>
   </data>
@@ -968,6 +1069,7 @@
   <data name="SidebarmenuHeaderNotFound" xml:space="preserve">
     <value>Sidebar menu header not found</value>
   </data>
+  <!-- #endregion SidebarMenu.Header -->
   <data name="MobileUserGroupMatchRetrievedSuccessfully" xml:space="preserve">
     <value>Mobile user group match information retrieved successfully</value>
   </data>
@@ -995,6 +1097,7 @@
   <data name="MobileUserGroupMatchNotFound" xml:space="preserve">
     <value>Mobile user group match not found</value>
   </data>
+  <!-- #endregion Platform.UserGroupMatch -->
   <data name="PtRouteCreatedSuccessfully" xml:space="preserve">
     <value>Production Transfer Route created successfully</value>
   </data>
@@ -1046,6 +1149,7 @@
   <data name="PtLineRetrievedSuccessfully" xml:space="preserve">
     <value>Production Transfer Line information retrieved successfully</value>
   </data>
+  <!-- #region PT.Line -->
   <data name="PtLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Production Transfer Line information</value>
   </data>
@@ -1070,9 +1174,11 @@
   <data name="PtLineNotFound" xml:space="preserve">
     <value>Production Transfer Line not found</value>
   </data>
+  <!-- #endregion PT.Line -->
   <data name="SrtLineCreatedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Line created successfully</value>
   </data>
+  <!-- #region SRT.Line -->
   <data name="SrtLineCreationError" xml:space="preserve">
     <value>Error occurred while creating Subcontracting Receipt Transfer Line</value>
   </data>
@@ -1091,13 +1197,21 @@
   <data name="SrtLineNotFound" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Line not found</value>
   </data>
+  <!-- #endregion SRT.Line -->
   <data name="WtRouteErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Transfer Route</value>
   </data>
+  <!-- Warehouse Transfer (WT) / Route (duplicate group) -->
+  <!-- #region WT.Route.Duplicate -->
   <data name="WtRouteRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Warehouse Transfer Route information retrieved successfully</value>
   </data>
+  <!-- #endregion WT.Route.Duplicate -->
+  <!-- Warehouse Transfer (WT) / Line -->
+  <!-- #region WT.Line -->
   <data name="WtLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Warehouse Transfer Line information retrieved successfully</value>
   </data>
   <data name="WtLineErrorOccurred" xml:space="preserve">
@@ -1115,9 +1229,11 @@
   <data name="WtLineNotFound" xml:space="preserve">
     <value>Warehouse Transfer Line not found</value>
   </data>
+  <!-- #endregion WT.Line -->
   <data name="WtImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Transfer Import Line information retrieved successfully</value>
   </data>
+  <!-- #region WT.ImportLine -->
   <data name="WtImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Transfer Import Line</value>
   </data>
@@ -1127,6 +1243,7 @@
   <data name="WtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
     <value>Stock code and YapKod do not match existing import lines</value>
   </data>
+  <!-- #endregion WT.ImportLine -->
   <data name="WtImportLineSerialNotMatch" xml:space="preserve">
     <value>Serial number does not match line serial records</value>
   </data>
@@ -1145,6 +1262,7 @@
   <data name="WtImportLineNotFound" xml:space="preserve">
     <value>Warehouse Transfer Import Line not found</value>
   </data>
+  <!-- #region WT.TerminalLine -->
   <data name="WtTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Transfer Terminal Line information retrieved successfully</value>
   </data>
@@ -1163,9 +1281,12 @@
   <data name="WtTerminalLineNotFound" xml:space="preserve">
     <value>Warehouse Transfer Terminal Line not found</value>
   </data>
+  <!-- #endregion WT.TerminalLine -->
+  <!-- #endregion WT -->
   <data name="WoLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Line information retrieved successfully</value>
   </data>
+  <!-- #region WO.Line -->
   <data name="WoLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Outbound Line information</value>
   </data>
@@ -1190,9 +1311,11 @@
   <data name="WoLineNotFound" xml:space="preserve">
     <value>Warehouse Outbound Line not found</value>
   </data>
+  <!-- #endregion WO.Line -->
   <data name="WoImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Import Line information retrieved successfully</value>
   </data>
+  <!-- #region WO.ImportLine -->
   <data name="WoImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Outbound Import Line</value>
   </data>
@@ -1208,9 +1331,11 @@
   <data name="WoImportLineNotFound" xml:space="preserve">
     <value>Warehouse Outbound Import Line not found</value>
   </data>
+  <!-- #endregion WO.ImportLine -->
   <data name="WoTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Terminal Line information retrieved successfully</value>
   </data>
+  <!-- #region WO.TerminalLine -->
   <data name="WoTerminalLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Outbound Terminal Line</value>
   </data>
@@ -1226,27 +1351,34 @@
   <data name="WoTerminalLineNotFound" xml:space="preserve">
     <value>Warehouse Outbound Terminal Line not found</value>
   </data>
+  <!-- #endregion WO.TerminalLine -->
   <data name="WiLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Line information retrieved successfully</value>
   </data>
+  <!-- #region WI.Line -->
   <data name="WiLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Inbound Line</value>
   </data>
+  <!-- #endregion WI.Line -->
   <data name="WiTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Terminal Line information retrieved successfully</value>
   </data>
+  <!-- #region WI.TerminalLine -->
   <data name="WiTerminalLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Inbound Terminal Line</value>
   </data>
+  <!-- #endregion WI.TerminalLine -->
   <data name="AuthUserNotFound" xml:space="preserve">
     <value>Authentication user not found</value>
   </data>
+  <!-- #region Auth.Generic -->
   <data name="AuthUserRetrievedSuccessfully" xml:space="preserve">
     <value>Authentication user retrieved successfully</value>
   </data>
   <data name="AuthErrorOccurred" xml:space="preserve">
     <value>Error occurred during authentication operation</value>
   </data>
+  <!-- #endregion Auth.Generic -->
   <data name="PlatformUserGroupMatchNotFound" xml:space="preserve">
     <value>Platform user-group match not found</value>
   </data>
@@ -1331,7 +1463,9 @@
   <data name="WiFunctionOpenOrderLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Inbound open order line information</value>
   </data>
+  <!-- Shipping Open Order (SIT) / Legacy group -->
   <data name="SitLineRetrievedSuccessfully" xml:space="preserve">
+    
     <value>Subcontracting Issue Transfer line information retrieved successfully</value>
   </data>
   <data name="SitLineRetrievalError" xml:space="preserve">
@@ -1355,6 +1489,7 @@
   <data name="SitRouteNotFound" xml:space="preserve">
     <value>Subcontracting Issue Transfer route not found</value>
   </data>
+  <!-- #endregion SIT -->
   <data name="AuthUserAlreadyExists" xml:space="preserve">
     <value>User already exists</value>
   </data>
@@ -1677,4 +1812,158 @@
   <data name="ShTerminalLineDeletedSuccessfully" xml:space="preserve">
     <value>Shipping Terminal Line deleted successfully</value>
   </data>
+  <!-- #region Production -->
+  <!-- Production / PrHeader -->
+  <data name="PrHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Header information retrieved successfully</value>
+  </data>
+  <data name="PrHeaderRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Production Header information</value>
+  </data>
+  <data name="PrHeaderNotFound" xml:space="preserve">
+    <value>Production Header not found</value>
+  </data>
+  <data name="PrHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Production Header created successfully</value>
+  </data>
+  <data name="PrHeaderCreationError" xml:space="preserve">
+    <value>Error occurred while creating Production Header</value>
+  </data>
+  <data name="PrHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Header updated successfully</value>
+  </data>
+  <data name="PrHeaderUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Production Header</value>
+  </data>
+  <data name="PrHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Production Header deleted successfully</value>
+  </data>
+  <data name="PrHeaderDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Production Header</value>
+  </data>
+  <data name="PrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Production Header completed successfully</value>
+  </data>
+  <data name="PrHeaderCompletionError" xml:space="preserve">
+    <value>Error occurred while completing Production Header</value>
+  </data>
+
+  <!-- Production / PrLine -->
+  <data name="PrLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Line information retrieved successfully</value>
+  </data>
+  <data name="PrLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Production Line information</value>
+  </data>
+  <data name="PrLineNotFound" xml:space="preserve">
+    <value>Production Line not found</value>
+  </data>
+  <data name="PrLineCreatedSuccessfully" xml:space="preserve">
+    <value>Production Line created successfully</value>
+  </data>
+  <data name="PrLineCreationError" xml:space="preserve">
+    <value>Error occurred while creating Production Line</value>
+  </data>
+  <data name="PrLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Line updated successfully</value>
+  </data>
+  <data name="PrLineUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Production Line</value>
+  </data>
+  <data name="PrLineDeletedSuccessfully" xml:space="preserve">
+    <value>Production Line deleted successfully</value>
+  </data>
+  <data name="PrLineDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Production Line</value>
+  </data>
+
+  <!-- Production / PrImportLine -->
+  <data name="PrImportLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Import Line information retrieved successfully</value>
+  </data>
+  <data name="PrImportLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Production Import Line</value>
+  </data>
+  <data name="PrImportLineNotFound" xml:space="preserve">
+    <value>Production Import Line not found</value>
+  </data>
+  <data name="PrImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Production Import Line created successfully</value>
+  </data>
+  <data name="PrImportLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Import Line updated successfully</value>
+  </data>
+  <data name="PrImportLineDeletedSuccessfully" xml:space="preserve">
+    <value>Production Import Line deleted successfully</value>
+  </data>
+
+  <!-- Production / PrRoute -->
+  <data name="PrRouteRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Route information retrieved successfully</value>
+  </data>
+  <data name="PrRouteRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Production Route information</value>
+  </data>
+  <data name="PrRouteNotFound" xml:space="preserve">
+    <value>Production Route not found</value>
+  </data>
+  <data name="PrRouteCreatedSuccessfully" xml:space="preserve">
+    <value>Production Route created successfully</value>
+  </data>
+  <data name="PrRouteCreationError" xml:space="preserve">
+    <value>Error occurred while creating Production Route</value>
+  </data>
+  <data name="PrRouteUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Route updated successfully</value>
+  </data>
+  <data name="PrRouteUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Production Route</value>
+  </data>
+  <data name="PrRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Production Route deleted successfully</value>
+  </data>
+  <data name="PrRouteDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting Production Route</value>
+  </data>
+
+  <!-- Production / PrTerminalLine -->
+  <data name="PrTerminalLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Terminal Line information retrieved successfully</value>
+  </data>
+  <data name="PrTerminalLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Production Terminal Line</value>
+  </data>
+  <data name="PrTerminalLineNotFound" xml:space="preserve">
+    <value>Production Terminal Line not found</value>
+  </data>
+  <data name="PrTerminalLineCreatedSuccessfully" xml:space="preserve">
+    <value>Production Terminal Line created successfully</value>
+  </data>
+  <data name="PrTerminalLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Terminal Line updated successfully</value>
+  </data>
+  <data name="PrTerminalLineDeletedSuccessfully" xml:space="preserve">
+    <value>Production Terminal Line deleted successfully</value>
+  </data>
+
+  <!-- Production / PrLineSerial -->
+  <data name="PrLineSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Production Line Serial information retrieved successfully</value>
+  </data>
+  <data name="PrLineSerialErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Production Line Serial</value>
+  </data>
+  <data name="PrLineSerialNotFound" xml:space="preserve">
+    <value>Production Line Serial not found</value>
+  </data>
+  <data name="PrLineSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Production Line Serial created successfully</value>
+  </data>
+  <data name="PrLineSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Production Line Serial updated successfully</value>
+  </data>
+  <data name="PrLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Production Line Serial deleted successfully</value>
+  </data>
+  <!-- #endregion Production -->
 </root>
