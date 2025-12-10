@@ -340,16 +340,15 @@ namespace WMS_WEBAPI.Services
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    // 1) Header kaydı aktiflik kontrolu
-                    var header = await _unitOfWork.WtHeaders.GetByIdAsync(request.HeaderId);
+                // 1) Header kontrolü: İstekle gelen header aktif ve silinmemiş olmalı
+                var header = await _unitOfWork.WtHeaders.GetByIdAsync(request.HeaderId);
                 if (header == null || header.IsDeleted)
                 {
                     return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderNotFound"), _localizationService.GetLocalizedString("WtHeaderNotFound"), 404);
                 }
 
-                    // 2) line stok ve yapkod uyumluluğu kontrolu
-                    var lineControl = await _unitOfWork.WtImportLines
-                        .FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
+                    // 2) Line uyumluluğu: Aynı header altında stok kodu + yapılandırma kodu ile importLine eşleşme kontrolü
+                    var lineControl = await _unitOfWork.WtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
 
                     if (lineControl != null && lineControl.Any())
                     {
@@ -365,10 +364,8 @@ namespace WMS_WEBAPI.Services
                     }
                   
                     
-                    // 3) LineId'lere ait WtLineSerial kayıtlarını kontrol et
-                    // Eğer kayıt varsa SerialNo kontrolü yap
-                    var lineSerialControl = await _unitOfWork.WtLineSerials
-                        .FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
+                    // 3) Seri eşleşme kontrolü: Header'a bağlı LineSerial kayıtları varsa, gelen seriyle eşleşmeli
+                    var lineSerialControl = await _unitOfWork.WtLineSerials.FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
 
                     if (lineSerialControl != null && lineSerialControl.Any())
                     {
@@ -379,7 +376,7 @@ namespace WMS_WEBAPI.Services
                         }
                     }
 
-                    // 4) duplicate Serial kontrolü
+                    // 4) Mükerrer seri kontrolü: Aynı header + stok + yapkod + seri için daha önce route eklenmiş mi
                     if (!string.IsNullOrWhiteSpace(request.SerialNo))
                     {
                         var duplicateExists = await _unitOfWork.WtRoutes
@@ -398,14 +395,13 @@ namespace WMS_WEBAPI.Services
                         }
                     }
 
-                    // 5) Miktar kontrolü
-                    // Eğer miktar 0 ise hata döndür
+                    // 5) Miktar doğrulama: Negatif/0 miktara izin verilmez
                     if (request.Quantity <= 0)
                     {
                         return ApiResponse<WtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineQuantityInvalid"), _localizationService.GetLocalizedString("WtImportLineQuantityInvalid"), 400);
                     }
 
-                    // 6) Import line bulma ve miktarı güncelleme işlemi
+                    // 6) ImportLine bul/oluştur: Header + Stok + YapKod'a göre mevcut importLine var mı, yoksa yeni oluşturulur
                     WtImportLine? importLine = null;
                     if (request.LineId.HasValue)
                     {
@@ -421,7 +417,7 @@ namespace WMS_WEBAPI.Services
                             .FirstOrDefault();
                     }
 
-                    // Kayıt yoksa oluştur
+                    // Kayıt yoksa yeni importLine oluşturulur
                     if (importLine == null)
                     {
                         importLine = new WtImportLine
@@ -435,7 +431,7 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.SaveChangesAsync();
                     }
 
-                    // 6) Route kaydını ekle (barkod, miktar, seri ve raf bilgileri)
+                    // 7) Route kaydı: Barkod, miktar, seri ve lokasyon bilgileri ile importLine'a bağlı route eklenir
                     var route = new WtRoute
                     {
                         ImportLineId = importLine.Id,
@@ -452,7 +448,7 @@ namespace WMS_WEBAPI.Services
                     await _unitOfWork.WtRoutes.AddAsync(route);
                     await _unitOfWork.SaveChangesAsync();
 
-                    // 7) Sonucu döndür
+                    // 8) Sonuç: importLine DTO döndürülür ve işlem tamamlanır
                     var dto = _mapper.Map<WtImportLineDto>(importLine);
 
                     scope.Complete();

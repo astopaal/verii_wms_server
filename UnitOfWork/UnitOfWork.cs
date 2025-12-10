@@ -58,6 +58,14 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<PtTerminalLine>? _ptTerminalLines;
         private IGenericRepository<PtLineSerial>? _ptLineSerials;
 
+        // Production repository instances
+        private IGenericRepository<PrHeader>? _prHeaders;
+        private IGenericRepository<PrLine>? _prLines;
+        private IGenericRepository<PrImportLine>? _prImportLines;
+        private IGenericRepository<PrRoute>? _prRoutes;
+        private IGenericRepository<PrTerminalLine>? _prTerminalLines;
+        private IGenericRepository<PrLineSerial>? _prLineSerials;
+
         // SubcontractingIssueTransfer repository instances
         private IGenericRepository<SitHeader>? _sitHeaders;
         private IGenericRepository<SitLine>? _sitLines;
@@ -202,6 +210,25 @@ namespace WMS_WEBAPI.UnitOfWork
 
         public IGenericRepository<PtLineSerial> PtLineSerials =>
             _ptLineSerials ??= new GenericRepository<PtLineSerial>(_context, _httpContextAccessor);
+
+        // Production repository properties
+        public IGenericRepository<PrHeader> PrHeaders =>
+            _prHeaders ??= new GenericRepository<PrHeader>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrLine> PrLines =>
+            _prLines ??= new GenericRepository<PrLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrImportLine> PrImportLines =>
+            _prImportLines ??= new GenericRepository<PrImportLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrRoute> PrRoutes =>
+            _prRoutes ??= new GenericRepository<PrRoute>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrTerminalLine> PrTerminalLines =>
+            _prTerminalLines ??= new GenericRepository<PrTerminalLine>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrLineSerial> PrLineSerials =>
+            _prLineSerials ??= new GenericRepository<PrLineSerial>(_context, _httpContextAccessor);
 
         // SubcontractingIssueTransfer repository properties
         public IGenericRepository<SitHeader> SitHeaders =>

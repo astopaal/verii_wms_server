@@ -51,6 +51,14 @@ namespace WMS_WEBAPI.UnitOfWork
         IGenericRepository<PtTerminalLine> PtTerminalLines { get; }
         IGenericRepository<PtLineSerial> PtLineSerials { get; }
 
+        // Production repositories
+        IGenericRepository<PrHeader> PrHeaders { get; }
+        IGenericRepository<PrLine> PrLines { get; }
+        IGenericRepository<PrImportLine> PrImportLines { get; }
+        IGenericRepository<PrRoute> PrRoutes { get; }
+        IGenericRepository<PrTerminalLine> PrTerminalLines { get; }
+        IGenericRepository<PrLineSerial> PrLineSerials { get; }
+
         // SubcontractingIssueTransfer repositories
         IGenericRepository<SitHeader> SitHeaders { get; }
         IGenericRepository<SitLine> SitLines { get; }
