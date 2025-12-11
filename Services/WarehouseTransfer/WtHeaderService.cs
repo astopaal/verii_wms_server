@@ -76,16 +76,11 @@ namespace WMS_WEBAPI.Services
 
                 var result = new PagedResponse<WtHeaderDto>(dtos, totalCount, pageNumber, pageSize);
 
-                return ApiResponse<PagedResponse<WtHeaderDto>>.SuccessResult(
-                    result,
-                    _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<WtHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<WtHeaderDto>>.ErrorResult(
-                    _localizationService.GetLocalizedString("WtHeaderRetrievalError"),
-                    ex.Message ?? string.Empty,
-                    500);
+                return ApiResponse<PagedResponse<WtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -450,8 +445,16 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var lines = await _unitOfWork.WtLines
-                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var lines = await _unitOfWork.WtLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var lineDtos = _mapper.Map<IEnumerable<WtLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
 
                 var lineIds = lines.Select(l => l.Id).ToList();
 
@@ -464,6 +467,15 @@ namespace WMS_WEBAPI.Services
 
                 var importLines = await _unitOfWork.WtImportLines
                     .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var importLineDtos = _mapper.Map<IEnumerable<WtImportLineDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
 
                 var importLineIds = importLines.Select(il => il.Id).ToList();
 
@@ -476,24 +488,17 @@ namespace WMS_WEBAPI.Services
 
                 var dto = new WtAssignedTransferOrderLinesDto
                 {
-                    Lines = _mapper.Map<IEnumerable<WtLineDto>>(lines),
+                    Lines = lineDtos,
                     LineSerials = _mapper.Map<IEnumerable<WtLineSerialDto>>(lineSerials),
-                    ImportLines = _mapper.Map<IEnumerable<WtImportLineDto>>(importLines),
+                    ImportLines = importLineDtos,
                     Routes = _mapper.Map<IEnumerable<WtRouteDto>>(routes)
                 };
 
-                return ApiResponse<WtAssignedTransferOrderLinesDto>.SuccessResult(
-                    dto,
-                    _localizationService.GetLocalizedString("WtHeaderAssignedOrderLinesRetrievedSuccessfully")
-                );
+                return ApiResponse<WtAssignedTransferOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderAssignedOrderLinesRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<WtAssignedTransferOrderLinesDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("WtHeaderAssignedOrderLinesRetrievalError"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<WtAssignedTransferOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -638,11 +643,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<WtHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
@@ -650,21 +651,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<WtHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<WtHeaderDto>.ErrorResult(
-                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new WtLineSerial
@@ -717,7 +710,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        // Korelasyon anahtarlarıyla toplu Wt oluşturma: temp ID -> gerçek ID eşleme
         public async Task<ApiResponse<int>> BulkCreateInterWarehouseTransferAsync(BulkCreateWtRequestDto request)
         {
             try
@@ -781,11 +773,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
@@ -793,21 +781,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new WtLineSerial
@@ -844,11 +824,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
@@ -936,21 +912,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 long importLineId = 0;
@@ -960,11 +928,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineGuidToId.TryGetValue(ig, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
@@ -972,11 +936,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else
@@ -987,11 +947,7 @@ namespace WMS_WEBAPI.Services
                                         if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
@@ -999,21 +955,13 @@ namespace WMS_WEBAPI.Services
                                         if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
 

@@ -519,11 +519,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<SitHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<SitHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
@@ -531,21 +527,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<SitHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<SitHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<SitHeaderDto>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        400
-                                    );
+                                    return ApiResponse<SitHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                 }
 
                                 var serial = new SitLineSerial
@@ -661,11 +649,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
@@ -673,21 +657,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                 }
 
                                 var serial = new SitLineSerial
@@ -724,11 +700,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
@@ -736,21 +708,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                 }
 
                                 var importLine = new SitImportLine
@@ -804,11 +768,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.LineClientKey))
@@ -816,21 +776,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                 }
 
                                 long importLineId = 0;
@@ -840,11 +792,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineGuidToId.TryGetValue(ig, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
@@ -852,11 +800,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
                                 else
@@ -867,11 +811,7 @@ namespace WMS_WEBAPI.Services
                                         if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                         }
                                     }
                                     else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
@@ -879,21 +819,13 @@ namespace WMS_WEBAPI.Services
                                         if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                                _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                         }
                                     }
                                     else
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            _localizationService.GetLocalizedString("SitHeaderErrorOccurred"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), _localizationService.GetLocalizedString("SitHeaderErrorOccurred"), 400);
                                     }
                                 }
 

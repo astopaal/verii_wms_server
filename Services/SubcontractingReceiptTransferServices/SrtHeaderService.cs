@@ -443,18 +443,11 @@ namespace WMS_WEBAPI.Services
                     Routes = _mapper.Map<IEnumerable<SrtRouteDto>>(routes)
                 };
 
-                return ApiResponse<SrtAssignedOrderLinesDto>.SuccessResult(
-                    dto,
-                    _localizationService.GetLocalizedString("SrtHeaderAssignedOrderLinesRetrievedSuccessfully")
-                );
+                return ApiResponse<SrtAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SrtHeaderAssignedOrderLinesRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<SrtAssignedOrderLinesDto>.ErrorResult(
-                    _localizationService.GetLocalizedString("SrtHeaderAssignedOrderLinesRetrievalError"),
-                    ex.Message ?? string.Empty,
-                    500
-                );
+                return ApiResponse<SrtAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -521,11 +514,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<SrtHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
@@ -533,21 +522,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<SrtHeaderDto>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<SrtHeaderDto>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new SrtLineSerial
@@ -663,11 +644,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
@@ -675,21 +652,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var serial = new SrtLineSerial
@@ -726,11 +695,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
@@ -738,21 +703,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 var importLine = new SrtImportLine
@@ -806,11 +763,7 @@ namespace WMS_WEBAPI.Services
                                     if (!lineGuidToId.TryGetValue(lg, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.LineClientKey))
@@ -818,21 +771,13 @@ namespace WMS_WEBAPI.Services
                                     if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineClientKeyNotFound"), 400);
                                     }
                                 }
                                 else
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(
-                                        _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"),
-                                        400
-                                    );
+                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
                                 long importLineId = 0;
@@ -842,11 +787,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineGuidToId.TryGetValue(ig, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
@@ -854,11 +795,7 @@ namespace WMS_WEBAPI.Services
                                     if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
                                 else
@@ -869,11 +806,7 @@ namespace WMS_WEBAPI.Services
                                         if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
@@ -881,21 +814,13 @@ namespace WMS_WEBAPI.Services
                                         if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
                                         {
                                             await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(
-                                                _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                                _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"),
-                                                400
-                                            );
+                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"), 400);
                                         }
                                     }
                                     else
                                     {
                                         await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(
-                                            _localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"),
-                                            _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"),
-                                            400
-                                        );
+                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderRouteGroupGuidNotFound"), 400);
                                     }
                                 }
 
