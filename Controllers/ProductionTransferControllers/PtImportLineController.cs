@@ -77,5 +77,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.SoftDeleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("addBarcodeBasedonAssignedOrder")]
+        public async Task<ActionResult<ApiResponse<PtImportLineDto>>> AddBarcodeBasedonAssignedOrder([FromBody] AddPtImportBarcodeRequestDto request)
+        {
+            var result = await _service.AddBarcodeBasedonAssignedOrderAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
