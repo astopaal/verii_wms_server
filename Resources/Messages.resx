@@ -587,6 +587,18 @@
   <data name="SitImportLineNotFound" xml:space="preserve">
     <value>Subcontracting Issue Import Line not found</value>
   </data>
+  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
+  </data>
   <!-- #endregion SIT.ImportLine -->
   
   <!-- Common Service Messages -->
@@ -1331,6 +1343,18 @@
   <data name="WoImportLineNotFound" xml:space="preserve">
     <value>Warehouse Outbound Import Line not found</value>
   </data>
+  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
+  </data>
   <!-- #endregion WO.ImportLine -->
   <data name="WoTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Terminal Line information retrieved successfully</value>
@@ -1529,6 +1553,18 @@
   <data name="WiImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Warehouse import line deleted successfully</value>
   </data>
+  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
+  </data>
   <data name="SrtTerminalLineRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer terminal line information retrieved successfully</value>
   </data>
@@ -1580,6 +1616,18 @@
   <data name="SrtImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer import line deleted successfully</value>
   </data>
+  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
+  </data>
   <data name="PtImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Production Transfer import line information retrieved successfully</value>
   </data>
@@ -1597,6 +1645,18 @@
   </data>
   <data name="PtImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Production Transfer import line deleted successfully</value>
+  </data>
+  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
   </data>
   <data name="NotificationCreatedSuccessfully" xml:space="preserve">
     <value>Notification created successfully</value>
@@ -1775,6 +1835,18 @@
   </data>
   <data name="ShImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Shipping Import Line deleted successfully</value>
+  </data>
+  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
   </data>
   <data name="ShLineSerialRetrievedSuccessfully" xml:space="preserve">
     <value>Shipping Line Serial information retrieved successfully</value>

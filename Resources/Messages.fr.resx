@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- #region WI.Header -->
+  <data name="WiHeaderNotFound" xml:space="preserve">
+    <value>En-tête d'entrée d'entrepôt introuvable</value>
+  </data>
+  <!-- #endregion WI.Header -->
+  <!-- #region WO.Header -->
+  <data name="WoHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sortie d'entrepôt introuvable</value>
+  </data>
+  <!-- #endregion WO.Header -->
+  <!-- #region Shipping.Header -->
+  <data name="ShHeaderNotFound" xml:space="preserve">
+    <value>En-tête d'expédition introuvable</value>
+  </data>
+  <!-- #endregion Shipping.Header -->
+  <!-- #region SIT.Header -->
+  <data name="SitHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sous-traitance sortie introuvable</value>
+  </data>
+  <!-- #endregion SIT.Header -->
+  <!-- #region SRT.Header -->
+  <data name="SrtHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sous-traitance réception introuvable</value>
+  </data>
+  <!-- #endregion SRT.Header -->
+  <!-- #region PT.Header -->
+  <data name="PtHeaderNotFound" xml:space="preserve">
+    <value>En-tête de transfert de production introuvable</value>
+  </data>
+  <!-- #endregion PT.Header -->
+
+  <!-- #region WI.ImportLine -->
+  <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation d'entrée d'entrepôt créée avec succès</value>
+  </data>
+  <!-- #endregion WI.ImportLine -->
+  <!-- #region WO.ImportLine -->
+  <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sortie d'entrepôt créée avec succès</value>
+  </data>
+  <!-- #endregion WO.ImportLine -->
+  <!-- #region Shipping.ImportLine -->
+  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation d'expédition créée avec succès</value>
+  </data>
+  <!-- #endregion Shipping.ImportLine -->
+  <!-- #region SIT.ImportLine -->
+  <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sous-traitance sortie créée avec succès</value>
+  </data>
+  <!-- #endregion SIT.ImportLine -->
+  <!-- #region SRT.ImportLine -->
+  <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sous-traitance réception créée avec succès</value>
+  </data>
+  <!-- #endregion SRT.ImportLine -->
+  <!-- #region PT.ImportLine -->
+  <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de transfert de production créée avec succès</value>
+  </data>
+
+  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+
+  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+
+  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+
+  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+
+  <data name="WiImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="WoImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="ShImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="SitImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="SrtImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="PtImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <!-- #endregion PT.ImportLine -->
+</root>

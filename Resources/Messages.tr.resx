@@ -692,6 +692,18 @@
   <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Sevkiyat İthalat Satır başarıyla oluşturuldu</value>
   </data>
+  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
+  </data>
   <data name="ShImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Sevkiyat İthalat Satır başarıyla güncellendi</value>
   </data>
@@ -837,7 +849,19 @@
     <value>Alt yüklenici çıkış ithalat satır işleminde hata oluştu</value>
   </data>
   <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Alt yüklenici çıkış ithalat satır başarıyla oluşturuldu</value>
+    <value>Alt yüklenici çıkış transfer import satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
   </data>
   <data name="SitImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış ithalat satır başarıyla güncellendi</value>
@@ -1490,6 +1514,18 @@
   <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Depo çıkış import satır başarıyla oluşturuldu</value>
   </data>
+  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
+  </data>
   <data name="WoImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Depo çıkış import satır başarıyla güncellendi</value>
   </data>
@@ -1663,6 +1699,18 @@
   <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Depo giriş ithalat satırı başarıyla oluşturuldu</value>
   </data>
+  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
+  </data>
   <data name="WiImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Depo giriş ithalat satırı başarıyla güncellendi</value>
   </data>
@@ -1714,6 +1762,18 @@
   <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul ithalat satırı başarıyla oluşturuldu</value>
   </data>
+  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
+  </data>
   <data name="SrtImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul ithalat satırı başarıyla güncellendi</value>
   </data>
@@ -1732,6 +1792,18 @@
   </data>
   <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Üretim transfer ithalat satırı başarıyla oluşturuldu</value>
+  </data>
+  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
   </data>
   <data name="PtImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Üretim transfer ithalat satırı başarıyla güncellendi</value>
