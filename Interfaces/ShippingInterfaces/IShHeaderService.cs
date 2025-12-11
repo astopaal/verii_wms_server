@@ -14,7 +14,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<ShAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
         Task<ApiResponse<ShHeaderDto>> GenerateShipmentOrderAsync(GenerateShipmentOrderRequestDto request);
         Task<ApiResponse<int>> BulkCreateShipmentAsync(BulkCreateShRequestDto request);
-        Task<ApiResponse<IEnumerable<ShHeaderDto>>> GetCompletedAwaitingErpApprovalAsync();
+        Task<ApiResponse<PagedResponse<ShHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
         Task<ApiResponse<ShHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }

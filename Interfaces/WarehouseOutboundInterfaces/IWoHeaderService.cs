@@ -22,7 +22,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WoAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
         Task<ApiResponse<WoHeaderDto>> GenerateWarehouseOutboundOrderAsync(GenerateWarehouseOutboundOrderRequestDto request);
         Task<ApiResponse<int>> BulkCreateWarehouseOutboundAsync(BulkCreateWoRequestDto request);
-        Task<ApiResponse<IEnumerable<WoHeaderDto>>> GetCompletedAwaitingErpApprovalAsync();
+        Task<ApiResponse<PagedResponse<WoHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
         Task<ApiResponse<WoHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }

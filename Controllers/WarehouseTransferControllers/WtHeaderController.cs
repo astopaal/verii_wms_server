@@ -91,9 +91,9 @@ namespace WMS_WEBAPI.Controllers
         }
 
         [HttpGet("completed-awaiting-erp-approval")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetCompletedAwaitingErpApproval()
+        public async Task<ActionResult<ApiResponse<PagedResponse<WtHeaderDto>>>> GetCompletedAwaitingErpApproval([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? sortBy = null, [FromQuery] string? sortDirection = "asc")
         {
-            var result = await _wtHeaderService.GetCompletedAwaitingErpApprovalAsync();
+            var result = await _wtHeaderService.GetCompletedAwaitingErpApprovalPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
             return StatusCode(result.StatusCode, result);
         }
         
