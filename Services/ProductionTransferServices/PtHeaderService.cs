@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
+using System.Security.Claims;
 
 namespace WMS_WEBAPI.Services
 {
@@ -336,6 +337,63 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderCompletionError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetCompletedAwaitingErpApprovalAsync()
+        {
+            try
+            {
+                var entities = await _unitOfWork.PtHeaders
+                    .FindAsync(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+                var dtos = _mapper.Map<IEnumerable<PtHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<PtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PtHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<PtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<PtHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.PtHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("PtHeaderNotFound");
+                    return ApiResponse<PtHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("PtHeaderApprovalUpdateError");
+                    return ApiResponse<PtHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.PtHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<PtHeaderDto>(entity);
+                return ApiResponse<PtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PtHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
     }

@@ -15,5 +15,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PtHeaderDto>> UpdateAsync(long id, UpdatePtHeaderDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
         Task<ApiResponse<bool>> CompleteAsync(long id);
+        Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetCompletedAwaitingErpApprovalAsync();
+        Task<ApiResponse<PtHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }

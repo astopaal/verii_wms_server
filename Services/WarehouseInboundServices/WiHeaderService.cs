@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
+using System.Security.Claims;
 
 namespace WMS_WEBAPI.Services
 {
@@ -460,6 +461,63 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<WiAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderErrorOccurred"), ex.Message ?? String.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<WiHeaderDto>>> GetCompletedAwaitingErpApprovalAsync()
+        {
+            try
+            {
+                var entities = await _unitOfWork.WiHeaders
+                    .FindAsync(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+                var dtos = _mapper.Map<IEnumerable<WiHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<WiHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<WiHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderErrorOccurred"), ex.Message ?? String.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<WiHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.WiHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("WiHeaderNotFound");
+                    return ApiResponse<WiHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("WiHeaderApprovalUpdateError");
+                    return ApiResponse<WiHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.WiHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<WiHeaderDto>(entity);
+                return ApiResponse<WiHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WiHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<WiHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderErrorOccurred"), ex.Message ?? String.Empty, 500);
             }
         }
 

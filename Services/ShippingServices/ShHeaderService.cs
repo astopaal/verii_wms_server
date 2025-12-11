@@ -5,6 +5,7 @@ using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
+using System.Security.Claims;
 
 namespace WMS_WEBAPI.Services
 {
@@ -248,6 +249,63 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<ShAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<ShHeaderDto>>> GetCompletedAwaitingErpApprovalAsync()
+        {
+            try
+            {
+                var entities = await _unitOfWork.ShHeaders
+                    .FindAsync(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+                var dtos = _mapper.Map<IEnumerable<ShHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<ShHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<ShHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<ShHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.ShHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("ShHeaderNotFound");
+                    return ApiResponse<ShHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("ShHeaderApprovalUpdateError");
+                    return ApiResponse<ShHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.ShHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<ShHeaderDto>(entity);
+                return ApiResponse<ShHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("ShHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 

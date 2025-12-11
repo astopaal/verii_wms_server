@@ -12,5 +12,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PtImportLineDto>> CreateAsync(CreatePtImportLineDto createDto);
         Task<ApiResponse<PtImportLineDto>> UpdateAsync(long id, UpdatePtImportLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
+        Task<ApiResponse<PtImportLineDto>> AddBarcodeBasedonAssignedOrderAsync(AddPtImportBarcodeRequestDto request);
     }
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
@@ -169,6 +170,107 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SrtImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<SrtImportLineDto>> AddBarcodeBasedonAssignedOrderAsync(AddSrtImportBarcodeRequestDto request)
+        {
+            try
+            {
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    var header = await _unitOfWork.SrtHeaders.GetByIdAsync(request.HeaderId);
+                    if (header == null || header.IsDeleted)
+                    {
+                        var nf = _localizationService.GetLocalizedString("SrtHeaderNotFound");
+                        return ApiResponse<SrtImportLineDto>.ErrorResult(nf, nf, 404);
+                    }
+
+                    var lineControl = await _unitOfWork.SrtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
+                    if (lineControl != null && lineControl.Any())
+                    {
+                        var lineCounter = lineControl.Count(x => x.StockCode == request.StockCode && x.YapKod == request.YapKod);
+                        if (lineCounter == 0)
+                        {
+                            var msg = _localizationService.GetLocalizedString("SrtImportLineStokCodeAndYapCodeNotMatch");
+                            return ApiResponse<SrtImportLineDto>.ErrorResult(msg, msg, 404);
+                        }
+                    }
+
+                    var lineSerialControl = await _unitOfWork.SrtLineSerials.FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
+                    if (lineSerialControl != null && lineSerialControl.Any())
+                    {
+                        var lineSerialCounter = lineSerialControl.Count(x => x.SerialNo == request.SerialNo);
+                        if (lineSerialCounter == 0)
+                        {
+                            var msg = _localizationService.GetLocalizedString("SrtImportLineSerialNotMatch");
+                            return ApiResponse<SrtImportLineDto>.ErrorResult(msg, msg, 404);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(request.SerialNo))
+                    {
+                        var duplicateExists = await _unitOfWork.SrtRoutes.AsQueryable().AnyAsync(r => !r.IsDeleted && r.SerialNo == request.SerialNo && r.ImportLine.HeaderId == request.HeaderId && r.ImportLine.StockCode == request.StockCode && r.ImportLine.YapKod == request.YapKod);
+                        if (duplicateExists)
+                        {
+                            var msg = _localizationService.GetLocalizedString("SrtImportLineDuplicateSerialFound");
+                            return ApiResponse<SrtImportLineDto>.ErrorResult(msg, msg, 409);
+                        }
+                    }
+
+                    if (request.Quantity <= 0)
+                    {
+                        var msg = _localizationService.GetLocalizedString("SrtImportLineQuantityInvalid");
+                        return ApiResponse<SrtImportLineDto>.ErrorResult(msg, msg, 400);
+                    }
+
+                    SrtImportLine? importLine = null;
+                    if (request.LineId.HasValue)
+                    {
+                        importLine = await _unitOfWork.SrtImportLines.GetByIdAsync(request.LineId.Value);
+                    }
+                    else
+                    {
+                        importLine = (await _unitOfWork.SrtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && x.StockCode == request.StockCode && x.YapKod == request.YapKod && !x.IsDeleted)).FirstOrDefault();
+                    }
+
+                    if (importLine == null)
+                    {
+                        importLine = new SrtImportLine
+                        {
+                            HeaderId = request.HeaderId,
+                            LineId = request.LineId,
+                            StockCode = request.StockCode,
+                            YapKod = request.YapKod
+                        };
+                        await _unitOfWork.SrtImportLines.AddAsync(importLine);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+
+                    var route = new SrtRoute
+                    {
+                        ImportLineId = importLine.Id,
+                        ScannedBarcode = request.Barcode,
+                        Quantity = request.Quantity,
+                        SerialNo = request.SerialNo,
+                        SerialNo2 = request.SerialNo2,
+                        SerialNo3 = request.SerialNo3,
+                        SerialNo4 = request.SerialNo4,
+                        SourceCellCode = request.SourceCellCode,
+                        TargetCellCode = request.TargetCellCode
+                    };
+
+                    await _unitOfWork.SrtRoutes.AddAsync(route);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    var dto = _mapper.Map<SrtImportLineDto>(importLine);
+                    scope.Complete();
+                    return ApiResponse<SrtImportLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SrtImportLineCreatedSuccessfully"));
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<SrtImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("SrtImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
     }

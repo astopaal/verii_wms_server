@@ -21,5 +21,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<SrtAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
         Task<ApiResponse<SrtHeaderDto>> GenerateOrderAsync(GenerateSubcontractingReceiptOrderRequestDto request);
         Task<ApiResponse<int>> BulkCreateSubcontractingReceiptTransferAsync(BulkCreateSrtRequestDto request);
+        Task<ApiResponse<IEnumerable<SrtHeaderDto>>> GetCompletedAwaitingErpApprovalAsync();
+        Task<ApiResponse<SrtHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }

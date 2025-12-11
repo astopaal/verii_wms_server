@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
+using System.Security.Claims;
 
 namespace WMS_WEBAPI.Services
 {
@@ -453,6 +454,63 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<SitAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<SitHeaderDto>>> GetCompletedAwaitingErpApprovalAsync()
+        {
+            try
+            {
+                var entities = await _unitOfWork.SitHeaders
+                    .FindAsync(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+                var dtos = _mapper.Map<IEnumerable<SitHeaderDto>>(entities);
+                return ApiResponse<IEnumerable<SitHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<SitHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<SitHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.SitHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("SitHeaderNotFound");
+                    return ApiResponse<SitHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("SitHeaderApprovalUpdateError");
+                    return ApiResponse<SitHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.SitHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<SitHeaderDto>(entity);
+                return ApiResponse<SitHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<SitHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 

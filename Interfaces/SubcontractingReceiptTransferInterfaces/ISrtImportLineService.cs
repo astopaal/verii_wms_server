@@ -12,5 +12,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<SrtImportLineDto>> CreateAsync(CreateSrtImportLineDto createDto);
         Task<ApiResponse<SrtImportLineDto>> UpdateAsync(long id, UpdateSrtImportLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
+        Task<ApiResponse<SrtImportLineDto>> AddBarcodeBasedonAssignedOrderAsync(AddSrtImportBarcodeRequestDto request);
     }
 }

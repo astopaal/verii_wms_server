@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
@@ -180,6 +181,107 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("ShImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<ShImportLineDto>> AddBarcodeBasedonAssignedOrderAsync(AddShImportBarcodeRequestDto request)
+        {
+            try
+            {
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    var header = await _unitOfWork.ShHeaders.GetByIdAsync(request.HeaderId);
+                    if (header == null || header.IsDeleted)
+                    {
+                        var nf = _localizationService.GetLocalizedString("ShHeaderNotFound");
+                        return ApiResponse<ShImportLineDto>.ErrorResult(nf, nf, 404);
+                    }
+
+                    var lineControl = await _unitOfWork.ShImportLines.FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
+                    if (lineControl != null && lineControl.Any())
+                    {
+                        var lineCounter = lineControl.Count(x => x.StockCode == request.StockCode && x.YapKod == request.YapKod);
+                        if (lineCounter == 0)
+                        {
+                            var msg = _localizationService.GetLocalizedString("ShImportLineStokCodeAndYapCodeNotMatch");
+                            return ApiResponse<ShImportLineDto>.ErrorResult(msg, msg, 404);
+                        }
+                    }
+
+                    var lineSerialControl = await _unitOfWork.ShLineSerials.FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
+                    if (lineSerialControl != null && lineSerialControl.Any())
+                    {
+                        var lineSerialCounter = lineSerialControl.Count(x => x.SerialNo == request.SerialNo);
+                        if (lineSerialCounter == 0)
+                        {
+                            var msg = _localizationService.GetLocalizedString("ShImportLineSerialNotMatch");
+                            return ApiResponse<ShImportLineDto>.ErrorResult(msg, msg, 404);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(request.SerialNo))
+                    {
+                        var duplicateExists = await _unitOfWork.ShRoutes.AsQueryable().AnyAsync(r => !r.IsDeleted && r.SerialNo == request.SerialNo && r.ImportLine.HeaderId == request.HeaderId && r.ImportLine.StockCode == request.StockCode && r.ImportLine.YapKod == request.YapKod);
+                        if (duplicateExists)
+                        {
+                            var msg = _localizationService.GetLocalizedString("ShImportLineDuplicateSerialFound");
+                            return ApiResponse<ShImportLineDto>.ErrorResult(msg, msg, 409);
+                        }
+                    }
+
+                    if (request.Quantity <= 0)
+                    {
+                        var msg = _localizationService.GetLocalizedString("ShImportLineQuantityInvalid");
+                        return ApiResponse<ShImportLineDto>.ErrorResult(msg, msg, 400);
+                    }
+
+                    ShImportLine? importLine = null;
+                    if (request.LineId.HasValue)
+                    {
+                        importLine = await _unitOfWork.ShImportLines.GetByIdAsync(request.LineId.Value);
+                    }
+                    else
+                    {
+                        importLine = (await _unitOfWork.ShImportLines.FindAsync(x => x.HeaderId == request.HeaderId && x.StockCode == request.StockCode && x.YapKod == request.YapKod && !x.IsDeleted)).FirstOrDefault();
+                    }
+
+                    if (importLine == null)
+                    {
+                        importLine = new ShImportLine
+                        {
+                            HeaderId = request.HeaderId,
+                            LineId = request.LineId,
+                            StockCode = request.StockCode,
+                            YapKod = request.YapKod
+                        };
+                        await _unitOfWork.ShImportLines.AddAsync(importLine);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+
+                    var route = new ShRoute
+                    {
+                        ImportLineId = importLine.Id,
+                        ScannedBarcode = request.Barcode,
+                        Quantity = request.Quantity,
+                        SerialNo = request.SerialNo,
+                        SerialNo2 = request.SerialNo2,
+                        SerialNo3 = request.SerialNo3,
+                        SerialNo4 = request.SerialNo4,
+                        SourceCellCode = request.SourceCellCode,
+                        TargetCellCode = request.TargetCellCode
+                    };
+
+                    await _unitOfWork.ShRoutes.AddAsync(route);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    var dto = _mapper.Map<ShImportLineDto>(importLine);
+                    scope.Complete();
+                    return ApiResponse<ShImportLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("ShImportLineCreatedSuccessfully"));
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ShImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("ShImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
     }
