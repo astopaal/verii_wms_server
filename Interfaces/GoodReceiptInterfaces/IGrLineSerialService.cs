@@ -11,6 +11,5 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<GrLineSerialDto>> CreateAsync(CreateGrLineSerialDto createDto);
         Task<ApiResponse<GrLineSerialDto>> UpdateAsync(long id, UpdateGrLineSerialDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
-        Task<ApiResponse<bool>> ExistsAsync(long id);
     }
 }

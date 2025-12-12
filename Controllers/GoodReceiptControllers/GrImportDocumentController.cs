@@ -72,12 +72,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("exists/{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> Exists(long id)
-        {
-            var result = await _grImportDocumentService.ExistsAsync(id);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
         [HttpPost("paged")]
         public async Task<ActionResult<ApiResponse<PagedResponse<GrImportDocumentDto>>>> GetPaged([FromBody] PagedRequest request)

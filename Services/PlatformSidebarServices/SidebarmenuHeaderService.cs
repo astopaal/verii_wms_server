@@ -189,19 +189,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.SidebarmenuHeaders.ExistsAsync(id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("SidebarmenuHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                var message = _localizationService.GetLocalizedString("SidebarmenuHeaderRetrievalError");
-                return ApiResponse<bool>.ErrorResult(message, ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
         public async Task<ApiResponse<SidebarmenuHeaderDto>> GetByMenuKeyAsync(string menuKey)
         {

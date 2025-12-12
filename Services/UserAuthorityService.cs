@@ -114,17 +114,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.UserAuthorities.ExistsAsync(id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("UserAuthorityRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("Error_Exists"), ex.Message ?? string.Empty, 500);
-            }
-        }
+        
     }
 }

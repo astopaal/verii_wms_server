@@ -11,7 +11,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PlatformPageGroupDto>> CreateAsync(CreatePlatformPageGroupDto createDto);
         Task<ApiResponse<PlatformPageGroupDto>> UpdateAsync(long id, UpdatePlatformPageGroupDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
-        Task<ApiResponse<bool>> ExistsAsync(long id);
         Task<ApiResponse<IEnumerable<PlatformPageGroupDto>>> GetByGroupCodeAsync(string groupCode);
         Task<ApiResponse<IEnumerable<PlatformPageGroupDto>>> GetByMenuHeaderIdAsync(int menuHeaderId);
         Task<ApiResponse<IEnumerable<PlatformPageGroupDto>>> GetByMenuLineIdAsync(int menuLineId);

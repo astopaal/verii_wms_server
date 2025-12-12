@@ -69,12 +69,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("exists/{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> Exists(long id)
-        {
-            var result = await _grLineSerialService.ExistsAsync(id);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
         [HttpGet("paged")]
         public async Task<ActionResult<ApiResponse<PagedResponse<GrLineSerialDto>>>> GetPaged(

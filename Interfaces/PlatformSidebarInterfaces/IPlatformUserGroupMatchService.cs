@@ -10,7 +10,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PlatformUserGroupMatchDto>> CreateAsync(CreatePlatformUserGroupMatchDto createDto);
         Task<ApiResponse<PlatformUserGroupMatchDto>> UpdateAsync(long id, UpdatePlatformUserGroupMatchDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
-        Task<ApiResponse<bool>> ExistsAsync(long id);
         Task<ApiResponse<IEnumerable<PlatformUserGroupMatchDto>>> GetByUserIdAsync(int userId);
         Task<ApiResponse<IEnumerable<PlatformUserGroupMatchDto>>> GetByGroupCodeAsync(string groupCode);
     }

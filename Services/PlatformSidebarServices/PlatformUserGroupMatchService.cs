@@ -126,18 +126,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.PlatformUserGroupMatches.ExistsAsync(id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("PlatformUserGroupMatchRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PlatformUserGroupMatchExistenceCheckError"), ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
         public async Task<ApiResponse<IEnumerable<PlatformUserGroupMatchDto>>> GetByUserIdAsync(int userId)
         {

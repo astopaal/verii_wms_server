@@ -172,17 +172,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.GrImportDocuments.ExistsAsync((int)id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("GrImportDocumentExistsCheckCompleted"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportDocumentExistsCheckError"), ex.Message, 500);
-            }
-        }
+        
     }
 }

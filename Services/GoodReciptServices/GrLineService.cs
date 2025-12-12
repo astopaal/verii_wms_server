@@ -206,18 +206,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.GrLines.ExistsAsync((int)id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("GrLineExistsCheckCompleted"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineExistsError"), ex.Message, 500);
-            }
-        }
+        
 
         // GrHeader ilişkili satırları (GrLine) headerId’ye göre getirir
         public async Task<ApiResponse<IEnumerable<GrLineDto>>> GetLinesByHeaderIdAsync(long headerId)

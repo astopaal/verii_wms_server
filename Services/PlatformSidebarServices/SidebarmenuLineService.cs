@@ -171,19 +171,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.SidebarmenuLines.ExistsAsync(id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("SidebarmenuLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                var message = _localizationService.GetLocalizedString("SidebarmenuLineRetrievalError");
-                return ApiResponse<bool>.ErrorResult(message, ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
         public async Task<ApiResponse<IEnumerable<SidebarmenuLineDto>>> GetByHeaderIdAsync(int headerId)
         {

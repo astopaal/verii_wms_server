@@ -12,6 +12,5 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<GrImportDocumentDto>> CreateAsync(CreateGrImportDocumentDto createDto);
         Task<ApiResponse<GrImportDocumentDto>> UpdateAsync(long id, UpdateGrImportDocumentDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
-        Task<ApiResponse<bool>> ExistsAsync(long id);
     }
 }

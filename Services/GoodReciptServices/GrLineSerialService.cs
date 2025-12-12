@@ -167,17 +167,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> ExistsAsync(long id)
-        {
-            try
-            {
-                var exists = await _unitOfWork.GrLineSerials.ExistsAsync((int)id);
-                return ApiResponse<bool>.SuccessResult(exists, _localizationService.GetLocalizedString("GrImportSerialLineExistsCheckCompleted"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrImportSerialLineExistsCheckError"), ex.Message, 500);
-            }
-        }
+        
     }
 }
