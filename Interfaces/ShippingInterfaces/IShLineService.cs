@@ -1,11 +1,12 @@
 using WMS_WEBAPI.DTOs;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Interfaces
 {
     public interface IShLineService
     {
         Task<ApiResponse<IEnumerable<ShLineDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<ShLineDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<ShLineDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<ShLineDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<ShLineDto>>> GetByHeaderIdAsync(long headerId);
         Task<ApiResponse<IEnumerable<ShLineDto>>> GetByStockCodeAsync(string stockCode);
@@ -16,4 +17,3 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
     }
 }
-

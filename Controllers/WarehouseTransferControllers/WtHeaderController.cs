@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Controllers
 {
@@ -24,10 +25,45 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpPost("paged")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<WtHeaderDto>>>> GetPaged([FromBody] PagedRequest request)
+        {
+            var result = await _wtHeaderService.GetPagedAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<WtHeaderDto>>> GetById(long id)
         {
             var result = await _wtHeaderService.GetByIdAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("branch/{branchCode}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByBranchCode(string branchCode)
+        {
+            var result = await _wtHeaderService.GetByBranchCodeAsync(branchCode);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("date-range")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var result = await _wtHeaderService.GetByDateRangeAsync(startDate, endDate);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("customer/{customerCode}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByCustomerCode(string customerCode)
+        {
+            var result = await _wtHeaderService.GetByCustomerCodeAsync(customerCode);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("doctype/{documentType}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByDocumentType(string documentType)
+        {
+            var result = await _wtHeaderService.GetByDocumentTypeAsync(documentType);
             return StatusCode(result.StatusCode, result);
         }
 
@@ -62,6 +98,13 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpPost("complete/{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> Complete(long id)
+        {
+            var result = await _wtHeaderService.CompleteAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpPost("inter-warehouse/bulk-create")]
         public async Task<ActionResult<ApiResponse<int>>> BulkCreateInterWarehouse([FromBody] BulkCreateWtRequestDto request)
         {
@@ -90,10 +133,10 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("completed-awaiting-erp-approval")]
-        public async Task<ActionResult<ApiResponse<PagedResponse<WtHeaderDto>>>> GetCompletedAwaitingErpApproval([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? sortBy = null, [FromQuery] string? sortDirection = "asc")
+        [HttpPost("completed-awaiting-erp-approval")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<WtHeaderDto>>>> GetCompletedAwaitingErpApproval([FromBody] PagedRequest request)
         {
-            var result = await _wtHeaderService.GetCompletedAwaitingErpApprovalPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
+            var result = await _wtHeaderService.GetCompletedAwaitingErpApprovalPagedAsync(request);
             return StatusCode(result.StatusCode, result);
         }
         

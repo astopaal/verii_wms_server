@@ -41,34 +41,20 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<PagedResponse<SrtLineDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<SrtLineDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
+                if (request.PageNumber < 1) request.PageNumber = 1;
+                if (request.PageSize < 1) request.PageSize = 20;
 
                 var query = _unitOfWork.SrtLines.AsQueryable().Where(x => !x.IsDeleted);
-
-                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-                switch (sortBy?.Trim())
-                {
-                    case "StockCode":
-                        query = desc ? query.OrderByDescending(x => x.StockCode) : query.OrderBy(x => x.StockCode);
-                        break;
-                    case "Quantity":
-                        query = desc ? query.OrderByDescending(x => x.Quantity) : query.OrderBy(x => x.Quantity);
-                        break;
-                    case "CreatedDate":
-                        query = desc ? query.OrderByDescending(x => x.CreatedDate) : query.OrderBy(x => x.CreatedDate);
-                        break;
-                    default:
-                        query = desc ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-                        break;
-                }
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
                 var dtos = _mapper.Map<List<SrtLineDto>>(items);
                 var enriched = await _erpService.PopulateStockNamesAsync(dtos);
                 if (!enriched.Success)
@@ -76,7 +62,7 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<PagedResponse<SrtLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data?.ToList() ?? dtos;
-                var result = new PagedResponse<SrtLineDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<SrtLineDto>(dtos, totalCount, request.PageNumber, request.PageSize);
                 return ApiResponse<PagedResponse<SrtLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SrtLineRetrievedSuccessfully"));
             }
             catch (Exception ex)

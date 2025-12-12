@@ -24,42 +24,21 @@ namespace WMS_WEBAPI.Services
             _localizationService = localizationService;
         }
 
-        public async Task<ApiResponse<PagedResponse<GrImportDocumentDto>>> GetPagedAsync(
-            int pageNumber,
-            int pageSize,
-            string? sortBy = null,
-            string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<GrImportDocumentDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
-
                 var query = _unitOfWork.GrImportDocuments.AsQueryable();
-
-                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-                switch (sortBy?.Trim())
-                {
-                    case "HeaderId":
-                        query = desc ? query.OrderByDescending(x => x.HeaderId) : query.OrderBy(x => x.HeaderId);
-                        break;
-                    case "CreatedDate":
-                        query = desc ? query.OrderByDescending(x => x.CreatedDate) : query.OrderBy(x => x.CreatedDate);
-                        break;
-                    default:
-                        query = desc ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-                        break;
-                }
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
 
                 var dtos = _mapper.Map<List<GrImportDocumentDto>>(items);
 
-                var result = new PagedResponse<GrImportDocumentDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<GrImportDocumentDto>(dtos, totalCount, request.PageNumber, request.PageSize);
 
                 return ApiResponse<PagedResponse<GrImportDocumentDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrImportDocumentRetrievedSuccessfully"));
             }

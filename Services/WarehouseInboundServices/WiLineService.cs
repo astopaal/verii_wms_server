@@ -41,25 +41,17 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<PagedResponse<WiLineDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<WiLineDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                var query = _unitOfWork.WiLines.AsQueryable();
-
-                if (!string.IsNullOrWhiteSpace(sortBy))
-                {
-                    var ascending = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
-                    query = sortBy switch
-                    {
-                        nameof(WiLine.StockCode) => ascending ? query.OrderBy(x => x.StockCode) : query.OrderByDescending(x => x.StockCode),
-                        nameof(WiLine.Quantity) => ascending ? query.OrderBy(x => x.Quantity) : query.OrderByDescending(x => x.Quantity),
-                        _ => query
-                    };
-                }
+                var query = _unitOfWork.WiLines.AsQueryable().Where(x => !x.IsDeleted);
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
                 var dtos = _mapper.Map<List<WiLineDto>>(items);
                 var enriched = await _erpService.PopulateStockNamesAsync(dtos);
                 if (!enriched.Success)
@@ -67,7 +59,7 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<PagedResponse<WiLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data?.ToList() ?? dtos;
-                var result = new PagedResponse<WiLineDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<WiLineDto>(dtos, totalCount, request.PageNumber, request.PageSize);
                 return ApiResponse<PagedResponse<WiLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
             }
             catch (Exception ex)

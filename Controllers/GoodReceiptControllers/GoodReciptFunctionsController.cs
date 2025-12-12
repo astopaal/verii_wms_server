@@ -33,5 +33,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _goodReciptFunctionsService.GetGoodsReceiptLineAsync(siparisNoCsv ?? string.Empty, customerCode);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("lines/customer/{customerCode}/branch/{branchCode}")]
+        public async Task<ActionResult<ApiResponse<List<GoodsOpenOrdersLineDto>>>> GetGoodsReceiptLinesByCustomerAndBranch(string customerCode, string branchCode)
+        {
+            var result = await _goodReciptFunctionsService.GetGoodsReceiptLineByCustomerCodeAndBranchCodeAsync(branchCode, customerCode);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

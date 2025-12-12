@@ -1,11 +1,12 @@
 using WMS_WEBAPI.DTOs;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Interfaces
 {
     public interface IGrRouteService
     {
         Task<ApiResponse<IEnumerable<GrRouteDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<GrRouteDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<GrRouteDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<GrRouteDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<GrRouteDto>>> GetByImportLineIdAsync(long importLineId);
         Task<ApiResponse<IEnumerable<GrRouteDto>>> GetByHeaderIdAsync(long headerId);

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Controllers
 {
@@ -101,24 +102,17 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        
-
-        /// <summary>
-        /// Sayfalı GrLine kayıtlarını getirir
-        /// </summary>
-        /// <param name="pageNumber">Sayfa numarası</param>
-        /// <param name="pageSize">Sayfa boyutu</param>
-        /// <param name="sortBy">Sıralama alanı (Id, HeaderId, Quantity, CreatedDate)</param>
-        /// <param name="sortDirection">Sıralama yönü (asc/desc)</param>
-        /// <returns>Sayfalı GrLine listesi</returns>
-        [HttpGet("paged")]
-        public async Task<ActionResult<ApiResponse<PagedResponse<GrLineDto>>>> GetPaged(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = "asc")
+        [HttpGet("exists/{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> Exists(long id)
         {
-            var result = await _grLineService.GetPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
+            var result = await _grLineService.ExistsAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("paged")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<GrLineDto>>>> GetPaged([FromBody] PagedRequest request)
+        {
+            var result = await _grLineService.GetPagedAsync(request);
             return StatusCode(result.StatusCode, result);
         }
     }

@@ -296,39 +296,19 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<PagedResponse<ShHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<ShHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
-
                 var query = _unitOfWork.ShHeaders.AsQueryable()
                     .Where(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
 
-                var ascending = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
-                if (!string.IsNullOrWhiteSpace(sortBy))
-                {
-                    switch (sortBy.Trim())
-                    {
-                        case nameof(ShHeader.ERPReferenceNumber):
-                            query = ascending ? query.OrderBy(x => x.ERPReferenceNumber) : query.OrderByDescending(x => x.ERPReferenceNumber);
-                            break;
-                        case nameof(ShHeader.CreatedDate):
-                            query = ascending ? query.OrderBy(x => x.CreatedDate) : query.OrderByDescending(x => x.CreatedDate);
-                            break;
-                        default:
-                            query = ascending ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id);
-                            break;
-                    }
-                }
-                else
-                {
-                    query = ascending ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id);
-                }
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
                 var dtos = _mapper.Map<List<ShHeaderDto>>(items);
 
                 var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
@@ -345,7 +325,7 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
-                var result = new PagedResponse<ShHeaderDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<ShHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
                 return ApiResponse<PagedResponse<ShHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)

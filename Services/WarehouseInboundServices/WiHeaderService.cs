@@ -54,26 +54,18 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<PagedResponse<WiHeaderDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<WiHeaderDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
                 var query = _unitOfWork.WiHeaders.AsQueryable().Where(x => x.BranchCode == branchCode);
-
-                if (!string.IsNullOrWhiteSpace(sortBy))
-                {
-                    var ascending = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
-                    query = sortBy switch
-                    {
-                        nameof(WiHeader.ERPReferenceNumber) => ascending ? query.OrderBy(x => x.ERPReferenceNumber) : query.OrderByDescending(x => x.ERPReferenceNumber),
-                        nameof(WiHeader.CreatedDate) => ascending ? query.OrderBy(x => x.CreatedDate) : query.OrderByDescending(x => x.CreatedDate),
-                        _ => query
-                    };
-                }
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
                 var dtos = _mapper.Map<List<WiHeaderDto>>(items);
 
                 var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
@@ -90,7 +82,7 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
-                var result = new PagedResponse<WiHeaderDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<WiHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
                 return ApiResponse<PagedResponse<WiHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WiHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -466,33 +458,19 @@ namespace WMS_WEBAPI.Services
 
         
 
-        public async Task<ApiResponse<PagedResponse<WiHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<WiHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
-
                 var query = _unitOfWork.WiHeaders.AsQueryable()
                     .Where(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
 
-                if (!string.IsNullOrWhiteSpace(sortBy))
-                {
-                    var ascending = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
-                    query = sortBy switch
-                    {
-                        nameof(WiHeader.ERPReferenceNumber) => ascending ? query.OrderBy(x => x.ERPReferenceNumber) : query.OrderByDescending(x => x.ERPReferenceNumber),
-                        nameof(WiHeader.CreatedDate) => ascending ? query.OrderBy(x => x.CreatedDate) : query.OrderByDescending(x => x.CreatedDate),
-                        _ => query.OrderBy(x => x.Id)
-                    };
-                }
-                else
-                {
-                    query = query.OrderBy(x => x.Id);
-                }
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
                 var dtos = _mapper.Map<List<WiHeaderDto>>(items);
 
                 var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
@@ -509,7 +487,7 @@ namespace WMS_WEBAPI.Services
                 }
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
-                var result = new PagedResponse<WiHeaderDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<WiHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
                 return ApiResponse<PagedResponse<WiHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WiHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)

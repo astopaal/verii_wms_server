@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Controllers
 {
@@ -149,14 +150,10 @@ namespace WMS_WEBAPI.Controllers
         /// <param name="sortBy">Sıralama alanı (Id, HeaderId, StockCode, Quantity, CreatedDate)</param>
         /// <param name="sortDirection">Sıralama yönü (asc/desc)</param>
         /// <returns>Sayfalı WtLine listesi</returns>
-        [HttpGet("paged")]
-        public async Task<ActionResult<ApiResponse<PagedResponse<WtLineDto>>>> GetPaged(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = "asc")
+        [HttpPost("paged")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<WtLineDto>>>> GetPaged([FromBody] PagedRequest request)
         {
-            var result = await _wtLineService.GetPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
+            var result = await _wtLineService.GetPagedAsync(request);
             return StatusCode(result.StatusCode, result);
         }
     }

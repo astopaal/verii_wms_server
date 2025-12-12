@@ -23,48 +23,23 @@ namespace WMS_WEBAPI.Services
             _erpService = erpService;
         }
 
-        public async Task<ApiResponse<PagedResponse<GrImportLDto>>> GetPagedAsync(
-            int pageNumber,
-            int pageSize,
-            string? sortBy = null,
-            string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<GrImportLDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
-
-                var query = _unitOfWork.GrImportLines.AsQueryable();
-
-                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-                switch (sortBy?.Trim())
-                {
-                    case "HeaderId":
-                        query = desc ? query.OrderByDescending(x => x.HeaderId) : query.OrderBy(x => x.HeaderId);
-                        break;
-                    case "LineId":
-                        query = desc ? query.OrderByDescending(x => x.LineId) : query.OrderBy(x => x.LineId);
-                        break;
-                    case "StockCode":
-                        query = desc ? query.OrderByDescending(x => x.StockCode) : query.OrderBy(x => x.StockCode);
-                        break;
-                    case "CreatedDate":
-                        query = desc ? query.OrderByDescending(x => x.CreatedDate) : query.OrderBy(x => x.CreatedDate);
-                        break;
-                    default:
-                        query = desc ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-                        break;
-                }
+                var query = _unitOfWork.GrImportLines.AsQueryable().Where(x => !x.IsDeleted);
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
                 var items = await query
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
+                    .ApplyPagination(request.PageNumber, request.PageSize)
                     .ToListAsync();
 
                 var dtos = _mapper.Map<List<GrImportLDto>>(items);
 
-                var result = new PagedResponse<GrImportLDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<GrImportLDto>(dtos, totalCount, request.PageNumber, request.PageSize);
 
                 return ApiResponse<PagedResponse<GrImportLDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
             }

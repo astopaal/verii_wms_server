@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Controllers
 {
@@ -141,22 +142,10 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        /// <summary>
-        /// Sayfalı GrImportL kayıtlarını getirir
-        /// </summary>
-        /// <param name="pageNumber">Sayfa numarası</param>
-        /// <param name="pageSize">Sayfa boyutu</param>
-        /// <param name="sortBy">Sıralama alanı (Id, HeaderId, LineId, StockCode, CreatedDate)</param>
-        /// <param name="sortDirection">Sıralama yönü (asc/desc)</param>
-        /// <returns>Sayfalı GrImportL listesi</returns>
-        [HttpGet("paged")]
-        public async Task<ActionResult<ApiResponse<PagedResponse<GrImportLDto>>>> GetPaged(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = "asc")
+        [HttpPost("paged")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<GrImportLDto>>>> GetPaged([FromBody] PagedRequest request)
         {
-            var result = await _grImportLService.GetPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
+            var result = await _grImportLService.GetPagedAsync(request);
             return StatusCode(result.StatusCode, result);
         }
     }

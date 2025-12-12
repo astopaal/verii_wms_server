@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using WMS_WEBAPI.Services;
 using WMS_WEBAPI.DTOs;
 
 namespace WMS_WEBAPI.Interfaces
@@ -5,7 +7,7 @@ namespace WMS_WEBAPI.Interfaces
     public interface IWtHeaderService
     {
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<WtHeaderDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByBranchCodeAsync(string branchCode);
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
@@ -20,7 +22,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<int>> BulkCreateInterWarehouseTransferAsync(BulkCreateWtRequestDto request);
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetAssignedTransferOrdersAsync(long userId);
         Task<ApiResponse<WtAssignedTransferOrderLinesDto>> GetAssignedTransferOrderLinesAsync(long headerId);
-        Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
         Task<ApiResponse<WtHeaderDto>> GenerateWarehouseTransferOrderAsync(GenerateWarehouseTransferOrderRequestDto request);
         Task<ApiResponse<WtHeaderDto>> SetApprovalAsync(long id, bool approved);
     }

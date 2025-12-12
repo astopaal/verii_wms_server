@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Controllers
 {
@@ -134,14 +135,10 @@ namespace WMS_WEBAPI.Controllers
         /// <param name="sortBy">Sıralama alanı (Id, MenuKey, Title, RoleLevel, CreatedDate)</param>
         /// <param name="sortDirection">Sıralama yönü (asc/desc)</param>
         /// <returns>Sayfalı SidebarmenuHeader listesi</returns>
-        [HttpGet("paged")]
-        public async Task<ActionResult<ApiResponse<PagedResponse<SidebarmenuHeaderDto>>>> GetPaged(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = "asc")
+        [HttpPost("paged")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<SidebarmenuHeaderDto>>>> GetPaged([FromBody] PagedRequest request)
         {
-            var result = await _sidebarmenuHeaderService.GetPagedAsync(pageNumber, pageSize, sortBy, sortDirection);
+            var result = await _sidebarmenuHeaderService.GetPagedAsync(request);
             return StatusCode(result.StatusCode, result);
         }
     }

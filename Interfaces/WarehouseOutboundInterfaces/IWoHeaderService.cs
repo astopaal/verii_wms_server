@@ -1,11 +1,12 @@
 using WMS_WEBAPI.DTOs;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Interfaces
 {
     public interface IWoHeaderService
     {
         Task<ApiResponse<IEnumerable<WoHeaderDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<WoHeaderDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<WoHeaderDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<WoHeaderDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WoHeaderDto>>> GetByBranchCodeAsync(string branchCode);
         Task<ApiResponse<IEnumerable<WoHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
@@ -22,7 +23,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WoAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
         Task<ApiResponse<WoHeaderDto>> GenerateWarehouseOutboundOrderAsync(GenerateWarehouseOutboundOrderRequestDto request);
         Task<ApiResponse<int>> BulkCreateWarehouseOutboundAsync(BulkCreateWoRequestDto request);
-        Task<ApiResponse<PagedResponse<WoHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<WoHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
         Task<ApiResponse<WoHeaderDto>> SetApprovalAsync(long id, bool approved);
     }
 }

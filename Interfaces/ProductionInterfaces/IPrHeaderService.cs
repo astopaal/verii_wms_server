@@ -1,11 +1,12 @@
 using WMS_WEBAPI.DTOs;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Interfaces
 {
     public interface IPrHeaderService
     {
         Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<PrHeaderDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<PrHeaderDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<PrHeaderDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByBranchCodeAsync(string branchCode);
         Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);

@@ -28,21 +28,10 @@ namespace WMS_WEBAPI.Services
                 if (pageNumber < 1) pageNumber = 1;
                 if (pageSize < 1) pageSize = 10;
 
-                var query = _unitOfWork.GrLineSerials.AsQueryable();
-
-                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-                switch (sortBy?.Trim())
-                {
-                    case "ImportLineId":
-                        query = desc ? query.OrderByDescending(x => x.ImportLineId) : query.OrderBy(x => x.ImportLineId);
-                        break;
-                    case "CreatedDate":
-                        query = desc ? query.OrderByDescending(x => x.CreatedDate) : query.OrderBy(x => x.CreatedDate);
-                        break;
-                    default:
-                        query = desc ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-                        break;
-                }
+                var query = _unitOfWork.GrLineSerials.AsQueryable().Where(x => !x.IsDeleted);
+                sortBy = string.IsNullOrWhiteSpace(sortBy) ? "Id" : sortBy.Trim();
+                bool desc = sortDirection?.Equals("desc", StringComparison.OrdinalIgnoreCase) == true;
+                query = query.ApplySorting(sortBy, desc);
 
                 var totalCount = await query.CountAsync();
                 var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();

@@ -1,11 +1,12 @@
 using WMS_WEBAPI.DTOs;
+using WMS_WEBAPI.Services;
 
 namespace WMS_WEBAPI.Interfaces
 {
     public interface IWoLineService
     {
         Task<ApiResponse<IEnumerable<WoLineDto>>> GetAllAsync();
-        Task<ApiResponse<PagedResponse<WoLineDto>>> GetPagedAsync(int pageNumber, int pageSize, string? sortBy = null, string? sortDirection = "asc");
+        Task<ApiResponse<PagedResponse<WoLineDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<WoLineDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WoLineDto>>> GetByHeaderIdAsync(long headerId);
         Task<ApiResponse<IEnumerable<WoLineDto>>> GetByStockCodeAsync(string stockCode);

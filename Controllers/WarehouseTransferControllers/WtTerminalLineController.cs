@@ -30,6 +30,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+
         /// <summary>
         /// ID'ye göre WtTerminalLine kaydını getirir
         /// </summary>

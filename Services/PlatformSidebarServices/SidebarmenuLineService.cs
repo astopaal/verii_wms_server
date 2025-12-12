@@ -35,49 +35,26 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<PagedResponse<SidebarmenuLineDto>>> GetPagedAsync(
-            int pageNumber,
-            int pageSize,
-            string? sortBy = null,
-            string? sortDirection = "asc")
+        public async Task<ApiResponse<PagedResponse<SidebarmenuLineDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1) pageSize = 10;
+                if (request.PageNumber < 1) request.PageNumber = 1;
+                if (request.PageSize < 1) request.PageSize = 20;
 
-                var query = _unitOfWork.SidebarmenuLines.AsQueryable()
-                    .Where(x => !x.IsDeleted);
-
-                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-                switch (sortBy?.Trim())
-                {
-                    case "HeaderId":
-                        query = desc ? query.OrderByDescending(x => x.HeaderId) : query.OrderBy(x => x.HeaderId);
-                        break;
-                    case "Page":
-                        query = desc ? query.OrderByDescending(x => x.Page) : query.OrderBy(x => x.Page);
-                        break;
-                    case "Title":
-                        query = desc ? query.OrderByDescending(x => x.Title) : query.OrderBy(x => x.Title);
-                        break;
-                    case "CreatedDate":
-                        query = desc ? query.OrderByDescending(x => x.CreatedDate) : query.OrderBy(x => x.CreatedDate);
-                        break;
-                    default:
-                        query = desc ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-                        break;
-                }
+                var query = _unitOfWork.SidebarmenuLines.AsQueryable().Where(x => !x.IsDeleted);
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
                 var items = await query
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
+                    .ApplyPagination(request.PageNumber, request.PageSize)
                     .ToListAsync();
 
                 var dtos = _mapper.Map<List<SidebarmenuLineDto>>(items);
 
-                var result = new PagedResponse<SidebarmenuLineDto>(dtos, totalCount, pageNumber, pageSize);
+                var result = new PagedResponse<SidebarmenuLineDto>(dtos, totalCount, request.PageNumber, request.PageSize);
 
                 return ApiResponse<PagedResponse<SidebarmenuLineDto>>.SuccessResult(
                     result,
