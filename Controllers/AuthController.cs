@@ -62,5 +62,35 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult<ApiResponse<string>>> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var result = await _authService.RequestPasswordResetAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<ApiResponse<bool>>> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var result = await _authService.ResetPasswordAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<ActionResult<ApiResponse<bool>>> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return StatusCode(401, ApiResponse<bool>.ErrorResult("Unauthorized", "Unauthorized", 401));
+            }
+            var userId = long.Parse(userIdClaim);
+            var result = await _authService.ChangePasswordAsync(userId, request);
+            return StatusCode(result.StatusCode, result);
+        }
+
     }
 }

@@ -9,5 +9,8 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<IEnumerable<UserDto>>> GetAllUsersAsync();
         Task<ApiResponse<UserDto>> RegisterUserAsync(RegisterDto registerDto);
         Task<ApiResponse<string>> LoginAsync(LoginRequest loginDto);
+        Task<ApiResponse<string>> RequestPasswordResetAsync(ForgotPasswordRequest request);
+        Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request);
+        Task<ApiResponse<bool>> ChangePasswordAsync(long userId, ChangePasswordRequest request);
     }
 }

@@ -281,8 +281,27 @@ builder.Services.AddAuthentication(options =>
             }
             
             // Kullanıcının aktif session'ı var mı kontrol et
+            var authHeader = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            string? rawToken = null;
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+            {
+                rawToken = authHeader.Substring("Bearer ".Length).Trim();
+            }
+            string? tokenHash = null;
+            if (!string.IsNullOrEmpty(rawToken))
+            {
+                using var sha256Hash = System.Security.Cryptography.SHA256.Create();
+                var bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
+                var builderStr = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builderStr.Append(bytes[i].ToString("x2"));
+                }
+                tokenHash = builderStr.ToString();
+            }
+
             var session = await db.UserSessions
-                .FirstOrDefaultAsync(s => s.UserId.ToString() == userId && s.RevokedAt == null);
+                .FirstOrDefaultAsync(s => s.UserId.ToString() == userId && s.RevokedAt == null && (tokenHash != null && s.Token == tokenHash));
             
             if (session == null)
             {

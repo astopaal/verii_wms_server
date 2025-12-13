@@ -176,6 +176,103 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<string>> RequestPasswordResetAsync(ForgotPasswordRequest request)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.AsQueryable().FirstOrDefaultAsync(u => u.Email == request.Email);
+                var token = Guid.NewGuid().ToString("N");
+                var tokenHash = ComputeSha256Hash(token);
+                var expiresAt = DateTime.UtcNow.AddMinutes(30);
+
+                if (user != null)
+                {
+                    var reset = new PasswordResetRequest
+                    {
+                        UserId = user.Id,
+                        TokenHash = tokenHash,
+                        ExpiresAt = expiresAt,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+                    _context.Set<PasswordResetRequest>().Add(reset);
+                    await _context.SaveChangesAsync();
+                }
+
+                var msg = _localizationService.GetLocalizedString("OperationSuccessful");
+                return ApiResponse<string>.SuccessResult(token, msg);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<string>.ErrorResult(_localizationService.GetLocalizedString("AuthErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            try
+            {
+                var tokenHash = ComputeSha256Hash(request.Token);
+                var now = DateTime.UtcNow;
+
+                var reset = await _context.Set<PasswordResetRequest>()
+                    .Include(r => r.User)
+                    .FirstOrDefaultAsync(r => r.TokenHash == tokenHash && r.UsedAt == null && r.ExpiresAt > now && !r.IsDeleted);
+
+                if (reset == null || reset.User == null)
+                {
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("ValidationError"), _localizationService.GetLocalizedString("ValidationError"), 400);
+                }
+
+                reset.UsedAt = now;
+                reset.UpdatedDate = now;
+
+                reset.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                reset.User.UpdatedDate = now;
+
+                await _context.SaveChangesAsync();
+
+                await InvalidateUserSessionsAsync(reset.User.Id);
+
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("OperationSuccessful"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("AuthErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ChangePasswordAsync(long userId, ChangePasswordRequest request)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.AsQueryable().FirstOrDefaultAsync(u => u.Id == userId);
+                if (user == null)
+                {
+                    var nf = _localizationService.GetLocalizedString("AuthUserNotFound");
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
+                {
+                    var msg = _localizationService.GetLocalizedString("Error.User.InvalidCredentials");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                user.UpdatedDate = DateTime.UtcNow;
+                await _unitOfWork.SaveChangesAsync();
+
+                await InvalidateUserSessionsAsync(user.Id);
+
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("OperationSuccessful"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("AuthErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
         static string ComputeSha256Hash(string rawData)
         {
             using var sha256Hash = System.Security.Cryptography.SHA256.Create();
@@ -186,6 +283,25 @@ namespace WMS_WEBAPI.Services
                 builder.Append(bytes[i].ToString("x2"));
             }
             return builder.ToString();
+        }
+
+        private async Task InvalidateUserSessionsAsync(long userId)
+        {
+            var sessions = await _context.Set<UserSession>()
+                .Where(s => s.UserId == userId && s.RevokedAt == null)
+                .ToListAsync();
+
+            if (sessions.Count > 0)
+            {
+                var now = DateTime.UtcNow;
+                foreach (var s in sessions)
+                {
+                    s.RevokedAt = now;
+                    s.UpdatedDate = now;
+                }
+                await _context.SaveChangesAsync();
+                await WMS_WEBAPI.Hubs.AuthHub.ForceLogoutUser(_hubContext, userId.ToString());
+            }
         }
 
         static UserDto MapToUserDto(User user)

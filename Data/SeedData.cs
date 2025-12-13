@@ -28,7 +28,29 @@ namespace WMS_WEBAPI.Data
                     SET [IsDeleted] = 0
                     WHERE [IsDeleted] IS NULL;
 
-
+                    IF OBJECT_ID('[dbo].[RII_PASSWORD_RESET_REQUEST]', 'U') IS NULL
+                    BEGIN
+                        CREATE TABLE [dbo].[RII_PASSWORD_RESET_REQUEST] (
+                            [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                            [CreatedDate] DATETIME2 NULL,
+                            [UpdatedDate] DATETIME2 NULL,
+                            [DeletedDate] DATETIME2 NULL,
+                            [IsDeleted] BIT NOT NULL CONSTRAINT [DF_RII_PASSWORD_RESET_REQUEST_IsDeleted] DEFAULT(0),
+                            [CreatedBy] BIGINT NULL,
+                            [UpdatedBy] BIGINT NULL,
+                            [DeletedBy] BIGINT NULL,
+                            [UserId] BIGINT NOT NULL,
+                            [TokenHash] NVARCHAR(128) NOT NULL,
+                            [ExpiresAt] DATETIME2 NOT NULL,
+                            [UsedAt] DATETIME2 NULL,
+                            [RequestIp] NVARCHAR(100) NULL,
+                            [UserAgent] NVARCHAR(500) NULL
+                        );
+                        ALTER TABLE [dbo].[RII_PASSWORD_RESET_REQUEST] WITH CHECK ADD CONSTRAINT [FK_RII_PASSWORD_RESET_REQUEST_RII_USERS_UserId] FOREIGN KEY([UserId])
+                        REFERENCES [dbo].[RII_USERS] ([Id]);
+                        CREATE INDEX [IX_RII_PASSWORD_RESET_REQUEST_UserId_TokenHash] ON [dbo].[RII_PASSWORD_RESET_REQUEST] ([UserId], [TokenHash]);
+                        CREATE INDEX [IX_RII_PASSWORD_RESET_REQUEST_ExpiresAt] ON [dbo].[RII_PASSWORD_RESET_REQUEST] ([ExpiresAt]);
+                    END
                     ");
             }
             catch { }
