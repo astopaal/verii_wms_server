@@ -205,50 +205,6 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<GrHeaderDto>>> GetByBranchCodeAsync(string branchCode)
-        {
-            try
-            {
-                var grHeaders = await _unitOfWork.GrHeaders
-                    .FindAsync(x => x.BranchCode == branchCode);
-
-                var grHeaderDtos = _mapper.Map<IEnumerable<GrHeaderDto>>(grHeaders);
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                var resultDtos = enrichedCustomer.Data ?? grHeaderDtos;
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<GrHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var grHeaders = await _unitOfWork.GrHeaders
-                    .FindAsync(x => x.PlannedDate >= startDate && x.PlannedDate <= endDate && x.BranchCode == branchCode);
-                
-                var grHeaderDtos = _mapper.Map<IEnumerable<GrHeaderDto>>(grHeaders);
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                var resultDtos = enrichedCustomer.Data ?? grHeaderDtos;
-                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(resultDtos, _localizationService.GetLocalizedString("GrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
-            }
-        }
 
         public async Task<ApiResponse<long>> BulkCreateAsync(BulkCreateGrRequestDto request)
         {

@@ -8,7 +8,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PtImportLineDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<PtImportLineDto>>> GetByHeaderIdAsync(long headerId);
         Task<ApiResponse<IEnumerable<PtImportLineDto>>> GetByLineIdAsync(long lineId);
-        Task<ApiResponse<IEnumerable<PtImportLineDto>>> GetByStockCodeAsync(string stockCode);
         Task<ApiResponse<PtImportLineDto>> CreateAsync(CreatePtImportLineDto createDto);
         Task<ApiResponse<PtImportLineDto>> UpdateAsync(long id, UpdatePtImportLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);

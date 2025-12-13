@@ -47,12 +47,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("daterange")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ShTerminalLineDto>>>> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            var result = await _service.GetByDateRangeAsync(startDate, endDate);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<ShTerminalLineDto>>> Create([FromBody] CreateShTerminalLineDto createDto)
@@ -76,4 +70,3 @@ namespace WMS_WEBAPI.Controllers
         }
     }
 }
-

@@ -111,26 +111,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<ShImportLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.ShImportLines.FindAsync(x => x.StockCode == stockCode);
-                var dtos = _mapper.Map<IEnumerable<ShImportLineDto>>(entities);
-
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<ShImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-
-                return ApiResponse<IEnumerable<ShImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("ShImportLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<ShImportLineDto>>.ErrorResult(_localizationService.GetLocalizedString("ShImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<ShImportLineDto>> CreateAsync(CreateShImportLineDto createDto)
         {

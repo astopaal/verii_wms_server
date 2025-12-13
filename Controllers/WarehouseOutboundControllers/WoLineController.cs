@@ -48,27 +48,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("stock/{stockCode}")]
-        public async Task<IActionResult> GetByStockCode(string stockCode)
-        {
-            var result = await _service.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("erporder/{erpOrderNo}")]
-        public async Task<IActionResult> GetByErpOrderNo(string erpOrderNo)
-        {
-            var result = await _service.GetByErpOrderNoAsync(erpOrderNo);
-            return StatusCode(result.StatusCode, result);
-        }
 
 
-        [HttpGet("quantity-range")]
-        public async Task<IActionResult> GetByQuantityRange([FromQuery] decimal minQuantity, [FromQuery] decimal maxQuantity)
-        {
-            var result = await _service.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWoLineDto createDto)

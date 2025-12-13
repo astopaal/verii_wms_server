@@ -103,24 +103,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<PrImportLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PrImportLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PrImportLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<PrImportLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrImportLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("PrImportLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrImportLineDto>>.ErrorResult(_localizationService.GetLocalizedString("PrImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<PrImportLineDto>> CreateAsync(CreatePrImportLineDto createDto)
         {
@@ -182,4 +164,3 @@ namespace WMS_WEBAPI.Services
         }
     }
 }
-

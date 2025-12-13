@@ -75,12 +75,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("by-branch/{branchCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GrHeaderDto>>>> GetByBranchCode(string branchCode)
-        {
-            var result = await _grHeaderService.GetByBranchCodeAsync(branchCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpGet("by-customer/{customerCode}")]
         public async Task<ActionResult<ApiResponse<IEnumerable<GrHeaderDto>>>> GetByCustomerCode(string customerCode)
@@ -89,14 +83,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("by-date-range")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GrHeaderDto>>>> GetByDateRange(
-            [FromQuery] DateTime startDate, 
-            [FromQuery] DateTime endDate)
-        {
-            var result = await _grHeaderService.GetByDateRangeAsync(startDate, endDate);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
         [HttpPost("paged")]
         public async Task<ActionResult<ApiResponse<PagedResponse<GrHeaderDto>>>> GetPaged([FromBody] PagedRequest request)

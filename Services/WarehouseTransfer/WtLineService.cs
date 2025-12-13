@@ -201,28 +201,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtLineDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtLines
-                    .FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
-
-                var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enrichedStock.Success)
-                {
-                    return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(enrichedStock.Message, enrichedStock.ExceptionMessage, enrichedStock.StatusCode);
-                }
-                dtos = enrichedStock.Data ?? dtos;
-
-                return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<WtLineDto>> CreateAsync(CreateWtLineDto createDto)
         {

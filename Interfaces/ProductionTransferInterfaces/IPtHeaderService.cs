@@ -8,8 +8,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetAllAsync();
         Task<ApiResponse<PagedResponse<PtHeaderDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<PtHeaderDto>> GetByIdAsync(long id);
-        Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetByBranchCodeAsync(string branchCode);
-        Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetByCustomerCodeAsync(string customerCode);
         Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetByDocumentTypeAsync(string documentType);
         Task<ApiResponse<PtHeaderDto>> CreateAsync(CreatePtHeaderDto createDto);

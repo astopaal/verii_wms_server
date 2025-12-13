@@ -110,19 +110,6 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<PtRouteDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PtRoutes.FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PtRouteDto>>(entities);
-                return ApiResponse<IEnumerable<PtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PtRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("PtRouteRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<PtRouteDto>> CreateAsync(CreatePtRouteDto createDto)
         {

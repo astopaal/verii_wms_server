@@ -8,7 +8,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WiTerminalLineDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WiTerminalLineDto>>> GetByHeaderIdAsync(long headerId);
         Task<ApiResponse<IEnumerable<WiTerminalLineDto>>> GetByUserIdAsync(long userId);
-        Task<ApiResponse<IEnumerable<WiTerminalLineDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<ApiResponse<WiTerminalLineDto>> CreateAsync(CreateWiTerminalLineDto createDto);
         Task<ApiResponse<WiTerminalLineDto>> UpdateAsync(long id, UpdateWiTerminalLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);

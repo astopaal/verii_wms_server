@@ -47,12 +47,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ShImportLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _service.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<ShImportLineDto>>> Create([FromBody] CreateShImportLineDto createDto)

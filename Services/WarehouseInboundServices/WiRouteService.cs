@@ -49,19 +49,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetByLineIdAsync(long lineId)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiRoutes.FindAsync(x => x.ImportLineId == lineId);
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetByStockCodeAsync(string stockCode)
         {
@@ -78,19 +65,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetBySerialNoAsync(string serialNo)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiRoutes.FindAsync(x => x.SerialNo == serialNo || x.SerialNo2 == serialNo);
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetBySourceWarehouseAsync(int sourceWarehouse)
         {
@@ -121,19 +95,6 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiRoutes.FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity);
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<WiRouteDto>> CreateAsync(CreateWiRouteDto createDto)
         {

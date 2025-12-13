@@ -8,9 +8,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WtRouteDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByLineIdAsync(long lineId);
         Task<ApiResponse<IEnumerable<WtRouteDto>>> GetBySerialNoAsync(string serialNo);
-        Task<ApiResponse<IEnumerable<WtRouteDto>>> GetBySourceWarehouseAsync(string sourceWarehouse);
-        Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByTargetWarehouseAsync(string targetWarehouse);
-        Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity);
         Task<ApiResponse<WtRouteDto>> CreateAsync(CreateWtRouteDto createDto);
         Task<ApiResponse<WtRouteDto>> UpdateAsync(long id, UpdateWtRouteDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);

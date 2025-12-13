@@ -41,19 +41,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("branch/{branchCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<PtHeaderDto>>>> GetByBranchCode(string branchCode)
-        {
-            var result = await _service.GetByBranchCodeAsync(branchCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("date-range")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<PtHeaderDto>>>> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            var result = await _service.GetByDateRangeAsync(startDate, endDate);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
 
         [HttpGet("customer/{customerCode}")]

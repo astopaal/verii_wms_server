@@ -47,27 +47,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("source/{sourceWarehouse}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<PtRouteDto>>>> GetBySourceWarehouse(int sourceWarehouse)
-        {
-            var result = await _service.GetBySourceWarehouseAsync(sourceWarehouse);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("target/{targetWarehouse}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<PtRouteDto>>>> GetByTargetWarehouse(int targetWarehouse)
-        {
-            var result = await _service.GetByTargetWarehouseAsync(targetWarehouse);
-            return StatusCode(result.StatusCode, result);
-        }
 
 
-        [HttpGet("quantity-range")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<PtRouteDto>>>> GetByQuantityRange([FromQuery] decimal minQuantity, [FromQuery] decimal maxQuantity)
-        {
-            var result = await _service.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<PtRouteDto>>> Create([FromBody] CreatePtRouteDto createDto)

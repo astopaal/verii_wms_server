@@ -60,24 +60,12 @@ namespace WMS_WEBAPI.Controllers
         /// </summary>
         /// <param name="stockCode">Stok kodu</param>
         /// <returns>WtLine listesi</returns>
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _wtLineService.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// ERP sipariş numarasına göre WtLine kayıtlarını getirir
         /// </summary>
         /// <param name="erpOrderNo">ERP sipariş numarası</param>
         /// <returns>WtLine listesi</returns>
-        [HttpGet("erporder/{erpOrderNo}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtLineDto>>>> GetByErpOrderNo(string erpOrderNo)
-        {
-            var result = await _wtLineService.GetByErpOrderNoAsync(erpOrderNo);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// Yeni WtLine kaydı oluşturur
@@ -133,14 +121,6 @@ namespace WMS_WEBAPI.Controllers
         /// <param name="minQuantity">Minimum miktar</param>
         /// <param name="maxQuantity">Maksimum miktar</param>
         /// <returns>WtLine listesi</returns>
-        [HttpGet("quantity")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtLineDto>>>> GetByQuantityRange(
-            [FromQuery] decimal minQuantity, 
-            [FromQuery] decimal maxQuantity)
-        {
-            var result = await _wtLineService.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// Sayfalı WtLine kayıtlarını getirir

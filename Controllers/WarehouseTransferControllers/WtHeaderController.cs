@@ -39,33 +39,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("branch/{branchCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByBranchCode(string branchCode)
-        {
-            var result = await _wtHeaderService.GetByBranchCodeAsync(branchCode);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
-        [HttpGet("date-range")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            var result = await _wtHeaderService.GetByDateRangeAsync(startDate, endDate);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("customer/{customerCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByCustomerCode(string customerCode)
-        {
-            var result = await _wtHeaderService.GetByCustomerCodeAsync(customerCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("doctype/{documentType}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByDocumentType(string documentType)
-        {
-            var result = await _wtHeaderService.GetByDocumentTypeAsync(documentType);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<WtHeaderDto>>> Create([FromBody] CreateWtHeaderDto createDto)
@@ -112,12 +87,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("by-document/{documentNo}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetByDocumentNo(string documentNo)
-        {
-            var result = await _wtHeaderService.GetByDocumentNoAsync(documentNo);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpGet("assigned/{userId}")]
         public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetAssignedTransferOrders(long userId)

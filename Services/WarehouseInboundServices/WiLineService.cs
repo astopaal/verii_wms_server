@@ -147,19 +147,6 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<WiLineDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiLines.FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity);
-                var dtos = _mapper.Map<IEnumerable<WiLineDto>>(entities);
-                return ApiResponse<IEnumerable<WiLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WiLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<WiLineDto>> CreateAsync(CreateWiLineDto createDto)
         {

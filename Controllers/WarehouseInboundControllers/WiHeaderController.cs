@@ -41,41 +41,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("branch/{branchCode}")]
-        public async Task<IActionResult> GetByBranchCode(string branchCode)
-        {
-            var result = await _service.GetByBranchCodeAsync(branchCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("date-range")]
-        public async Task<IActionResult> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
-        {
-            var result = await _service.GetByDateRangeAsync(startDate, endDate);
-            return StatusCode(result.StatusCode, result);
-        }
-
-
-        [HttpGet("customer/{customerCode}")]
-        public async Task<IActionResult> GetByCustomerCode(string customerCode)
-        {
-            var result = await _service.GetByCustomerCodeAsync(customerCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("doctype/{documentType}")]
-        public async Task<IActionResult> GetByDocumentType(string documentType)
-        {
-            var result = await _service.GetByDocumentTypeAsync(documentType);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("docno/{documentNo}")]
-        public async Task<IActionResult> GetByDocumentNo(string documentNo)
-        {
-            var result = await _service.GetByDocumentNoAsync(documentNo);
-            return StatusCode(result.StatusCode, result);
-        }
+        
+        
 
         [HttpGet("inbound/{inboundType}")]
         public async Task<IActionResult> GetByInboundType(string inboundType)

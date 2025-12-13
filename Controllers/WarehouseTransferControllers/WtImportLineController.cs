@@ -73,41 +73,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        /// <summary>
-        /// Stok koduna göre WtImportLine kayıtlarını getirir
-        /// </summary>
-        /// <param name="stockCode">Stok kodu</param>
-        /// <returns>WtImportLine listesi</returns>
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtImportLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _wtImportLineService.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
-        /// <summary>
-        /// Cell koduna göre WtImportLine kayıtlarını getirir
-        /// </summary>
-        /// <param name="cellCode">Cell kodu</param>
-        /// <returns>WtImportLine listesi</returns>
-        [HttpGet("cell/{cellCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtImportLineDto>>>> GetByCellCode(string cellCode)
-        {
-            var result = await _wtImportLineService.GetByCellCodeAsync(cellCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
-        /// <summary>
-        /// ERP sipariş numarasına göre WtImportLine kayıtlarını getirir
-        /// </summary>
-        /// <param name="erpOrderNo">ERP sipariş numarası</param>
-        /// <returns>WtImportLine listesi</returns>
-        [HttpGet("erp-order/{erpOrderNo}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtImportLineDto>>>> GetByErpOrderNo(string erpOrderNo)
-        {
-            var result = await _wtImportLineService.GetByErpOrderNoAsync(erpOrderNo);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// Yeni WtImportLine kaydı oluşturur

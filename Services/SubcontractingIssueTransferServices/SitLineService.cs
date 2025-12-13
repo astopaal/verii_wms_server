@@ -153,19 +153,6 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<SitLineDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.SitLines.FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(_localizationService.GetLocalizedString("SitLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<SitLineDto>> CreateAsync(CreateSitLineDto createDto)
         {

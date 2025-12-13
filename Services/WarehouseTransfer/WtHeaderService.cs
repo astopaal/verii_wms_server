@@ -130,35 +130,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByDocumentNoAsync(string documentNo)
-        {
-            try
-            {
-                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var entities = await _unitOfWork.WtHeaders
-                    .FindAsync(x => x.DocumentNo == documentNo && !x.IsDeleted && x.BranchCode == branchCode);
-                var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                dtos = enrichedWarehouse.Data ?? dtos;
-                return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
 
 
@@ -193,34 +164,7 @@ namespace WMS_WEBAPI.Services
         }
 
 
-        public async Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var entities = await _unitOfWork.WtHeaders
-                    .FindAsync(x => x.DocumentDate >= startDate && x.DocumentDate <= endDate && !x.IsDeleted && x.BranchCode == branchCode);
-                var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                dtos = enrichedWarehouse.Data ?? dtos;
-                return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
         public async Task<ApiResponse<WtHeaderDto>> CreateAsync(CreateWtHeaderDto createDto)
         {
@@ -359,53 +303,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByCustomerCodeAsync(string customerCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtHeaders
-                    .FindAsync(x => x.CustomerCode == customerCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
-                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                dtos = enriched.Data ?? dtos;
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                dtos = enrichedWarehouse.Data ?? dtos;
-                return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
-       public async Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetByDocumentTypeAsync(string documentType)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtHeaders
-                    .FindAsync(x => x.DocumentType == documentType && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtHeaderDto>>(entities);
-                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                dtos = enriched.Data ?? dtos;
-                return ApiResponse<IEnumerable<WtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetAssignedTransferOrdersAsync(long userId)
         {

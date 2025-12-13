@@ -169,26 +169,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<GrImportLDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var grImportLs = await _unitOfWork.GrImportLines.FindAsync(x => x.StockCode == stockCode);
-                var grImportLDtos = _mapper.Map<IEnumerable<GrImportLDto>>(grImportLs);
-
-                var enriched = await _erpService.PopulateStockNamesAsync(grImportLDtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-
-                return ApiResponse<IEnumerable<GrImportLDto>>.SuccessResult(enriched.Data ?? grImportLDtos, _localizationService.GetLocalizedString("GrImportLRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<GrImportLDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLRetrievalError"), ex.Message, 500);
-            }
-        }
 
         public async Task<ApiResponse<GrImportLDto>> CreateAsync(CreateGrImportLDto createDto)
         {

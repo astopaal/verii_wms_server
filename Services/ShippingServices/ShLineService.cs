@@ -153,19 +153,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<ShLineDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity)
-        {
-            try
-            {
-                var entities = await _unitOfWork.ShLines.FindAsync(x => x.Quantity >= minQuantity && x.Quantity <= maxQuantity && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<ShLineDto>>(entities);
-                return ApiResponse<IEnumerable<ShLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("ShLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<ShLineDto>>.ErrorResult(_localizationService.GetLocalizedString("ShLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<ShLineDto>> CreateAsync(CreateShLineDto createDto)
         {

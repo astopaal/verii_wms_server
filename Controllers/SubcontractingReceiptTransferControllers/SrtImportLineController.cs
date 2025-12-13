@@ -48,12 +48,6 @@ namespace WMS_WEBAPI.Controllers
         }
 
 
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<SrtImportLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _service.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
 
         [HttpPost]

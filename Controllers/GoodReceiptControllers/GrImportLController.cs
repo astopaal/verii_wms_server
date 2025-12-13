@@ -74,17 +74,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        /// <summary>
-        /// Stok koduna göre GrImportL kayıtlarını getirir
-        /// </summary>
-        /// <param name="stockCode">Stok kodu</param>
-        /// <returns>GrImportL listesi</returns>
-        [HttpGet("by-stock-code/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GrImportLDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _grImportLService.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
 
         /// <summary>

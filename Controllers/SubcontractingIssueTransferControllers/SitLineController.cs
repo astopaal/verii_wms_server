@@ -48,27 +48,8 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<SitLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _service.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
-
-        [HttpGet("erpOrder/{erpOrderNo}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<SitLineDto>>>> GetByErpOrderNo(string erpOrderNo)
-        {
-            var result = await _service.GetByErpOrderNoAsync(erpOrderNo);
-            return StatusCode(result.StatusCode, result);
-        }
 
 
-        [HttpGet("quantity-range")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<SitLineDto>>>> GetByQuantityRange([FromQuery] decimal minQuantity, [FromQuery] decimal maxQuantity)
-        {
-            var result = await _service.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse<SitLineDto>>> Create([FromBody] CreateSitLineDto createDto)

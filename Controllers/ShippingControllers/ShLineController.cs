@@ -41,19 +41,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("stock/{stockCode}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ShLineDto>>>> GetByStockCode(string stockCode)
-        {
-            var result = await _service.GetByStockCodeAsync(stockCode);
-            return StatusCode(result.StatusCode, result);
-        }
 
-        [HttpGet("quantity")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<ShLineDto>>>> GetByQuantityRange([FromQuery] decimal minQuantity, [FromQuery] decimal maxQuantity)
-        {
-            var result = await _service.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
 
         [HttpPost("paged")]
         public async Task<ActionResult<ApiResponse<PagedResponse<ShLineDto>>>> GetPaged([FromBody] PagedRequest request)

@@ -72,24 +72,12 @@ namespace WMS_WEBAPI.Controllers
         /// </summary>
         /// <param name="sourceWarehouse">Kaynak depo kodu</param>
         /// <returns>WtRoute listesi</returns>
-        [HttpGet("sourcewarehouse/{sourceWarehouse}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtRouteDto>>>> GetBySourceWarehouse(string sourceWarehouse)
-        {
-            var result = await _wtRouteService.GetBySourceWarehouseAsync(sourceWarehouse);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// Hedef depo koduna göre WtRoute kayıtlarını getirir
         /// </summary>
         /// <param name="targetWarehouse">Hedef depo kodu</param>
         /// <returns>WtRoute listesi</returns>
-        [HttpGet("targetwarehouse/{targetWarehouse}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtRouteDto>>>> GetByTargetWarehouse(string targetWarehouse)
-        {
-            var result = await _wtRouteService.GetByTargetWarehouseAsync(targetWarehouse);
-            return StatusCode(result.StatusCode, result);
-        }
 
         /// <summary>
         /// Yeni WtRoute kaydı oluşturur
@@ -145,13 +133,5 @@ namespace WMS_WEBAPI.Controllers
         /// <param name="minQuantity">Minimum miktar</param>
         /// <param name="maxQuantity">Maksimum miktar</param>
         /// <returns>WtRoute listesi</returns>
-        [HttpGet("quantity")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtRouteDto>>>> GetByQuantityRange(
-            [FromQuery] decimal minQuantity, 
-            [FromQuery] decimal maxQuantity)
-        {
-            var result = await _wtRouteService.GetByQuantityRangeAsync(minQuantity, maxQuantity);
-            return StatusCode(result.StatusCode, result);
-        }
     }
 }

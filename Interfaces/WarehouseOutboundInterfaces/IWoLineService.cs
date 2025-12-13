@@ -9,9 +9,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PagedResponse<WoLineDto>>> GetPagedAsync(PagedRequest request);
         Task<ApiResponse<WoLineDto>> GetByIdAsync(long id);
         Task<ApiResponse<IEnumerable<WoLineDto>>> GetByHeaderIdAsync(long headerId);
-        Task<ApiResponse<IEnumerable<WoLineDto>>> GetByStockCodeAsync(string stockCode);
-        Task<ApiResponse<IEnumerable<WoLineDto>>> GetByErpOrderNoAsync(string erpOrderNo);
-        Task<ApiResponse<IEnumerable<WoLineDto>>> GetByQuantityRangeAsync(decimal minQuantity, decimal maxQuantity);
         Task<ApiResponse<WoLineDto>> CreateAsync(CreateWoLineDto createDto);
         Task<ApiResponse<WoLineDto>> UpdateAsync(long id, UpdateWoLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
