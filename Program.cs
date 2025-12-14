@@ -60,7 +60,10 @@ builder.Services.AddHangfire(configuration => configuration
     }));
 
 // Add Hangfire server
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(options =>
+{
+    options.Queues = new[] { "default", "email", "reset-pass-mail" };
+});
 
 // Register Core Services
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -178,6 +181,7 @@ builder.Services.AddScoped<BackgroundJobService>();
 
 // Register Notification Services
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IResetPasswordEmailJob, WMS_WEBAPI.Services.Jobs.ResetPasswordEmailJob>();
 
 // Add HttpContextAccessor for accessing HTTP context in services
 builder.Services.AddHttpContextAccessor();

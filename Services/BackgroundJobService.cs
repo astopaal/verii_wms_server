@@ -1,4 +1,7 @@
 using Hangfire;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Net.Mail;
 using WMS_WEBAPI.Interfaces;
 
 namespace WMS_WEBAPI.Services
@@ -7,11 +10,13 @@ namespace WMS_WEBAPI.Services
     {
         private readonly ILocalizationService _localizationService;
         private readonly ILogger<BackgroundJobService> _logger;
+        private readonly IConfiguration _configuration;
 
-        public BackgroundJobService(ILocalizationService localizationService, ILogger<BackgroundJobService> logger)
+        public BackgroundJobService(ILocalizationService localizationService, ILogger<BackgroundJobService> logger, IConfiguration configuration)
         {
             _localizationService = localizationService;
             _logger = logger;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -39,6 +44,8 @@ namespace WMS_WEBAPI.Services
             
             _logger.LogInformation($"Hatırlatma e-postası başarıyla gönderildi: {message}");
         }
+
+        
 
         /// <summary>
         /// Örnek recurring job - Belirli aralıklarla tekrar eden iş

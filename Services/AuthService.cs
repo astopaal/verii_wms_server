@@ -6,6 +6,7 @@ using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.UnitOfWork;
+using Hangfire;
 
 namespace WMS_WEBAPI.Services
 {
@@ -197,10 +198,17 @@ namespace WMS_WEBAPI.Services
                     };
                     _context.Set<PasswordResetRequest>().Add(reset);
                     await _context.SaveChangesAsync();
+                    
+                    var fullName = string.Join(" ", new[] { user.FirstName, user.LastName }.Where(x => !string.IsNullOrWhiteSpace(x)));
+                    if (string.IsNullOrWhiteSpace(fullName))
+                    {
+                        fullName = user.Username;
+                    }
+                    BackgroundJob.Enqueue<WMS_WEBAPI.Services.Jobs.ResetPasswordEmailJob>(job => job.Send(user.Email, fullName, token));
                 }
 
                 var msg = _localizationService.GetLocalizedString("OperationSuccessful");
-                return ApiResponse<string>.SuccessResult(token, msg);
+                return ApiResponse<string>.SuccessResult(string.Empty, msg);
             }
             catch (Exception ex)
             {
