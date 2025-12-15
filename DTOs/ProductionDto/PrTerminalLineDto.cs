@@ -19,13 +19,10 @@ namespace WMS_WEBAPI.DTOs
         public string? DeletedByFullUser { get; set; }
     }
 
-    public class CreatePrTerminalLineDto
+    public class CreatePrTerminalLineDto : BaseTerminalLineCreateDto
     {
         [Required]
         public long HeaderId { get; set; }
-
-        [Required]
-        public long TerminalUserId { get; set; }
     }
 
     public class UpdatePrTerminalLineDto

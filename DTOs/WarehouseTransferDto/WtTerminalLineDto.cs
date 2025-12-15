@@ -18,13 +18,10 @@ namespace WMS_WEBAPI.DTOs
 
     }
 
-    public class CreateWtTerminalLineDto
+    public class CreateWtTerminalLineDto : BaseTerminalLineCreateDto
     {
         [Required]
         public long HeaderId { get; set; }
-
-        [Required]
-        public long TerminalUserId { get; set; }
     }
 
     public class UpdateWtTerminalLineDto

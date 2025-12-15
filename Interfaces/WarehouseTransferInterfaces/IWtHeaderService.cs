@@ -18,5 +18,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
         Task<ApiResponse<WtHeaderDto>> GenerateWarehouseTransferOrderAsync(GenerateWarehouseTransferOrderRequestDto request);
         Task<ApiResponse<WtHeaderDto>> SetApprovalAsync(long id, bool approved);
+        Task<ApiResponse<WtHeaderDto>> BulkWtGenerateAsync(BulkWtGenerateRequestDto request);
     }
 }

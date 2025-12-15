@@ -475,7 +475,7 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
-        
+
         public async Task<ApiResponse<WtHeaderDto>> GenerateWarehouseTransferOrderAsync(GenerateWarehouseTransferOrderRequestDto request)
         {
             try
@@ -591,6 +591,163 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.CommitTransactionAsync();
 
                         var dto = _mapper.Map<WtHeaderDto>(header);
+                        return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderGenerateError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+    
+        public async Task<ApiResponse<WtHeaderDto>> BulkWtGenerateAsync(BulkWtGenerateRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var headerEntity = _mapper.Map<WtHeader>(request.Header.Header);
+                        await _unitOfWork.WtHeaders.AddAsync(headerEntity);
+                        await _unitOfWork.SaveChangesAsync();
+                        var headerKeyToId = new Dictionary<Guid, long> { { request.Header.HeaderKey, headerEntity.Id } };
+                        var lineKeyToId = new Dictionary<Guid, long>();
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<WtLine>(request.Lines.Count);
+                            var lineKeys = new List<Guid>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                if (!headerKeyToId.TryGetValue(l.HeaderKey, out var hdrId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var line = new WtLine
+                                {
+                                    HeaderId = hdrId,
+                                    StockCode = l.StockCode,
+                                    YapKod = l.YapKod,
+                                    Quantity = l.Quantity,
+                                    Unit = l.Unit,
+                                    ErpOrderNo = l.ErpOrderNo,
+                                    ErpOrderId = l.ErpOrderId,
+                                    Description = l.Description
+                                };
+                                lines.Add(line);
+                                lineKeys.Add(l.LineKey);
+                            }
+                            await _unitOfWork.WtLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+                            for (int i = 0; i < lines.Count; i++)
+                            {
+                                lineKeyToId[lineKeys[i]] = lines[i].Id;
+                            }
+                        }
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<WtLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                if (!lineKeyToId.TryGetValue(s.LineKey, out var lid))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var serial = new WtLineSerial
+                                {
+                                    LineId = lid,
+                                    Quantity = s.Quantity,
+                                    SerialNo = s.SerialNo,
+                                    SerialNo2 = s.SerialNo2,
+                                    SerialNo3 = s.SerialNo3,
+                                    SerialNo4 = s.SerialNo4,
+                                    SourceCellCode = s.SourceCellCode,
+                                    TargetCellCode = s.TargetCellCode
+                                };
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.WtLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+                        var importLineKeyToId = new Dictionary<Guid, long>();
+                        if (request.ImportLines != null && request.ImportLines.Count > 0)
+                        {
+                            var importLines = new List<WtImportLine>(request.ImportLines.Count);
+                            var importKeys = new List<Guid>(request.ImportLines.Count);
+                            foreach (var il in request.ImportLines)
+                            {
+                                if (!headerKeyToId.TryGetValue(il.HeaderKey, out var hdrId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                long? linkedLineId = null;
+                                if (il.LineKey.HasValue)
+                                {
+                                    if (!lineKeyToId.TryGetValue(il.LineKey.Value, out var lId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
+                                    }
+                                    linkedLineId = lId;
+                                }
+                                var importLine = new WtImportLine
+                                {
+                                    HeaderId = hdrId,
+                                    LineId = linkedLineId,
+                                    StockCode = il.StockCode
+                                };
+                                importLines.Add(importLine);
+                                importKeys.Add(il.ImportLineKey);
+                            }
+                            await _unitOfWork.WtImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+                            for (int i = 0; i < importLines.Count; i++)
+                            {
+                                importLineKeyToId[importKeys[i]] = importLines[i].Id;
+                            }
+                        }
+                        if (request.Routes != null && request.Routes.Count > 0)
+                        {
+                            var routes = new List<WtRoute>(request.Routes.Count);
+                            foreach (var r in request.Routes)
+                            {
+                                if (!importLineKeyToId.TryGetValue(r.ImportLineKey, out var ilId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var route = new WtRoute
+                                {
+                                    ImportLineId = ilId,
+                                    Quantity = r.Quantity,
+                                    SerialNo = r.SerialNo,
+                                    SerialNo2 = r.SerialNo2,
+                                    SerialNo3 = r.SerialNo3,
+                                    SerialNo4 = r.SerialNo4,
+                                    ScannedBarcode = r.ScannedBarcode ?? string.Empty,
+                                    SourceWarehouse = r.SourceWarehouse,
+                                    TargetWarehouse = r.TargetWarehouse,
+                                    SourceCellCode = r.SourceCellCode,
+                                    TargetCellCode = r.TargetCellCode,
+                                    Description = r.Description
+                                };
+                                routes.Add(route);
+                            }
+
+                            await _unitOfWork.WtRoutes.AddRangeAsync(routes);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+                        await _unitOfWork.CommitTransactionAsync();
+                        var dto = _mapper.Map<WtHeaderDto>(headerEntity);
                         return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderGenerateCompletedSuccessfully"));
                     }
                     catch

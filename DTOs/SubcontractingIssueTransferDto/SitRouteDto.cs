@@ -6,9 +6,7 @@ namespace WMS_WEBAPI.DTOs
     {
         public long ImportLineId { get; set; }
         public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public int Priority { get; set; }
         public string? Description { get; set; }
     }
@@ -18,9 +16,7 @@ namespace WMS_WEBAPI.DTOs
         [Required]
         public long ImportLineId { get; set; }
         public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public int Priority { get; set; }
         public string? Description { get; set; }
     }
@@ -29,9 +25,7 @@ namespace WMS_WEBAPI.DTOs
     {
         public long? ImportLineId { get; set; }
         public string? StockCode { get; set; }
-        public string? StockName { get; set; }
         public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public int? Priority { get; set; }
         public string? Description { get; set; }
     }

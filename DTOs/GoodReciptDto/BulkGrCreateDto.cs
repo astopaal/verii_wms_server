@@ -4,19 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WMS_WEBAPI.DTOs
 {
-    public class CreateGrLineWithKeyDto
+    public class CreateGrLineWithKeyDto : BaseLineCreateDto
     {
         [Required]
         public string ClientKey { get; set; } = null!;
 
-        public string StockCode { get; set; } = string.Empty;
-        public decimal Quantity { get; set; }
-        public string? Unit { get; set; }
-        public string? ErpOrderNo { get; set; }
-        public string? ErpOrderId { get; set; }
-        // Açıklama alanı (maks. 100 karakter)
-        [StringLength(100)]
-        public string? Description { get; set; }
     }
 
     public class CreateGrImportLWithLineKeyDto

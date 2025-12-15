@@ -72,22 +72,13 @@ namespace WMS_WEBAPI.DTOs
         public IEnumerable<WiRouteDto> Routes { get; set; } = Array.Empty<WiRouteDto>();
     }
 
-    public class CreateWiLineWithKeyDto
+    public class CreateWiLineWithKeyDto : BaseLineCreateDto
     {
         public string? ClientKey { get; set; }
         public Guid? ClientGuid { get; set; }
 
-        public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
-        public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public int? OrderId { get; set; }
-        public decimal Quantity { get; set; }
-        public string? Unit { get; set; }
-        public string? ErpOrderNo { get; set; }
-        public string? ErpOrderId { get; set; }
         public string? ErpLineReference { get; set; }
-        public string? Description { get; set; }
     }
 
     public class CreateWiLineSerialWithLineKeyDto : BaseLineSerialCreateDto
@@ -106,9 +97,7 @@ namespace WMS_WEBAPI.DTOs
         public Guid? ClientGroupGuid { get; set; }
 
         public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public decimal Quantity { get; set; }
         public string? SerialNo { get; set; }
         public string? SerialNo2 { get; set; }
@@ -131,7 +120,6 @@ namespace WMS_WEBAPI.DTOs
         public Guid? RouteGroupGuid { get; set; }
 
         public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public decimal Quantity { get; set; }
         public string? Unit { get; set; }
         public string? SerialNo { get; set; }
@@ -144,9 +132,8 @@ namespace WMS_WEBAPI.DTOs
         public string? ErpOrderLineNumber { get; set; }
     }
 
-    public class CreateWiTerminalLineWithUserDto
+    public class CreateWiTerminalLineWithUserDto : BaseTerminalLineCreateDto
     {
-        public long TerminalUserId { get; set; }
     }
 
     public class GenerateWarehouseInboundOrderRequestDto

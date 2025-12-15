@@ -22,8 +22,6 @@ namespace WMS_WEBAPI.DTOs
         public DateTime DocumentDate { get; set; }
         [StringLength(20)]
         public string? CustomerCode { get; set; }
-        [StringLength(100)]
-        public string? CustomerName { get; set; }
         [StringLength(20)]
         public string? SourceWarehouse { get; set; }
         [StringLength(20)]
@@ -39,8 +37,6 @@ namespace WMS_WEBAPI.DTOs
         public DateTime? DocumentDate { get; set; }
         [StringLength(20)]
         public string? CustomerCode { get; set; }
-        [StringLength(100)]
-        public string? CustomerName { get; set; }
         [StringLength(20)]
         public string? SourceWarehouse { get; set; }
         [StringLength(20)]
@@ -61,8 +57,6 @@ namespace WMS_WEBAPI.DTOs
         public string? ClientKey { get; set; }
         public Guid? ClientGuid { get; set; }
 
-        public string? StockName { get; set; }
-        public string? YapKod { get; set; }
         public int? OrderId { get; set; }
         public string? ErpLineReference { get; set; }
     }
@@ -83,9 +77,7 @@ namespace WMS_WEBAPI.DTOs
         public Guid? ClientGroupGuid { get; set; }
 
         public string StockCode { get; set; } = string.Empty;
-        public string? StockName { get; set; }
         public string? YapKod { get; set; }
-        public string? YapAcik { get; set; }
         public string? Description { get; set; }
     }
 
@@ -112,9 +104,8 @@ namespace WMS_WEBAPI.DTOs
         public string? ErpOrderLineNumber { get; set; }
     }
 
-    public class CreateShTerminalLineWithUserDto
+    public class CreateShTerminalLineWithUserDto : BaseTerminalLineCreateDto
     {
-        public long TerminalUserId { get; set; }
     }
 
     public class GenerateShipmentOrderRequestDto

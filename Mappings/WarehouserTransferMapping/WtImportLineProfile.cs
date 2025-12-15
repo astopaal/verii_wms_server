@@ -10,9 +10,9 @@ namespace WMS_WEBAPI.Mappings
         {
             // WtImportLine to WtImportLineDto
             CreateMap<WtImportLine, WtImportLineDto>()
+                .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
-                .ForMember(dest => dest.ProductDescription, opt => opt.MapFrom(src => src.Description1))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
@@ -24,9 +24,9 @@ namespace WMS_WEBAPI.Mappings
             // CreateWtImportLineDto to WtImportLine
             CreateMap<CreateWtImportLineDto, WtImportLine>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
-                .ForMember(dest => dest.Description1, opt => opt.MapFrom(src => src.ProductDescription))
                 
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
@@ -41,9 +41,9 @@ namespace WMS_WEBAPI.Mappings
             // UpdateWtImportLineDto to WtImportLine
             CreateMap<UpdateWtImportLineDto, WtImportLine>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
-                .ForMember(dest => dest.Description1, opt => opt.MapFrom(src => src.ProductDescription))
                 
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
