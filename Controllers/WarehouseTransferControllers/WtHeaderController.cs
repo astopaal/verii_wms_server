@@ -80,9 +80,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        
-
-
         [HttpGet("assigned/{userId}")]
         public async Task<ActionResult<ApiResponse<IEnumerable<WtHeaderDto>>>> GetAssignedTransferOrders(long userId)
         {

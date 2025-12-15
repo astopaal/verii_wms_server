@@ -195,6 +195,13 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineNotFound"), "Record not found", 404, "GrLine not found");
                 }
 
+                var importLines = await _unitOfWork.GrImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("GrLineImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 await _unitOfWork.GrLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
 

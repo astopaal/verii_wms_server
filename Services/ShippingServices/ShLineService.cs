@@ -196,6 +196,12 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var importLines = await _unitOfWork.ShImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("ShLineImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.ShLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShLineDeletedSuccessfully"));

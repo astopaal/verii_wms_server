@@ -188,6 +188,12 @@
   <data name="IcHeaderImportLinesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
+  <data name="WtLineImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SitLineImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
   <!-- #region GR.Header -->
   
   <!-- GrImportDocument Messages -->

@@ -166,6 +166,12 @@
   <data name="IcHeaderImportLinesExist" xml:space="preserve">
     <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
   </data>
+  <data name="WtLineImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="SitLineImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
   <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
     <value>Proje bilgileri başarıyla getirildi</value>
   </data>
