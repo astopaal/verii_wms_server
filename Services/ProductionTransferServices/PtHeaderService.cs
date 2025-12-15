@@ -241,6 +241,12 @@ namespace WMS_WEBAPI.Services
                     var notFound = _localizationService.GetLocalizedString("PtHeaderNotFound");
                     return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
+                var importLines = await _unitOfWork.PtImportLines.FindAsync(x => x.HeaderId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("PtHeaderImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.PtHeaders.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PtHeaderDeletedSuccessfully"));

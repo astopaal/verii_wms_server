@@ -162,6 +162,13 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var importLines = await _unitOfWork.WoImportLines.FindAsync(x => x.HeaderId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("WoHeaderImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 await _unitOfWork.WoHeaders.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WoHeaderDeletedSuccessfully"));

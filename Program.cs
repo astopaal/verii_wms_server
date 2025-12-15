@@ -146,6 +146,7 @@ builder.Services.AddScoped<ISrtFunctionService, SrtFunctionService>();
 builder.Services.AddScoped<ISrtLineSerialService, SrtLineSerialService>();
 
 // Register Warehouse Outbound Services
+builder.Services.AddScoped<IWoFunctionService, WoFunctionService>();
 builder.Services.AddScoped<IWoHeaderService, WoHeaderService>();
 builder.Services.AddScoped<IWoLineService, WoLineService>();
 builder.Services.AddScoped<IWoImportLineService, WoImportLineService>();
@@ -154,6 +155,7 @@ builder.Services.AddScoped<IWoTerminalLineService, WoTerminalLineService>();
 builder.Services.AddScoped<IWoLineSerialService, WoLineSerialService>();
 
 // Register Warehouse Inbound Services
+builder.Services.AddScoped<IWiFunctionService, WiFunctionService>();
 builder.Services.AddScoped<IWiHeaderService, WiHeaderService>();
 builder.Services.AddScoped<IWiLineService, WiLineService>();
 builder.Services.AddScoped<IWiImportLineService, WiImportLineService>();
@@ -173,8 +175,6 @@ builder.Services.AddScoped<IShLineSerialService, ShLineSerialService>();
 
 // Register Function Services
 builder.Services.AddScoped<IGoodReciptFunctionsService, GoodReciptFunctionsService>();
-builder.Services.AddScoped<IWoFunctionService, WoFunctionService>();
-builder.Services.AddScoped<IWiFunctionService, WiFunctionService>();
 
 // Register Background Job Services
 builder.Services.AddScoped<BackgroundJobService>();

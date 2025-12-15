@@ -134,6 +134,12 @@ namespace WMS_WEBAPI.Services
                     var nf = _localizationService.GetLocalizedString("ShHeaderNotFound");
                     return ApiResponse<bool>.ErrorResult(nf, nf, 404);
                 }
+                var importLines = await _unitOfWork.ShImportLines.FindAsync(x => x.HeaderId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("ShHeaderImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 existing.IsDeleted = true;
                 _unitOfWork.ShHeaders.Update(existing);
                 await _unitOfWork.SaveChangesAsync();

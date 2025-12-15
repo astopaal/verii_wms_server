@@ -101,6 +101,12 @@ namespace WMS_WEBAPI.Services
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("IcHeaderNotFound"), _localizationService.GetLocalizedString("IcHeaderNotFound"), 404);
                 }
+                var importLines = await _unitOfWork.IcImportLines.FindAsync(x => x.HeaderId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("IcHeaderImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.ICHeaders.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("IcHeaderDeletedSuccessfully"));

@@ -139,6 +139,33 @@
   <data name="WtHeaderApprovalUpdateError" xml:space="preserve">
     <value>Onay durumu güncellenirken hata oluştu</value>
   </data>
+  <data name="WtHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="WiHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="WoHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="ShHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="SitHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="SrtHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="PtHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="PrHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
+  <data name="IcHeaderImportLinesExist" xml:space="preserve">
+    <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
+  </data>
   <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
     <value>Proje bilgileri başarıyla getirildi</value>
   </data>

@@ -161,6 +161,33 @@
   <data name="GrHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Receipt Header information</value>
   </data>
+  <data name="WtHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WiHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WoHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="ShHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SitHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SrtHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PtHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PrHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="IcHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
   <!-- #region GR.Header -->
   
   <!-- GrImportDocument Messages -->
