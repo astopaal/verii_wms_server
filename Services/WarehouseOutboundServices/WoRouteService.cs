@@ -55,7 +55,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var query = _unitOfWork.WoRoutes.AsQueryable().Where(r => r.ImportLine.StockCode == stockCode);
+                var query = _unitOfWork.WoRoutes.AsQueryable().Where(r => ((r.ImportLine.StockCode ?? "").Trim() == (stockCode ?? "").Trim()));
                 var entities = await query.ToListAsync();
                 var dtos = _mapper.Map<IEnumerable<WoRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WoRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WoRouteRetrievedSuccessfully"));
@@ -70,7 +70,8 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WoRoutes.FindAsync(x => x.SerialNo == serialNo || x.SerialNo2 == serialNo);
+                var sn = (serialNo ?? "").Trim();
+                var entities = await _unitOfWork.WoRoutes.FindAsync(x => (((x.SerialNo ?? "").Trim() == sn) || ((x.SerialNo2 ?? "").Trim() == sn) || ((x.SerialNo3 ?? "").Trim() == sn) || ((x.SerialNo4 ?? "").Trim() == sn)));
                 var dtos = _mapper.Map<IEnumerable<WoRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WoRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WoRouteRetrievedSuccessfully"));
             }

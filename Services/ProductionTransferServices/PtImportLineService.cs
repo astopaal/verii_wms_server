@@ -195,7 +195,11 @@ namespace WMS_WEBAPI.Services
                     var lineControl = await _unitOfWork.PtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
                     if (lineControl != null && lineControl.Any())
                     {
-                        var lineCounter = lineControl.Count(x => x.StockCode == request.StockCode && x.YapKod == request.YapKod);
+                        var reqStock = (request.StockCode ?? "").Trim();
+                        var reqYap = (request.YapKod ?? "").Trim();
+                    var lineCounter = lineControl.Count(x =>
+                        ((x.StockCode ?? "").Trim() == reqStock) && ((x.YapKod ?? "").Trim() == reqYap)
+                    );
                         if (lineCounter == 0)
                         {
                             var msg = _localizationService.GetLocalizedString("PtImportLineStokCodeAndYapCodeNotMatch");
@@ -206,21 +210,41 @@ namespace WMS_WEBAPI.Services
                     var lineSerialControl = await _unitOfWork.PtLineSerials.FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
                     if (lineSerialControl != null && lineSerialControl.Any())
                     {
-                        var lineSerialCounter = lineSerialControl.Count(x => x.SerialNo == request.SerialNo);
-                        if (lineSerialCounter == 0)
+                        var s1 = (request.SerialNo ?? "").Trim();
+                        var s2 = (request.SerialNo2 ?? "").Trim();
+                        var s3 = (request.SerialNo3 ?? "").Trim();
+                        var s4 = (request.SerialNo4 ?? "").Trim();
+                        var anyReqSerial = !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2) || !string.IsNullOrWhiteSpace(s3) || !string.IsNullOrWhiteSpace(s4);
+                        if (anyReqSerial)
                         {
-                            var msg = _localizationService.GetLocalizedString("PtImportLineSerialNotMatch");
-                            return ApiResponse<PtImportLineDto>.ErrorResult(msg, msg, 404);
+                            var lineSerialCounter = lineSerialControl.Count(x =>
+                                (!string.IsNullOrWhiteSpace(s1) && ((x.SerialNo ?? "").Trim() == s1)) ||
+                                (!string.IsNullOrWhiteSpace(s2) && ((x.SerialNo2 ?? "").Trim() == s2)) ||
+                                (!string.IsNullOrWhiteSpace(s3) && ((x.SerialNo3 ?? "").Trim() == s3)) ||
+                                (!string.IsNullOrWhiteSpace(s4) && ((x.SerialNo4 ?? "").Trim() == s4))
+                            );
+                            if (lineSerialCounter == 0)
+                            {
+                                var msg = _localizationService.GetLocalizedString("PtImportLineSerialNotMatch");
+                                return ApiResponse<PtImportLineDto>.ErrorResult(msg, msg, 404);
+                            }
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(request.SerialNo))
                     {
-                        var duplicateExists = await _unitOfWork.PtRoutes.AsQueryable().AnyAsync(r => !r.IsDeleted && r.SerialNo == request.SerialNo && r.ImportLine.HeaderId == request.HeaderId && r.ImportLine.StockCode == request.StockCode && r.ImportLine.YapKod == request.YapKod);
-                        if (duplicateExists)
+                        var s1 = (request.SerialNo ?? "").Trim();
+                        var s2 = (request.SerialNo2 ?? "").Trim();
+                        var s3 = (request.SerialNo3 ?? "").Trim();
+                        var s4 = (request.SerialNo4 ?? "").Trim();
+                        var anyReqSerial = !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2) || !string.IsNullOrWhiteSpace(s3) || !string.IsNullOrWhiteSpace(s4);
+                        if (anyReqSerial)
                         {
-                            var msg = _localizationService.GetLocalizedString("PtImportLineDuplicateSerialFound");
-                            return ApiResponse<PtImportLineDto>.ErrorResult(msg, msg, 409);
+                            var duplicateExists = await _unitOfWork.PtRoutes.AsQueryable().AnyAsync(r => !r.IsDeleted && r.ImportLine.HeaderId == request.HeaderId && ((r.ImportLine.StockCode ?? "").Trim() == (request.StockCode ?? "").Trim()) && ((r.ImportLine.YapKod ?? "").Trim() == (request.YapKod ?? "").Trim()) && (((r.SerialNo ?? "").Trim() == s1 && !string.IsNullOrWhiteSpace(s1)) || ((r.SerialNo2 ?? "").Trim() == s2 && !string.IsNullOrWhiteSpace(s2)) || ((r.SerialNo3 ?? "").Trim() == s3 && !string.IsNullOrWhiteSpace(s3)) || ((r.SerialNo4 ?? "").Trim() == s4 && !string.IsNullOrWhiteSpace(s4))));
+                            if (duplicateExists)
+                            {
+                                var msg = _localizationService.GetLocalizedString("PtImportLineDuplicateSerialFound");
+                                return ApiResponse<PtImportLineDto>.ErrorResult(msg, msg, 409);
+                            }
                         }
                     }
 
@@ -237,7 +261,7 @@ namespace WMS_WEBAPI.Services
                     }
                     else
                     {
-                        importLine = (await _unitOfWork.PtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && x.StockCode == request.StockCode && x.YapKod == request.YapKod && !x.IsDeleted)).FirstOrDefault();
+                        importLine = (await _unitOfWork.PtImportLines.FindAsync(x => x.HeaderId == request.HeaderId && ((x.StockCode ?? "").Trim() == (request.StockCode ?? "").Trim()) && ((x.YapKod ?? "").Trim() == (request.YapKod ?? "").Trim()) && !x.IsDeleted)).FirstOrDefault();
                     }
 
                     if (importLine == null)

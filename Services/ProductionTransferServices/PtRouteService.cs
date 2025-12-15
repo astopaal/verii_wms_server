@@ -71,7 +71,8 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.PtRoutes.FindAsync(x => x.SerialNo == serialNo && !x.IsDeleted);
+                var sn = (serialNo ?? "").Trim();
+                var entities = await _unitOfWork.PtRoutes.FindAsync(x => (((x.SerialNo ?? "").Trim() == sn) || ((x.SerialNo2 ?? "").Trim() == sn) || ((x.SerialNo3 ?? "").Trim() == sn) || ((x.SerialNo4 ?? "").Trim() == sn)) && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<PtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<PtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PtRouteRetrievedSuccessfully"));
             }

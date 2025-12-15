@@ -131,22 +131,29 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PrLineSerialNotFound"), _localizationService.GetLocalizedString("PrLineSerialNotFound"), 404);
                 }
 
-                if (!string.IsNullOrWhiteSpace(entity.SerialNo))
                 {
-                    var serialExistsInRoutes = await _unitOfWork.PrRoutes
-                        .AsQueryable()
-                        .AnyAsync(r => !r.IsDeleted
-                                       && r.ImportLine.LineId == entity.LineId
-                                       && (
-                                           r.SerialNo == entity.SerialNo ||
-                                           r.SerialNo2 == entity.SerialNo ||
-                                           r.SerialNo3 == entity.SerialNo ||
-                                           r.SerialNo4 == entity.SerialNo
-                                       ));
-                    if (serialExistsInRoutes)
+                    var s1 = (entity.SerialNo ?? "").Trim();
+                    var s2 = (entity.SerialNo2 ?? "").Trim();
+                    var s3 = (entity.SerialNo3 ?? "").Trim();
+                    var s4 = (entity.SerialNo4 ?? "").Trim();
+                    var anyEntitySerial = !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2) || !string.IsNullOrWhiteSpace(s3) || !string.IsNullOrWhiteSpace(s4);
+                    if (anyEntitySerial)
                     {
-                        var msg = _localizationService.GetLocalizedString("PrLineSerialRoutesExist");
-                        return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                        var serialExistsInRoutes = await _unitOfWork.PrRoutes
+                            .AsQueryable()
+                            .AnyAsync(r => !r.IsDeleted
+                                           && r.ImportLine.LineId == entity.LineId
+                                           && (
+                                               (!string.IsNullOrWhiteSpace(s1) && (r.SerialNo ?? "").Trim() == s1) ||
+                                               (!string.IsNullOrWhiteSpace(s2) && (r.SerialNo2 ?? "").Trim() == s2) ||
+                                               (!string.IsNullOrWhiteSpace(s3) && (r.SerialNo3 ?? "").Trim() == s3) ||
+                                               (!string.IsNullOrWhiteSpace(s4) && (r.SerialNo4 ?? "").Trim() == s4)
+                                           ));
+                        if (serialExistsInRoutes)
+                        {
+                            var msg = _localizationService.GetLocalizedString("PrLineSerialRoutesExist");
+                            return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                        }
                     }
                 }
 

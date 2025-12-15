@@ -54,7 +54,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var query = _unitOfWork.WiRoutes.AsQueryable().Where(r => r.ImportLine.StockCode == stockCode);
+                var query = _unitOfWork.WiRoutes.AsQueryable().Where(r => ((r.ImportLine.StockCode ?? "").Trim() == (stockCode ?? "").Trim()));
                 var entities = await query.ToListAsync();
                 var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
