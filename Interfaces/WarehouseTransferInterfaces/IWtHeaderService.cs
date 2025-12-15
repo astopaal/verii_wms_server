@@ -13,8 +13,6 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<WtHeaderDto>> UpdateAsync(long id, UpdateWtHeaderDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
         Task<ApiResponse<bool>> CompleteAsync(long id);
-        // Inter-warehouse transfer için korelasyon anahtarlarıyla toplu oluşturma
-        Task<ApiResponse<int>> BulkCreateInterWarehouseTransferAsync(BulkCreateWtRequestDto request);
         Task<ApiResponse<IEnumerable<WtHeaderDto>>> GetAssignedTransferOrdersAsync(long userId);
         Task<ApiResponse<WtAssignedTransferOrderLinesDto>> GetAssignedTransferOrderLinesAsync(long headerId);
         Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);

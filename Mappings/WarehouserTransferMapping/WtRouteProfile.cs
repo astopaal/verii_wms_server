@@ -11,7 +11,7 @@ namespace WMS_WEBAPI.Mappings
             // WtRoute to WtRouteDto
             CreateMap<WtRoute, WtRouteDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
+                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -25,7 +25,7 @@ namespace WMS_WEBAPI.Mappings
             // CreateWtRouteDto to WtRoute
             CreateMap<CreateWtRouteDto, WtRoute>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
+                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -46,7 +46,7 @@ namespace WMS_WEBAPI.Mappings
             // UpdateWtRouteDto to WtRoute
             CreateMap<UpdateWtRouteDto, WtRoute>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
+                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))

@@ -47,7 +47,6 @@ namespace WMS_WEBAPI.Mappings
 
             CreateMap<UpdateGrRouteDto, GrRoute>()
                 .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.ScannedBarcode, opt => opt.MapFrom(src => src.ScannedBarcode))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity.HasValue ? src.Quantity.Value : 0))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))

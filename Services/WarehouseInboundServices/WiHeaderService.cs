@@ -790,7 +790,6 @@ namespace WMS_WEBAPI.Services
                                 var route = new WiRoute
                                 {
                                     ImportLineId = importLineId,
-                                    LineId = lineId,
                                     Quantity = rDto.Quantity,
                                     SerialNo = rDto.SerialNo,
                                     SerialNo2 = rDto.SerialNo2,

@@ -47,12 +47,7 @@ namespace WMS_WEBAPI.Controllers
         /// </summary>
         /// <param name="lineId">Line ID</param>
         /// <returns>WtRoute listesi</returns>
-        [HttpGet("line/{lineId}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<WtRouteDto>>>> GetByLineId(long lineId)
-        {
-            var result = await _wtRouteService.GetByLineIdAsync(lineId);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
 
         /// <summary>

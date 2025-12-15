@@ -6,7 +6,6 @@ namespace WMS_WEBAPI.Interfaces
     {
         Task<ApiResponse<IEnumerable<ShRouteDto>>> GetAllAsync();
         Task<ApiResponse<ShRouteDto>> GetByIdAsync(long id);
-        Task<ApiResponse<IEnumerable<ShRouteDto>>> GetByLineIdAsync(long lineId);
         Task<ApiResponse<IEnumerable<ShRouteDto>>> GetBySerialNoAsync(string serialNo);
         Task<ApiResponse<ShRouteDto>> CreateAsync(CreateShRouteDto createDto);
         Task<ApiResponse<ShRouteDto>> UpdateAsync(long id, UpdateShRouteDto updateDto);

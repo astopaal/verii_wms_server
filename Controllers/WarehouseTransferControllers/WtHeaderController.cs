@@ -80,12 +80,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("inter-warehouse/bulk-create")]
-        public async Task<ActionResult<ApiResponse<int>>> BulkCreateInterWarehouse([FromBody] BulkCreateWtRequestDto request)
-        {
-            var result = await _wtHeaderService.BulkCreateInterWarehouseTransferAsync(request);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
 
         [HttpGet("assigned/{userId}")]

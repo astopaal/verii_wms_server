@@ -33,12 +33,7 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("line/{lineId}")]
-        public async Task<IActionResult> GetByLineId(long lineId)
-        {
-            var result = await _service.GetByLineIdAsync(lineId);
-            return StatusCode(result.StatusCode, result);
-        }
+        
 
 
         [HttpGet("serial/{serialNo}")]

@@ -11,7 +11,6 @@ namespace WMS_WEBAPI.DTOs
     {
         [Required]
         public long ImportLineId { get; set; }
-        public long? LineId { get; set; }
         [MaxLength(75)]
         public string ScannedBarcode { get; set; } = string.Empty;
         [Required]
@@ -33,7 +32,6 @@ namespace WMS_WEBAPI.DTOs
     public class UpdateGrRouteDto
     {
         public long? ImportLineId { get; set; }
-        public long? LineId { get; set; }
         public string? ScannedBarcode { get; set; }
         public decimal? Quantity { get; set; }
         public string? StockCode { get; set; }

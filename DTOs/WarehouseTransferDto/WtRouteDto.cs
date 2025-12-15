@@ -4,7 +4,7 @@ namespace WMS_WEBAPI.DTOs
 {
     public class WtRouteDto : BaseRouteEntityDto
     {
-        public long LineId { get; set; }
+        public long ImportLineId { get; set; }
         public string StockCode { get; set; } = string.Empty;
         public string? StockName { get; set; }
         public string? YapKod { get; set; }
@@ -16,7 +16,7 @@ namespace WMS_WEBAPI.DTOs
     public class CreateWtRouteDto : BaseRouteCreateDto
     {
         [Required]
-        public long LineId { get; set; }
+        public long ImportLineId { get; set; }
         public string StockCode { get; set; } = string.Empty;
         public string? StockName { get; set; }
         public string? YapKod { get; set; }
@@ -26,7 +26,7 @@ namespace WMS_WEBAPI.DTOs
 
     public class UpdateWtRouteDto : BaseRouteUpdateDto
     {
-        public long? LineId { get; set; }
+        public long? ImportLineId { get; set; }
         public string? StockCode { get; set; }
         public string? StockName { get; set; }
         public string? YapKod { get; set; }

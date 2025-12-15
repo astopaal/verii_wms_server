@@ -52,19 +52,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<SitRouteDto>>> GetByLineIdAsync(long lineId)
-        {
-            try
-            {
-                var entities = await _unitOfWork.SitRoutes.FindAsync(x => x.ImportLineId == lineId && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<SitRouteDto>>(entities);
-                return ApiResponse<IEnumerable<SitRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<SitRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("SitRouteErrorOccurred"), ex.Message ?? String.Empty, 500);
-            }
-        }
+        
 
         public async Task<ApiResponse<IEnumerable<SitRouteDto>>> GetByStockCodeAsync(string stockCode)
         {
