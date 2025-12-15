@@ -116,6 +116,17 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpPost("bulk-generate")]
+        public async Task<ActionResult<ApiResponse<WtHeaderDto>>> BulkWtGenerate([FromBody] BulkWtGenerateRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, ModelState);
+            }
+            var result = await _wtHeaderService.BulkWtGenerateAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpPost("approval/{id}")]
         public async Task<ActionResult<ApiResponse<WtHeaderDto>>> SetApproval(long id, [FromQuery] bool approved)
         {
