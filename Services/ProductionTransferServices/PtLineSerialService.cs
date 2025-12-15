@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
@@ -123,17 +124,77 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.PtLineSerials.ExistsAsync(id);
-                if (!exists)
+                var tx = await _unitOfWork.BeginTransactionAsync();
+                var entity = await _unitOfWork.PtLineSerials.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PtLineSerialNotFound"), _localizationService.GetLocalizedString("PtLineSerialNotFound"), 404);
                 }
+
+                if (!string.IsNullOrWhiteSpace(entity.SerialNo))
+                {
+                    var serialExistsInRoutes = await _unitOfWork.PtRoutes
+                        .AsQueryable()
+                        .AnyAsync(r => !r.IsDeleted
+                                       && r.ImportLine.LineId == entity.LineId
+                                       && (
+                                           r.SerialNo == entity.SerialNo ||
+                                           r.SerialNo2 == entity.SerialNo ||
+                                           r.SerialNo3 == entity.SerialNo ||
+                                           r.SerialNo4 == entity.SerialNo
+                                       ));
+                    if (serialExistsInRoutes)
+                    {
+                        var msg = _localizationService.GetLocalizedString("PtLineSerialRoutesExist");
+                        return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                    }
+                }
+
+                var totalLineSerialQty = await _unitOfWork.PtLineSerials
+                    .AsQueryable()
+                    .Where(ls => !ls.IsDeleted && ls.LineId == entity.LineId)
+                    .SumAsync(ls => ls.Quantity);
+
+                var totalRouteQty = await _unitOfWork.PtRoutes
+                    .AsQueryable()
+                    .Where(r => !r.IsDeleted && r.ImportLine.LineId == entity.LineId)
+                    .SumAsync(r => r.Quantity);
+
+                var remainingAfterDelete = totalLineSerialQty - entity.Quantity;
+                if (remainingAfterDelete < totalRouteQty)
+                {
+                    var msg = _localizationService.GetLocalizedString("PtLineSerialInsufficientQuantityAfterDelete");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 await _unitOfWork.PtLineSerials.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PtLineSerialDeletedSuccessfully"));
+
+                var remainingSerialCount = await _unitOfWork.PtLineSerials
+                    .AsQueryable()
+                    .CountAsync(ls => !ls.IsDeleted && ls.LineId == entity.LineId);
+
+                var lineDeleted = false;
+                if (remainingSerialCount == 0)
+                {
+                    var hasImportLines = await _unitOfWork.PtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.LineId == entity.LineId);
+                    if (!hasImportLines)
+                    {
+                        await _unitOfWork.PtLines.SoftDelete(entity.LineId);
+                        await _unitOfWork.SaveChangesAsync();
+                        lineDeleted = true;
+                    }
+                }
+
+                await _unitOfWork.CommitTransactionAsync();
+                var msgKey = lineDeleted ? "PtLineSerialDeletedAndLineDeleted" : "PtLineSerialDeletedSuccessfully";
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString(msgKey));
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync();
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PtLineSerialErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }

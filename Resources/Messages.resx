@@ -194,6 +194,108 @@
   <data name="SitLineImportLinesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
+  <data name="WtImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WiImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WoImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SitImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SrtImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PtImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="ShImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PrImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="IcImportLineRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="GrImportLRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WtLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WtLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WiLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WiLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WoLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WoLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PtLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PtLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PrLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="PrLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SrtLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SrtLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SitLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="SitLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="ShLineSerialRoutesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="ShLineSerialInsufficientQuantityAfterDelete" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="WtLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="WiLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="WoLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="PtLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="PrLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="SrtLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="SitLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
+  <data name="ShLineSerialDeletedAndLineDeleted" xml:space="preserve">
+    <value>Line serial deleted; related line soft deleted</value>
+  </data>
   <!-- #region GR.Header -->
   
   <!-- GrImportDocument Messages -->

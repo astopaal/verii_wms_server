@@ -256,6 +256,13 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtLineNotFound"), _localizationService.GetLocalizedString("WtLineNotFound"), 404);
                 }
 
+                var importLines = await _unitOfWork.WtImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("WtLineImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 await _unitOfWork.WtLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
 

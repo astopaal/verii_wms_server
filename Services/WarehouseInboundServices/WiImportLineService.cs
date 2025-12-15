@@ -149,6 +149,12 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var routes = await _unitOfWork.WiRoutes.FindAsync(x => x.ImportLineId == id && !x.IsDeleted);
+                if (routes.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("WiImportLineRoutesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.WiImportLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WiImportLineDeletedSuccessfully"));

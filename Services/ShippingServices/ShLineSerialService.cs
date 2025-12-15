@@ -101,12 +101,78 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var tx = await _unitOfWork.BeginTransactionAsync();
+                var entity = await _unitOfWork.ShLineSerials.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("ShLineSerialNotFound");
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!string.IsNullOrWhiteSpace(entity.SerialNo))
+                {
+                    var serialExistsInRoutes = await _unitOfWork.ShRoutes
+                        .AsQueryable()
+                        .AnyAsync(r => !r.IsDeleted
+                                       && r.ImportLine.LineId == entity.LineId
+                                       && (
+                                           r.SerialNo == entity.SerialNo ||
+                                           r.SerialNo2 == entity.SerialNo ||
+                                           r.SerialNo3 == entity.SerialNo ||
+                                           r.SerialNo4 == entity.SerialNo
+                                       ));
+                    if (serialExistsInRoutes)
+                    {
+                        var msg = _localizationService.GetLocalizedString("ShLineSerialRoutesExist");
+                        return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                    }
+                }
+
+                var totalLineSerialQty = await _unitOfWork.ShLineSerials
+                    .AsQueryable()
+                    .Where(ls => !ls.IsDeleted && ls.LineId == entity.LineId)
+                    .SumAsync(ls => ls.Quantity);
+
+                var totalRouteQty = await _unitOfWork.ShRoutes
+                    .AsQueryable()
+                    .Where(r => !r.IsDeleted && r.ImportLine.LineId == entity.LineId)
+                    .SumAsync(r => r.Quantity);
+
+                var remainingAfterDelete = totalLineSerialQty - entity.Quantity;
+                if (remainingAfterDelete < totalRouteQty)
+                {
+                    var msg = _localizationService.GetLocalizedString("ShLineSerialInsufficientQuantityAfterDelete");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 await _unitOfWork.ShLineSerials.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShLineSerialDeletedSuccessfully"));
+
+                var remainingSerialCount = await _unitOfWork.ShLineSerials
+                    .AsQueryable()
+                    .CountAsync(ls => !ls.IsDeleted && ls.LineId == entity.LineId);
+
+                var lineDeleted = false;
+                if (remainingSerialCount == 0)
+                {
+                    var hasImportLines = await _unitOfWork.ShImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.LineId == entity.LineId);
+                    if (!hasImportLines)
+                    {
+                        await _unitOfWork.ShLines.SoftDelete(entity.LineId);
+                        await _unitOfWork.SaveChangesAsync();
+                        lineDeleted = true;
+                    }
+                }
+
+                await _unitOfWork.CommitTransactionAsync();
+                var msgKey = lineDeleted ? "ShLineSerialDeletedAndLineDeleted" : "ShLineSerialDeletedSuccessfully";
+                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString(msgKey));
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync();
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("ShLineSerialErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }

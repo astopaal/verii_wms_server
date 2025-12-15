@@ -153,6 +153,12 @@ namespace WMS_WEBAPI.Services
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PrImportLineNotFound"), _localizationService.GetLocalizedString("PrImportLineNotFound"), 404);
                 }
+                var routes = await _unitOfWork.PrRoutes.FindAsync(x => x.ImportLineId == id && !x.IsDeleted);
+                if (routes.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("PrImportLineRoutesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.PrImportLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PrImportLineDeletedSuccessfully"));

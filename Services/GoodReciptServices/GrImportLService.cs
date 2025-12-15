@@ -228,7 +228,12 @@ namespace WMS_WEBAPI.Services
                     var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
                     return ApiResponse<bool>.ErrorResult(nf, nf, 404);
                 }
-
+                var routes = await _unitOfWork.GrRoutes.FindAsync(x => x.ImportLineId == id && !x.IsDeleted);
+                if (routes.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("GrImportLRoutesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
                 await _unitOfWork.GrImportLines.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
                 
