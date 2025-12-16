@@ -124,12 +124,13 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var tx = await _unitOfWork.BeginTransactionAsync();
+                using var tx = await _unitOfWork.BeginTransactionAsync();
                 var entity = await _unitOfWork.SrtLineSerials.GetByIdAsync(id);
                 if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SrtLineSerialNotFound"), _localizationService.GetLocalizedString("SrtLineSerialNotFound"), 404);
                 }
+                var lineEntity = await _unitOfWork.SrtLines.GetByIdAsync(entity.LineId);
 
                 {
                     var s1 = (entity.SerialNo ?? "").Trim();
@@ -192,6 +193,24 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.SrtLines.SoftDelete(entity.LineId);
                         await _unitOfWork.SaveChangesAsync();
                         lineDeleted = true;
+                        if (lineEntity != null)
+                        {
+                            var headerId = lineEntity.HeaderId;
+                            var remainingLinesUnderHeader = await _unitOfWork.SrtLines
+                                .AsQueryable()
+                                .CountAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                            if (remainingLinesUnderHeader == 0)
+                            {
+                                var hasHeaderImportLines = await _unitOfWork.SrtImportLines
+                                    .AsQueryable()
+                                    .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                                if (!hasHeaderImportLines)
+                                {
+                                    await _unitOfWork.SrtHeaders.SoftDelete(headerId);
+                                    await _unitOfWork.SaveChangesAsync();
+                                }
+                            }
+                        }
                     }
                 }
 

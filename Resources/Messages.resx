@@ -2013,6 +2013,24 @@
   <data name="ShTerminalLineCreatedSuccessfully" xml:space="preserve">
     <value>Shipping Terminal Line created successfully</value>
   </data>
+  <data name="WtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Warehouse Transfer Line Serial deleted successfully</value>
+  </data>
+  <data name="WiLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Warehouse Inbound Line Serial deleted successfully</value>
+  </data>
+  <data name="WoLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Warehouse Outbound Line Serial deleted successfully</value>
+  </data>
+  <data name="PtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Production Transfer Line Serial deleted successfully</value>
+  </data>
+  <data name="SitLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Subcontracting Issue Transfer Line Serial deleted successfully</value>
+  </data>
+  <data name="SrtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Subcontracting Receipt Transfer Line Serial deleted successfully</value>
+  </data>
   <data name="ShTerminalLineUpdatedSuccessfully" xml:space="preserve">
     <value>Shipping Terminal Line updated successfully</value>
   </data>

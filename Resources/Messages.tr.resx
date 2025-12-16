@@ -876,6 +876,24 @@
   <data name="ShTerminalLineNotFound" xml:space="preserve">
     <value>Sevkiyat Terminal Satır bulunamadı</value>
   </data>
+  <data name="WtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Depo transfer satır seri başarıyla silindi</value>
+  </data>
+  <data name="WiLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Depo giriş satır seri başarıyla silindi</value>
+  </data>
+  <data name="WoLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Depo çıkış satır seri başarıyla silindi</value>
+  </data>
+  <data name="PtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim transfer satır seri başarıyla silindi</value>
+  </data>
+  <data name="SitLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Tedarikçi çıkış transfer satır seri başarıyla silindi</value>
+  </data>
+  <data name="SrtLineSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Tedarikçi giriş transfer satır seri başarıyla silindi</value>
+  </data>
   <data name="ShTerminalLineCreatedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Terminal Satır başarıyla oluşturuldu</value>
   </data>

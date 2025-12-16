@@ -24,8 +24,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => !x.IsDeleted);
+                var entities = await _unitOfWork.WtRoutes.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
             }
@@ -62,8 +61,7 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => x.SerialNo == serialNo && !x.IsDeleted);
+                var entities = await _unitOfWork.WtRoutes.FindAsync(x => x.SerialNo == serialNo && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
             }
@@ -123,16 +121,12 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-
-
-
         public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByWarehouseIdAsync(long warehouseId)
         {
             try
             {
                 // WtRoute model doesn't have WarehouseId property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => !x.IsDeleted);
+                var entities = await _unitOfWork.WtRoutes.FindAsync(x => !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
             }
@@ -148,39 +142,6 @@ namespace WMS_WEBAPI.Services
             {
                 var entities = await _unitOfWork.WtRoutes
                     .FindAsync(x => x.Description.Contains(description) && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByStatusAsync(short status)
-        {
-            try
-            {
-                // WtRoute model doesn't have Status property, filtering only by IsDeleted  
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
             }

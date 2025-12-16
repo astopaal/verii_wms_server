@@ -136,6 +136,7 @@ namespace WMS_WEBAPI.Services
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtLineSerialNotFound"), _localizationService.GetLocalizedString("WtLineSerialNotFound"), 404);
                 }
+                var lineEntity = await _unitOfWork.WtLines.GetByIdAsync(entity.LineId);
 
                 {
                     var s1 = (entity.SerialNo ?? "").Trim();
@@ -199,6 +200,25 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.WtLines.SoftDelete(entity.LineId);
                         await _unitOfWork.SaveChangesAsync();
                         lineDeleted = true;
+
+                        if (lineEntity != null)
+                        {
+                            var headerId = lineEntity.HeaderId;
+                            var remainingLinesUnderHeader = await _unitOfWork.WtLines
+                                .AsQueryable()
+                                .CountAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                            if (remainingLinesUnderHeader == 0)
+                            {
+                                var hasHeaderImportLines = await _unitOfWork.WtImportLines
+                                    .AsQueryable()
+                                    .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                                if (!hasHeaderImportLines)
+                                {
+                                    await _unitOfWork.WtHeaders.SoftDelete(headerId);
+                                    await _unitOfWork.SaveChangesAsync();
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -212,5 +232,6 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtLineSerialErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
+  
     }
 }

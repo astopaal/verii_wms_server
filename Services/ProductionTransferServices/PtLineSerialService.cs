@@ -124,12 +124,13 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var tx = await _unitOfWork.BeginTransactionAsync();
+                using var tx = await _unitOfWork.BeginTransactionAsync();
                 var entity = await _unitOfWork.PtLineSerials.GetByIdAsync(id);
                 if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PtLineSerialNotFound"), _localizationService.GetLocalizedString("PtLineSerialNotFound"), 404);
                 }
+                var lineEntity = await _unitOfWork.PtLines.GetByIdAsync(entity.LineId);
 
                 {
                     var s1 = (entity.SerialNo ?? "").Trim();
@@ -192,6 +193,24 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.PtLines.SoftDelete(entity.LineId);
                         await _unitOfWork.SaveChangesAsync();
                         lineDeleted = true;
+                        if (lineEntity != null)
+                        {
+                            var headerId = lineEntity.HeaderId;
+                            var remainingLinesUnderHeader = await _unitOfWork.PtLines
+                                .AsQueryable()
+                                .CountAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                            if (remainingLinesUnderHeader == 0)
+                            {
+                                var hasHeaderImportLines = await _unitOfWork.PtImportLines
+                                    .AsQueryable()
+                                    .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                                if (!hasHeaderImportLines)
+                                {
+                                    await _unitOfWork.PtHeaders.SoftDelete(headerId);
+                                    await _unitOfWork.SaveChangesAsync();
+                                }
+                            }
+                        }
                     }
                 }
 
