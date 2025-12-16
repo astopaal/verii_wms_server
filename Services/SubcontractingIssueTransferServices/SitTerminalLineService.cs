@@ -80,20 +80,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<SitTerminalLineDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var entities = await _unitOfWork.SitTerminalLines.FindAsync(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<SitTerminalLineDto>>(entities);
-                return ApiResponse<IEnumerable<SitTerminalLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("SitTerminalLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<SitTerminalLineDto>>.ErrorResult(_localizationService.GetLocalizedString("SitTerminalLineErrorOccurred"), ex.Message ?? String.Empty, 500);
-            }
-        }
-
 
         public async Task<ApiResponse<SitTerminalLineDto>> CreateAsync(CreateSitTerminalLineDto createDto)
         {

@@ -114,43 +114,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<PrLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PrLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PrLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<PrLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("PrLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("PrLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<PrLineDto>>> GetByErpOrderNoAsync(string erpOrderNo)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PrLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PrLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<PrLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("PrLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrLineDto>>.ErrorResult(_localizationService.GetLocalizedString("PrLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
 
         public async Task<ApiResponse<PrLineDto>> CreateAsync(CreatePrLineDto createDto)
@@ -197,19 +161,54 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.PrLines.ExistsAsync(id);
-                if (!exists)
+                var entity = await _unitOfWork.PrLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PrLineNotFound"), _localizationService.GetLocalizedString("PrLineNotFound"), 404);
                 }
+                
+                var hasActiveLineSerials = await _unitOfWork.PrLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("PrLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 var importLines = await _unitOfWork.PrImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
                 if (importLines.Any())
                 {
                     var msg = _localizationService.GetLocalizedString("PrLineImportLinesExist");
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
-                await _unitOfWork.PrLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.PrLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.PrLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.PrImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.PrHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PrLineDeletedSuccessfully"));
             }
             catch (Exception ex)

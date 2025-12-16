@@ -1,123 +1,314 @@
-# VERII WMS Server – Cursor Proje Kuralları ve Yol Haritası
+# =========================================================
+# VERII WMS Server – Cursor AI Kuralları
+# =========================================================
+# Bu dosya, Cursor AI’nin bu projede kod üretirken
+# mimari, domain ve teknik kurallara uymasını sağlar.
+# =========================================================
 
-## Amaç
-- Kod üretiminde tutarlılığı sağlamak, modül eklemeyi hızlandırmak ve AI asistanların doğru kararlar almasını kolaylaştırmak.
-- Projedeki ana kavramları ve veri akışını açıkça tanımlamak.
+# ---------------------------------------------------------
+# 1. GENEL MİMARİ KURALLAR
+# ---------------------------------------------------------
 
-## Genel Mimari
-- Katmanlar: `Controllers` → `Services` → `UnitOfWork/Repositories` → `Models` → `Data/Configuration`
-- Veri Transferi: `DTOs` + `AutoMapper` profilleri
-- Kimlik: `[Authorize]` ile endpoint erişim kontrolü
-- ERP Entegrasyonu: `IErpService` ile müşteri ve depo isim zenginleştirmeleri
+- Proje katmanlı mimariye sahiptir:
+  Controllers → Services → UnitOfWork/Repositories → Models → Data/Configuration
 
-## Temel Varlıklar
-- Header: Üst kayıt. Planlama, durum ve doküman bilgilerini taşır. Tüm modüllerde ana yapı.
-- Line: Emre bağlı sipariş satırı. Ürün, miktar, birim ve ERP referansları.
-- LineSerial: Emre bağlı seri/miktar hareketi. SeriNo(1-4), miktar ve hücre bilgileri.
-- ImportLine: Toplanan ürün satırı. Stok kodu ve açıklamalar; ilgili Line bağlantısı.
-- Route: ImportLine’a bağlı miktar, seri, depo/hücre bilgisi ve yönlendirme adımı.
-- TerminalLine: Emre bağlı işlem yapacak kullanıcı listesi.
+- Controller:
+  - Sadece HTTP orchestration yapar
+  - Business rule içermez
+  - DbContext veya Repository kullanmaz
+  - Transaction başlatmaz
 
-## Base Sınıflar ve DTO Üçlüsü
-- Header
-  - Model: `BaseHeaderEntity`
-  - DTO: `BaseHeaderEntityDto`
-  - Create: `BaseHeaderCreateDto`
-  - Update: `BaseHeaderUpdateDto`
-- Line
-  - Model: `BaseLineEntity`
-  - DTO: `BaseLineEntityDto`
-  - Create: `BaseLineCreateDto`
-  - Update: `BaseLineUpdateDto`
-- LineSerial
-  - Model: `BaseLineSerialEntity`
-  - DTO: `BaseLineSerialEntityDto`
-  - Create: `BaseLineSerialCreateDto`
-  - Update: `BaseLineSerialUpdateDto`
-- ImportLine
-  - Model: `BaseImportLineEntity`
-  - DTO: `BaseImportLineEntityDto`
-  - Create: `BaseImportLineCreateDto`
-  - Update: `BaseImportLineUpdateDto`
-- Route
-  - Model: `BaseRouteEntity`
-  - DTO: `BaseRouteEntityDto`
-  - Create: `BaseRouteCreateDto`
-  - Update: `BaseRouteUpdateDto`
+- Service:
+  - Business logic burada yazılır
+  - Transaction burada yönetilir
+  - UnitOfWork üzerinden repository erişimi yapılır
 
-## DTO Alan Kullanım Kuralları
-- Create/Update DTO’larda `CustomerName`, `StockName`, `YapAcik` alanları yer almaz.
-- Entity DTO’larda gösterim amaçlı alanlar bulunabilir; operasyonel alanlar Create/Update’a taşınmaz.
-- Route Create/Update DTO’ları sadece yönlendirme için gerekli alanları (`Quantity`, `SerialNo*`, `Source/TargetWarehouse`, `Source/TargetCellCode`) içerir.
-- ImportLine Create/Update DTO’ları stok kodu ve açıklamaları base’den alır; ilişki anahtarlarını (HeaderId, LineId, RouteId?) modüle göre ekler.
+- Repository:
+  - Sadece veri erişimi yapar
+  - Business kural içermez
 
-## Modül Ekleme Rehberi
-- Modül adları: `WarehouseTransfer`, `WarehouseOutbound`, `WarehouseInbound`, `ProductionTransfer`, `SubcontractingIssueTransfer`, `SubcontractingReceiptTransfer`, `InventoryCount`.
-- Adımlar:
-  - Models: Header/Line/ImportLine/Route/TerminalLine sınıflarını base’den türet.
-  - Data/Configuration: Her model için tablo ve kolon kurallarını ekle, index ve ilişkileri tanımla.
-  - DTOs: Entity/ Create/ Update üçlüsünü base’den türeterek yaz, gereksiz alanları ekleme.
-  - Mappings: `Profile` oluştur, Create/Update DTO → Model ve Model → DTO eşlemelerini tanımla.
-  - Services: `I<Service>` arayüzü ve `Service` implementasyonu; `UnitOfWork` üzerinden CRUD ve süreçler.
-  - Controllers: `[Authorize]` ile korunan REST endpoint’leri ekle; `generate`, `bulk-generate` paternini uygula.
+- Mapping:
+  - AutoMapper zorunludur
+  - DTO → Entity manuel mapping YASAK
+  - Service veya Controller içinde mapping yazılmaz
 
-## Servis Kuralları
-- `UnitOfWork` ile repository’lere eriş; transaction gerektiren işlerde `BeginTransactionAsync` kullan.
-- `ApiResponse<T>` ile tutarlı cevap şablonu; `LocalizationService` ile mesajlar.
-- Zenginleştirme: ERP servisleri ile müşteri/depo isimleri doldurulur; başarısızlıkta hata döndürülür.
-- `CompleteAsync`, `SetApprovalAsync` gibi durum değişiklikleri tek noktadan yönetilir.
+# ---------------------------------------------------------
+# 2. DOMAIN & AGGREGATE KURALLARI
+# ---------------------------------------------------------
 
-## Controller Kuralları
-- Route örnekleri:
-  - Header: `GET/POST/PUT/DELETE`, `POST generate`, `POST bulk-generate`, `POST approval/{id}`
-  - Lines: `POST`, `PUT`, `DELETE`
-  - LineSerials: `POST`, `PUT`, `DELETE`
-  - ImportLines: `POST`, `PUT`, `DELETE`
-  - Routes: `POST`, `PUT`, `DELETE`
-  - TerminalLines: `POST`, `PUT`, `DELETE`
-- `ModelState.IsValid` kontrolü ve doğru `StatusCode` dönüşleri.
+- Header bir Aggregate Root’tur.
+- Line, LineSerial, ImportLine, Route, TerminalLine
+  doğrudan bağımsız domain objesi değildir.
 
-## Mapping Kuralları
-- Her aggregate için ayrı `Profile`.
-- Base alanlar otomatik eşlenir; modül spesifik alanlar açıkça belirtilir.
-- Kaynaktaki null üyeler `ForAllMembers(... Condition ...)` ile hedefe yazılmaz.
+- Alt entity’ler (Line, LineSerial vb.)
+  Header veya ilgili Service üzerinden yönetilir.
 
-## Validasyon ve İsimlendirme
-- `DataAnnotations` ile `Required`, `StringLength`, `MaxLength` kullan.
-- İlişki anahtarları: `HeaderId`, `LineId`, `ImportLineId`, `RouteId` tutarlı adlandırılır.
-- Create zorunlu alanları net belirt; Update opsiyonel (`nullable`) olmalıdır.
+- Header olmadan alt entity oluşturulamaz.
 
-## Süreç Paternleri
-- Generate:
-  - Header oluştur
-  - Lines ekle ve `HeaderId` ile bağla
-  - LineSerials ekle ve `LineId` ile bağla
-  - ImportLines ekle ve gerekli yerlere bağla
-  - Routes ekle ve `ImportLineId` ile bağla
-  - TerminalLines ekle ve kullanıcıları ilişkilendir
-- Bulk Generate:
-  - `HeaderKey`/`LineKey`/`ImportLineKey` gibi istemci anahtarlarını server ID’lerine eşle
-  - Hata durumunda rollback
+# ---------------------------------------------------------
+# 3. BASE ENTITY & DTO KURALLARI
+# ---------------------------------------------------------
 
-## Güvenlik ve Uygulama Kuralları
-- `[Authorize]` zorunlu; gizli bilgiler logging’e yazılmaz.
-- Exception mesajları son kullanıcıya sade, sistem loglarına detay eklenir.
-- Soft delete kullanımlarında `IsDeleted` dikkate alınır; sorgular bu filtreyle yazılır.
+- Yeni entity veya DTO yazmadan önce:
+  - Base<Entity>Entity
+  - Base<Entity>EntityDto
+  - Base<Entity>CreateDto
+  - Base<Entity>UpdateDto
+  mutlaka kontrol edilir.
 
-## Çalıştırma ve Doğrulama
-- Build: `dotnet build VERII_WMS_WEBAPI.sln`
-- Çalıştırma komutları ve test çerçevesi eklenirse bu dosya güncellenecek.
+- Base class kullanılmadan yeni alan eklenmez.
 
-## Terimler Sözlüğü
-- Header: Üst kayıt; planlama ve doküman meta verisi. Base header ana yapısı.
-- Line: Sipariş içeren emir tablosu; stok kodu, miktar, birim, ERP referansları.
-- LineSerial: Emre bağlı siparişin miktar/seri bilgisi; seriNo(1–4) ve hücre kodları.
-- ImportLine: Toplanan ürünler; stok kodu ve açıklamalar; line’a bağlı toplama kaydı.
-- Route: ImportLine’ye bağlı miktar, seri ve raf (hücre) bilgisi; akış adımı.
-- TerminalLine: Emre bağlı işlem yapacak kullanıcı listesi.
+- Create/Update DTO’larda:
+  - CustomerName
+  - StockName
+  - Açıklama (ERP’den gelen)
+  gibi gösterim alanları YER ALMAZ.
 
-## Kod Kalitesi ve Teknik Borç
-- Base DTO ve entity sınıfları kullanılmadan yeni alan eklenmez.
-- Create/Update DTO’larda operasyon dışı (gösterim amaçlı) alan bulundurulmaz.
-- Profil ve servislerde kaldırılan alanlara eşleme/kullanım eklenmez.
+# ---------------------------------------------------------
+# 4. CRUD KULLANIM FELSEFESİ
+# ---------------------------------------------------------
 
+- Line ve LineSerial için CRUD endpoint’leri OLABİLİR.
+- Ancak bu endpoint’ler:
+  - Admin
+  - Debug
+  - Özel senaryolar
+  içindir.
+
+- Operasyonel süreçlerde:
+  - Generate
+  - BulkGenerate
+  - Route akışları
+  kullanılır.
+
+- CRUD var ama kullanılmıyor olması HATA DEĞİLDİR.
+
+# ---------------------------------------------------------
+# 5. GENERATE & BULK GENERATE KURALLARI
+# ---------------------------------------------------------
+
+- Generate süreci sırası:
+  1. Header
+  2. Lines (HeaderId)
+  3. LineSerials (LineId)
+  4. ImportLines
+  5. Routes (ImportLineId)
+  6. TerminalLines
+
+- Bulk Generate işlemlerinde:
+  - Client geçici key kullanır:
+    HeaderKey, LineKey, ImportLineKey
+  - Bu key’ler DB’ye KALICI yazılmaz.
+  - Server tarafında gerçek ID’lere map edilir.
+  - Hata durumunda tüm işlem rollback edilir.
+
+# ---------------------------------------------------------
+# 6. SOFT DELETE KURALLARI
+# ---------------------------------------------------------
+
+- Hard delete YASAK.
+- Tüm silmeler Soft Delete olarak yapılır.
+
+- Soft Delete öncesi:
+  - Route kontrol edilir
+  - LineSerial kontrol edilir
+
+- Header:
+  - Alt kayıt kalmazsa otomatik soft delete edilir.
+
+- Silme işlemleri:
+  - Service katmanında
+  - Transaction içinde yapılır.
+
+# ---------------------------------------------------------
+# 7. PAGINATION / FILTER / SORT STANDARDI
+# ---------------------------------------------------------
+
+- Tüm liste endpoint’leri PagedRequest alır.
+- Filtering JSON tabanlıdır.
+- String alanlar:
+  - Contains
+  - StartsWith
+  - EndsWith
+- Numeric ve Date alanlar:
+  - Min / Max aralığı
+- Enum alanlar:
+  - String olarak gönderilir
+  - Backend enum’a convert eder
+- Pagination, filtering ve sorting
+  tek helper üzerinden uygulanır.
+
+# ---------------------------------------------------------
+# 8. VALIDATION & BUSINESS RULE AYRIMI
+# ---------------------------------------------------------
+
+- Validation:
+  - DTO seviyesinde
+  - DataAnnotations veya FluentValidation
+
+- Business rule:
+  - Service seviyesinde
+
+- Hata kodları:
+  - Validation → 400
+  - Business rule → 400
+  - Sistem hatası → 500
+
+# ---------------------------------------------------------
+# 9. TRANSACTION & UNIT OF WORK
+# ---------------------------------------------------------
+
+- Transaction:
+  - Service seviyesinde başlatılır
+  - UnitOfWork üzerinden yönetilir
+
+- Controller içinde transaction başlatmak YASAK.
+
+- SaveChanges:
+  - Transaction içindeyse tek noktadan çağrılır.
+
+# ---------------------------------------------------------
+# 10. AUTH & CONTEXT KURALLARI
+# ---------------------------------------------------------
+
+- BranchCode, UserId, CompanyId:
+  - HttpContext üzerinden alınır.
+  - Client tarafından gönderilmez.
+
+- Endpoint’ler:
+  - [Authorize] ile korunur.
+
+# ---------------------------------------------------------
+# 11. LOGGING & AUDIT
+# ---------------------------------------------------------
+
+- CreatedBy, CreatedAt
+- UpdatedBy, UpdatedAt
+- DeletedBy, DeletedAt
+  otomatik doldurulur.
+
+- Exception detayları loglanır,
+  client’a sade mesaj döner.
+
+# ---------------------------------------------------------
+# 12. AI (CURSOR) DAVRANIŞ KURALLARI
+# ---------------------------------------------------------
+
+- Kod üretirken mevcut mimariye UY.
+- Aynı işi yapan helper’ları tekrar yazma.
+- Base class ve mevcut servisleri kontrol etmeden
+  yeni abstraction üretme.
+- Mimari dışı veya shortcut çözümler üretme.
+
+# ---------------------------------------------------------
+# 13. LOCALIZATION (ZORUNLU KURAL)
+# ---------------------------------------------------------
+
+- Projede tüm kullanıcıya dönen mesajlar LOCALIZED olmalıdır.
+- Hardcoded string mesaj kullanımı YASAK.
+
+- ApiResponse içerisinde dönen:
+  - Message
+  - Error
+  - Validation mesajları
+  mutlaka LocalizationService üzerinden alınır.
+
+# ---------------------------------------------------------
+# 13.1 CLASS BAZLI LOCALIZATION
+# ---------------------------------------------------------
+
+- Localization key’leri CLASS bazlı gruplanır.
+- Her Service veya Controller kendi class adıyla localization region’ına sahiptir.
+
+Örnek:
+  Class: GrImportLineService
+  Localization Region: GrImportLine
+
+Key formatı:
+  <ClassName>.<ActionOrRule>
+
+Örnek key’ler:
+  GrImportLine.NotFound
+  GrImportLine.RoutesExist
+  GrImportLine.LineSerialsExist
+  GrImportLine.DeletedSuccessfully
+  GrImportLine.ErrorOccurred
+
+- Localization key’leri ASLA global veya karışık isimlendirilmez.
+
+# ---------------------------------------------------------
+# 13.2 LOCALIZATION KULLANIM ŞEKLİ
+# ---------------------------------------------------------
+
+- Kod içerisinde localization şu şekilde çağrılır:
+
+  _localizationService.GetLocalizedString("GrImportLine.NotFound")
+
+- Aynı mesaj birden fazla yerde kullanılıyorsa
+  yine class bazlı key korunur.
+
+# ---------------------------------------------------------
+# 13.3 REGION (RESOURCE GROUP) YOKSA OTOMATİK OLUŞTURMA
+# ---------------------------------------------------------
+
+- Eğer ilgili class için localization region (resource group) yoksa:
+  - Yeni region otomatik olarak oluşturulur.
+  - Region adı class adı ile birebir aynı olur.
+
+Örnek:
+  Class: GrImportLineService
+  → Resource Region: GrImportLine
+
+- Cursor yeni bir Service oluşturduğunda:
+  - Aynı isimle localization region açar.
+  - Tüm mesajları bu region altına ekler.
+
+# ---------------------------------------------------------
+# 13.4 LOCALIZATION FALLBACK KURALI
+# ---------------------------------------------------------
+
+- Eğer localization key bulunamazsa:
+  - Key string doğrudan kullanıcıya gösterilmez.
+  - Fallback olarak İngilizce default mesaj döner.
+
+- Localization eksikliği uygulamanın çalışmasını BOZMAZ
+  ancak eksik key loglanır.
+
+# ---------------------------------------------------------
+# 13.5 VALIDATION & BUSINESS RULE LOCALIZATION
+# ---------------------------------------------------------
+
+- Validation mesajları da localization kullanır.
+- DataAnnotations veya FluentValidation mesajları:
+  LocalizationService üzerinden resolve edilir.
+
+- Business rule ihlallerinde:
+  - Message localization’dan alınır
+  - ExceptionMessage sistem loglarına yazılır
+
+# ---------------------------------------------------------
+# 13.6 API RESPONSE & LOCALIZATION
+# ---------------------------------------------------------
+
+- ApiResponse<T> oluşturulurken:
+  - Message alanı mutlaka localized olmalıdır.
+  - ExceptionMessage localization içermez (debug/log amaçlıdır).
+
+Örnek:
+  ApiResponse<bool>
+  .ErrorResult(_localizationService.GetLocalizedString("GrImportLine.RoutesExist"),exceptionMessage,400)
+
+# ---------------------------------------------------------
+# 13.7 AI (CURSOR) LOCALIZATION DAVRANIŞI
+# ---------------------------------------------------------
+
+- Yeni yazılan her Service için:
+  - Aynı isimle localization region oluştur.
+  - Mesajları bu region altında grupla.
+
+- Aynı mesajı farklı class’lar arasında paylaşma.
+- Generic mesajlar bile class bazlı yazılır.
+
+# =========================================================
+# BU DOSYA REFERANS ALINMADAN YAZILAN KOD KABUL EDİLMEZ
+# =========================================================

@@ -80,20 +80,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<PtTerminalLineDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PtTerminalLines.FindAsync(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PtTerminalLineDto>>(entities);
-                return ApiResponse<IEnumerable<PtTerminalLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PtTerminalLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PtTerminalLineDto>>.ErrorResult(_localizationService.GetLocalizedString("PtTerminalLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
 
         public async Task<ApiResponse<PtTerminalLineDto>> CreateAsync(CreatePtTerminalLineDto createDto)
         {

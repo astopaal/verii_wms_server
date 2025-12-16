@@ -157,9 +157,19 @@ namespace WMS_WEBAPI.Services
                     var nf = _localizationService.GetLocalizedString("GrImportSerialLineNotFound");
                     return ApiResponse<bool>.ErrorResult(nf, nf, 404);
                 }
-                await _unitOfWork.GrLineSerials.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrImportSerialLineDeletedSuccessfully"));
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.GrLineSerials.SoftDelete(id);
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrImportSerialLineDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

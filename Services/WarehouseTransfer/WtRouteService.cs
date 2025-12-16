@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using WMS_WEBAPI.DTOs;
 using WMS_WEBAPI.Interfaces;
@@ -54,94 +55,11 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        
-
-
         public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetBySerialNoAsync(string serialNo)
         {
             try
             {
                 var entities = await _unitOfWork.WtRoutes.FindAsync(x => x.SerialNo == serialNo && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetBySourceWarehouseAsync(string sourceWarehouse)
-        {
-            try
-            {
-                // Convert string to int for comparison with SourceWarehouse (int?)
-                if (int.TryParse(sourceWarehouse, out int warehouseId))
-                {
-                    var entities = await _unitOfWork.WtRoutes
-                        .FindAsync(x => x.SourceWarehouse == warehouseId && !x.IsDeleted);
-                    var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                    return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-                }
-                else
-                {
-                    // If conversion fails, return empty result
-                    var emptyDtos = new List<WtRouteDto>();
-                    return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(emptyDtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-                }
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByTargetWarehouseAsync(string targetWarehouse)
-        {
-            try
-            {
-                // Convert string to int for comparison with TargetWarehouse (int?)
-                if (int.TryParse(targetWarehouse, out int warehouseId))
-                {
-                    var entities = await _unitOfWork.WtRoutes
-                        .FindAsync(x => x.TargetWarehouse == warehouseId && !x.IsDeleted);
-                    var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                    return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-                }
-                else
-                {
-                    // If conversion fails, return empty result
-                    var emptyDtos = new List<WtRouteDto>();
-                    return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(emptyDtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-                }
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByWarehouseIdAsync(long warehouseId)
-        {
-            try
-            {
-                // WtRoute model doesn't have WarehouseId property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtRoutes.FindAsync(x => !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtRouteDto>>> GetByDescriptionAsync(string description)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtRoutes
-                    .FindAsync(x => x.Description.Contains(description) && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<WtRouteDto>>(entities);
                 return ApiResponse<IEnumerable<WtRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtRouteRetrievedSuccessfully"));
             }
@@ -200,21 +118,74 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.WtRoutes.ExistsAsync(id);
-                if (!exists)
+                var route = await _unitOfWork.WtRoutes.GetByIdAsync(id);
+                if (route == null || route.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtRouteNotFound"), _localizationService.GetLocalizedString("WtRouteNotFound"), 404);
                 }
 
-                await _unitOfWork.WtRoutes.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+                var importLineId = route.ImportLineId;
+                var importLine = await _unitOfWork.WtImportLines.GetByIdAsync(importLineId);
+                var remainingRoutesUnderImport = await _unitOfWork.WtRoutes
+                    .AsQueryable()
+                    .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
 
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtRouteDeletedSuccessfully"));
+                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.WtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
+                    : false;
+                var hasOtherLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.WtLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerIdToCheck)
+                    : false;
+
+                var canDeleteImportLine = true;
+                if (willDeleteImportLine && importLine != null && importLine.LineId.HasValue)
+                {
+                    var hasActiveLineSerials = await _unitOfWork.WtLineSerials
+                        .AsQueryable()
+                        .AnyAsync(ls => !ls.IsDeleted && ls.LineId == importLine.LineId.Value);
+                    if (hasActiveLineSerials)
+                    {
+                        canDeleteImportLine = false;
+                    }
+                }
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WtRoutes.SoftDelete(id);
+
+                    if (willDeleteImportLine && canDeleteImportLine)
+                    {
+                        await _unitOfWork.WtImportLines.SoftDelete(importLineId);
+
+                        if (!hasOtherLinesUnderHeader && !hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        {
+                            await _unitOfWork.WtHeaders.SoftDelete(headerIdToCheck);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtRouteDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
+   
     }
 }

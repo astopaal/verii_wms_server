@@ -71,21 +71,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtTerminalLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                // WtTerminalLine'da StockCode yok, Line üzerinden erişmek gerekiyor
-                var entities = await _unitOfWork.WtTerminalLines
-                    .FindAsync(x => !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtTerminalLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtTerminalLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtTerminalLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtTerminalLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtTerminalLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
 
         public async Task<ApiResponse<IEnumerable<WtTerminalLineDto>>> GetByHeaderIdAsync(long headerId)
         {
@@ -102,8 +87,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        
-
         public async Task<ApiResponse<IEnumerable<WtTerminalLineDto>>> GetByUserIdAsync(long userId)
         {
             try
@@ -118,26 +101,6 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<IEnumerable<WtTerminalLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtTerminalLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
-
-        
-
-        public async Task<ApiResponse<IEnumerable<WtTerminalLineDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtTerminalLines
-                    .FindAsync(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtTerminalLineDto>>(entities);
-                return ApiResponse<IEnumerable<WtTerminalLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtTerminalLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtTerminalLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtTerminalLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        
-
 
         public async Task<ApiResponse<WtTerminalLineDto>> CreateAsync(CreateWtTerminalLineDto createDto)
         {

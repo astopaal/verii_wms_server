@@ -156,9 +156,67 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                await _unitOfWork.SrtRoutes.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("SrtRouteDeletedSuccessfully"));
+                var route = await _unitOfWork.SrtRoutes.GetByIdAsync(id);
+                if (route == null || route.IsDeleted)
+                {
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SrtRouteNotFound"), _localizationService.GetLocalizedString("SrtRouteNotFound"), 404);
+                }
+
+                var importLineId = route.ImportLineId;
+                var importLine = await _unitOfWork.SrtImportLines.GetByIdAsync(importLineId);
+                var remainingRoutesUnderImport = await _unitOfWork.SrtRoutes
+                    .AsQueryable()
+                    .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
+
+                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.SrtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
+                    : false;
+                var hasOtherLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.SrtLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerIdToCheck)
+                    : false;
+
+                var canDeleteImportLine = true;
+                if (willDeleteImportLine && importLine != null && importLine.LineId.HasValue)
+                {
+                    var hasActiveLineSerials = await _unitOfWork.SrtLineSerials
+                        .AsQueryable()
+                        .AnyAsync(ls => !ls.IsDeleted && ls.LineId == importLine.LineId.Value);
+                    if (hasActiveLineSerials)
+                    {
+                        canDeleteImportLine = false;
+                    }
+                }
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.SrtRoutes.SoftDelete(id);
+
+                    if (willDeleteImportLine && canDeleteImportLine)
+                    {
+                        await _unitOfWork.SrtImportLines.SoftDelete(importLineId);
+
+                        if (!hasOtherLinesUnderHeader && !hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        {
+                            await _unitOfWork.SrtHeaders.SoftDelete(headerIdToCheck);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("SrtRouteDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

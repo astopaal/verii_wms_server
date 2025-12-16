@@ -107,10 +107,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-
-
-
-
         public async Task<ApiResponse<WiImportLineDto>> CreateAsync(CreateWiImportLineDto createDto)
         {
             try
@@ -149,15 +145,55 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var entity = await _unitOfWork.WiImportLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("WiImportLineNotFound");
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
                 var routes = await _unitOfWork.WiRoutes.FindAsync(x => x.ImportLineId == id && !x.IsDeleted);
                 if (routes.Any())
                 {
                     var msg = _localizationService.GetLocalizedString("WiImportLineRoutesExist");
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
-                await _unitOfWork.WiImportLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WiImportLineDeletedSuccessfully"));
+
+                var hasActiveLineSerials = await _unitOfWork.WiLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == entity.LineId);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("WiImportLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WiImportLines.SoftDelete(id);
+
+                    var headerId = entity.HeaderId;
+                    var hasOtherLines = await _unitOfWork.WiLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.WiImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.WiHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WiImportLineDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

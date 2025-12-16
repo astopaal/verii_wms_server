@@ -95,11 +95,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-
-
-
-        // Quantity alanı WtImportLine modelinde bulunmuyor, bu nedenle kapsam dışında bırakıldı
-
         public async Task<ApiResponse<WtImportLineDto>> CreateAsync(CreateWtImportLineDto createDto)
         {
             try
@@ -149,8 +144,8 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.WtImportLines.ExistsAsync(id);
-                if (!exists)
+                var entity = await _unitOfWork.WtImportLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtImportLineNotFound"), _localizationService.GetLocalizedString("WtImportLineNotFound"), 404);
                 }
@@ -162,10 +157,41 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
                 
-                await _unitOfWork.WtImportLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+                var hasActiveLineSerials = await _unitOfWork.WtLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == entity.LineId);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("WtImportLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+                
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WtImportLines.SoftDelete(id);
 
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtImportLineDeletedSuccessfully"));
+                    var headerId = entity.HeaderId;
+                    var hasOtherLines = await _unitOfWork.WtLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.WtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.WtHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtImportLineDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

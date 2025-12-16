@@ -49,53 +49,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var query = _unitOfWork.WiRoutes.AsQueryable().Where(r => ((r.ImportLine.StockCode ?? "").Trim() == (stockCode ?? "").Trim()));
-                var entities = await query.ToListAsync();
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetBySourceWarehouseAsync(int sourceWarehouse)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiRoutes.FindAsync(x => x.SourceWarehouse == sourceWarehouse);
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WiRouteDto>>> GetByTargetWarehouseAsync(int targetWarehouse)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WiRoutes.FindAsync(x => x.TargetWarehouse == targetWarehouse);
-                var dtos = _mapper.Map<IEnumerable<WiRouteDto>>(entities);
-                return ApiResponse<IEnumerable<WiRouteDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WiRouteRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WiRouteDto>>.ErrorResult(_localizationService.GetLocalizedString("WiRouteErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-
-
         public async Task<ApiResponse<WiRouteDto>> CreateAsync(CreateWiRouteDto createDto)
         {
             try
@@ -134,9 +87,67 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                await _unitOfWork.WiRoutes.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WiRouteDeletedSuccessfully"));
+                var route = await _unitOfWork.WiRoutes.GetByIdAsync(id);
+                if (route == null || route.IsDeleted)
+                {
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WiRouteNotFound"), _localizationService.GetLocalizedString("WiRouteNotFound"), 404);
+                }
+
+                var importLineId = route.ImportLineId;
+                var importLine = await _unitOfWork.WiImportLines.GetByIdAsync(importLineId);
+                var remainingRoutesUnderImport = await _unitOfWork.WiRoutes
+                    .AsQueryable()
+                    .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
+
+                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.WiImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
+                    : false;
+                var hasOtherLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.WiLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerIdToCheck)
+                    : false;
+
+                var canDeleteImportLine = true;
+                if (willDeleteImportLine && importLine != null && importLine.LineId.HasValue)
+                {
+                    var hasActiveLineSerials = await _unitOfWork.WiLineSerials
+                        .AsQueryable()
+                        .AnyAsync(ls => !ls.IsDeleted && ls.LineId == importLine.LineId.Value);
+                    if (hasActiveLineSerials)
+                    {
+                        canDeleteImportLine = false;
+                    }
+                }
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WiRoutes.SoftDelete(id);
+
+                    if (willDeleteImportLine && canDeleteImportLine)
+                    {
+                        await _unitOfWork.WiImportLines.SoftDelete(importLineId);
+
+                        if (!hasOtherLinesUnderHeader && !hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        {
+                            await _unitOfWork.WiHeaders.SoftDelete(headerIdToCheck);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WiRouteDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

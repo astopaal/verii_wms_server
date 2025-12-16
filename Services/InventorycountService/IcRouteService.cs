@@ -111,14 +111,49 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.IcRoutes.ExistsAsync(id);
-                if (!exists)
+                var route = await _unitOfWork.IcRoutes.GetByIdAsync(id);
+                if (route == null || route.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("IcRouteNotFound"), _localizationService.GetLocalizedString("IcRouteNotFound"), 404);
                 }
-                await _unitOfWork.IcRoutes.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("IcRouteDeletedSuccessfully"));
+
+                var importLineId = route.ImportLineId;
+                var importLine = await _unitOfWork.IcImportLines.GetByIdAsync(importLineId);
+                var remainingRoutesUnderImport = await _unitOfWork.IcRoutes
+                    .AsQueryable()
+                    .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
+
+                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.IcImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
+                    : false;
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.IcRoutes.SoftDelete(id);
+
+                    if (willDeleteImportLine)
+                    {
+                        await _unitOfWork.IcImportLines.SoftDelete(importLineId);
+                        if (!hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        {
+                            await _unitOfWork.ICHeaders.SoftDelete(headerIdToCheck);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("IcRouteDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

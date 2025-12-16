@@ -115,43 +115,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<ShLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.ShLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<ShLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<ShLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<ShLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("ShLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<ShLineDto>>.ErrorResult(_localizationService.GetLocalizedString("ShLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<ShLineDto>>> GetByErpOrderNoAsync(string erpOrderNo)
-        {
-            try
-            {
-                var entities = await _unitOfWork.ShLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<ShLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<ShLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<ShLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("ShLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<ShLineDto>>.ErrorResult(_localizationService.GetLocalizedString("ShLineRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
+        
 
 
         public async Task<ApiResponse<ShLineDto>> CreateAsync(CreateShLineDto createDto)
@@ -196,14 +160,55 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var entity = await _unitOfWork.ShLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("ShLineNotFound");
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
+                var hasActiveLineSerials = await _unitOfWork.ShLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("ShLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 var importLines = await _unitOfWork.ShImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
                 if (importLines.Any())
                 {
                     var msg = _localizationService.GetLocalizedString("ShLineImportLinesExist");
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
-                await _unitOfWork.ShLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.ShLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.ShLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.ShImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.ShHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShLineDeletedSuccessfully"));
             }
             catch (Exception ex)

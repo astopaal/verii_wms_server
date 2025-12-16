@@ -189,10 +189,22 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var line = await _unitOfWork.GrLines.GetByIdAsync(id);
-                if (line == null)
+                var entity = await _unitOfWork.GrLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrLineNotFound"), "Record not found", 404, "GrLine not found");
+                }
+
+                var hasActiveLineSerials = await _unitOfWork.GrLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted
+                                   && _unitOfWork.GrImportLines
+                                       .AsQueryable()
+                                       .Any(il => !il.IsDeleted && il.LineId == id && il.Id == ls.ImportLineId));
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("GrLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
 
                 var importLines = await _unitOfWork.GrImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
@@ -202,8 +214,31 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
 
-                await _unitOfWork.GrLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.GrLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.GrLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.GrImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.GrHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
 
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrLineDeletedSuccessfully"));
             }

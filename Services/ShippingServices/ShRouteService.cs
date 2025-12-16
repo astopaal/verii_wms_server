@@ -148,9 +148,68 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                await _unitOfWork.ShRoutes.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShRouteDeletedSuccessfully"));
+                var route = await _unitOfWork.ShRoutes.GetByIdAsync(id);
+                if (route == null || route.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("ShRouteNotFound");
+                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
+                var importLineId = route.ImportLineId;
+                var importLine = await _unitOfWork.ShImportLines.GetByIdAsync(importLineId);
+                var remainingRoutesUnderImport = await _unitOfWork.ShRoutes
+                    .AsQueryable()
+                    .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
+
+                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.ShImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
+                    : false;
+                var hasOtherLinesUnderHeader = headerIdToCheck != 0
+                    ? await _unitOfWork.ShLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerIdToCheck)
+                    : false;
+
+                var canDeleteImportLine = true;
+                if (willDeleteImportLine && importLine != null && importLine.LineId.HasValue)
+                {
+                    var hasActiveLineSerials = await _unitOfWork.ShLineSerials
+                        .AsQueryable()
+                        .AnyAsync(ls => !ls.IsDeleted && ls.LineId == importLine.LineId.Value);
+                    if (hasActiveLineSerials)
+                    {
+                        canDeleteImportLine = false;
+                    }
+                }
+
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.ShRoutes.SoftDelete(id);
+
+                    if (willDeleteImportLine && canDeleteImportLine)
+                    {
+                        await _unitOfWork.ShImportLines.SoftDelete(importLineId);
+
+                        if (!hasOtherLinesUnderHeader && !hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        {
+                            await _unitOfWork.ShHeaders.SoftDelete(headerIdToCheck);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShRouteDeletedSuccessfully"));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

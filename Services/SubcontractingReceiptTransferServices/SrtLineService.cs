@@ -196,14 +196,54 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                var entity = await _unitOfWork.SrtLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SrtLineNotFound"), _localizationService.GetLocalizedString("SrtLineNotFound"), 404);
+                }
+
+                var hasActiveLineSerials = await _unitOfWork.SrtLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("SrtLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 var importLines = await _unitOfWork.SrtImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
                 if (importLines.Any())
                 {
                     var msg = _localizationService.GetLocalizedString("SrtLineImportLinesExist");
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
-                await _unitOfWork.SrtLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.SrtLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.SrtLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.SrtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.SrtHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("SrtLineDeletedSuccessfully"));
             }
             catch (Exception ex)

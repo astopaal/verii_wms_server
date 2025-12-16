@@ -865,6 +865,9 @@
   <data name="ShLineSerialDeletedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Satır Seri başarıyla silindi</value>
   </data>
+  <data name="WtImportLineLineSerialsExist" xml:space="preserve">
+    <value>Satıra bağlı aktif seri kayıtları mevcut; silmeden önce kaldırınız</value>
+  </data>
   <!-- #endregion Shipping.LineSerial -->
   <!-- #region Shipping.TerminalLine -->
   <data name="ShTerminalLineRetrievedSuccessfully" xml:space="preserve">
@@ -2080,7 +2083,34 @@
     <value>Üretim rota güncellenirken hata oluştu</value>
   </data>
   <data name="PrRouteDeletedSuccessfully" xml:space="preserve">
-    <value>Üretim rota başarıyla silindi</value>
+    <value>Üretim Rota başarıyla silindi</value>
+  </data>
+  <data name="WtRouteNotFound" xml:space="preserve">
+    <value>Depolar arası transfer rota bulunamadı</value>
+  </data>
+  <data name="WtRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Depolar arası transfer rota başarıyla silindi</value>
+  </data>
+  <data name="WiRouteNotFound" xml:space="preserve">
+    <value>Depo giriş rota bulunamadı</value>
+  </data>
+  <data name="WiRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Depo giriş rota başarıyla silindi</value>
+  </data>
+  <data name="WiRouteErrorOccurred" xml:space="preserve">
+    <value>Depo giriş rota işleminde hata oluştu</value>
+  </data>
+  <data name="GrRouteNotFound" xml:space="preserve">
+    <value>Mal kabul rota bulunamadı</value>
+  </data>
+  <data name="GrRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Mal kabul rota başarıyla silindi</value>
+  </data>
+  <data name="GrRouteDeleteError" xml:space="preserve">
+    <value>Mal kabul rota silinirken hata oluştu</value>
+  </data>
+  <data name="SitRouteDeletedSuccessfully" xml:space="preserve">
+    <value>Alt yüklenici çıkış rota başarıyla silindi</value>
   </data>
   <data name="PrRouteDeletionError" xml:space="preserve">
     <value>Üretim rota silinirken hata oluştu</value>

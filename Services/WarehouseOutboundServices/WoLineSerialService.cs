@@ -124,7 +124,6 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                using var tx = await _unitOfWork.BeginTransactionAsync();
                 var entity = await _unitOfWork.WoLineSerials.GetByIdAsync(id);
                 if (entity == null || entity.IsDeleted)
                 {
@@ -175,52 +174,65 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
 
-                await _unitOfWork.WoLineSerials.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
-
-                var remainingSerialCount = await _unitOfWork.WoLineSerials
+                var currentSerialCount = await _unitOfWork.WoLineSerials
                     .AsQueryable()
                     .CountAsync(ls => !ls.IsDeleted && ls.LineId == entity.LineId);
+                var remainingSerialCount = currentSerialCount - 1;
 
-                var lineDeleted = false;
-                if (remainingSerialCount == 0)
+                var hasImportLines = await _unitOfWork.WoImportLines
+                    .AsQueryable()
+                    .AnyAsync(il => !il.IsDeleted && il.LineId == entity.LineId);
+                var lineWillBeDeleted = remainingSerialCount == 0 && !hasImportLines;
+
+                var headerWillBeDeleted = false;
+                var headerIdToDelete = 0L;
+                if (lineWillBeDeleted && lineEntity != null)
                 {
-                    var hasImportLines = await _unitOfWork.WoImportLines
+                    var headerId = lineEntity.HeaderId;
+                    var currentLinesUnderHeader = await _unitOfWork.WoLines
                         .AsQueryable()
-                        .AnyAsync(il => !il.IsDeleted && il.LineId == entity.LineId);
-                    if (!hasImportLines)
+                        .CountAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var remainingLinesUnderHeader = currentLinesUnderHeader - 1;
+                    if (remainingLinesUnderHeader == 0)
                     {
-                        await _unitOfWork.WoLines.SoftDelete(entity.LineId);
-                        await _unitOfWork.SaveChangesAsync();
-                        lineDeleted = true;
-                        if (lineEntity != null)
+                        var hasHeaderImportLines = await _unitOfWork.WoImportLines
+                            .AsQueryable()
+                            .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                        if (!hasHeaderImportLines)
                         {
-                            var headerId = lineEntity.HeaderId;
-                            var remainingLinesUnderHeader = await _unitOfWork.WoLines
-                                .AsQueryable()
-                                .CountAsync(l => !l.IsDeleted && l.HeaderId == headerId);
-                            if (remainingLinesUnderHeader == 0)
-                            {
-                                var hasHeaderImportLines = await _unitOfWork.WoImportLines
-                                    .AsQueryable()
-                                    .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
-                                if (!hasHeaderImportLines)
-                                {
-                                    await _unitOfWork.WoHeaders.SoftDelete(headerId);
-                                    await _unitOfWork.SaveChangesAsync();
-                                }
-                            }
+                            headerWillBeDeleted = true;
+                            headerIdToDelete = headerId;
                         }
                     }
                 }
 
-                await _unitOfWork.CommitTransactionAsync();
-                var msgKey = lineDeleted ? "WoLineSerialDeletedAndLineDeleted" : "WoLineSerialDeletedSuccessfully";
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString(msgKey));
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WoLineSerials.SoftDelete(id);
+
+                    if (lineWillBeDeleted)
+                    {
+                        await _unitOfWork.WoLines.SoftDelete(entity.LineId);
+                        if (headerWillBeDeleted && headerIdToDelete != 0)
+                        {
+                            await _unitOfWork.WoHeaders.SoftDelete(headerIdToDelete);
+                        }
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                    var msgKey = lineWillBeDeleted ? "WoLineSerialDeletedAndLineDeleted" : "WoLineSerialDeletedSuccessfully";
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString(msgKey));
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync();
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WoLineSerialErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }

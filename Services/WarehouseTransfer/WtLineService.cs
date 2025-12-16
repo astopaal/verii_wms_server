@@ -30,16 +30,13 @@ namespace WMS_WEBAPI.Services
                 if (request.PageNumber < 1) request.PageNumber = 1;
                 if (request.PageSize < 1) request.PageSize = 20;
 
-                var query = _unitOfWork.WtLines.AsQueryable()
-                    .Where(x => !x.IsDeleted);
+                var query = _unitOfWork.WtLines.AsQueryable().Where(x => !x.IsDeleted);
                 query = query.ApplyFilters(request.Filters);
                 bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
                 query = query.ApplySorting(request.SortBy ?? "Id", desc);
 
                 var totalCount = await query.CountAsync();
-                var items = await query
-                    .ApplyPagination(request.PageNumber, request.PageSize)
-                    .ToListAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
 
                 var dtos = _mapper.Map<List<WtLineDto>>(items);
 
@@ -133,75 +130,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
-
-                var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enrichedStock.Success)
-                {
-                    return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(enrichedStock.Message, enrichedStock.ExceptionMessage, enrichedStock.StatusCode);
-                }
-                dtos = enrichedStock.Data ?? dtos;
-
-                return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtLineDto>>> GetBySerialNoAsync(string serialNo)
-        {
-            try
-            {
-                // WtLine model doesn't have SerialNo property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtLines.FindAsync(x => !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
-
-                var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enrichedStock.Success)
-                {
-                    return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(enrichedStock.Message, enrichedStock.ExceptionMessage, enrichedStock.StatusCode);
-                }
-                dtos = enrichedStock.Data ?? dtos;
-
-                return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<WtLineDto>>> GetByWarehouseAsync(string warehouse)
-        {
-            try
-            {
-                // WtLine model doesn't have Warehouse property, filtering only by IsDeleted
-                var entities = await _unitOfWork.WtLines.FindAsync(x => !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);
-
-                var enrichedStock = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enrichedStock.Success)
-                {
-                    return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(enrichedStock.Message, enrichedStock.ExceptionMessage, enrichedStock.StatusCode);
-                }
-                dtos = enrichedStock.Data ?? dtos;
-
-                return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-
         public async Task<ApiResponse<WtLineDto>> CreateAsync(CreateWtLineDto createDto)
         {
             try
@@ -250,10 +178,19 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.WtLines.ExistsAsync(id);
-                if (!exists)
+                var entity = await _unitOfWork.WtLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("WtLineNotFound"), _localizationService.GetLocalizedString("WtLineNotFound"), 404);
+                }
+
+                var hasActiveLineSerials = await _unitOfWork.WtLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("WtLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
 
                 var importLines = await _unitOfWork.WtImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
@@ -263,8 +200,31 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
 
-                await _unitOfWork.WtLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.WtLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.WtLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.WtImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.WtHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
 
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtLineDeletedSuccessfully"));
             }
@@ -274,18 +234,5 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<WtLineDto>>> GetByErpOrderNoAsync(string erpOrderNo)
-        {
-            try
-            {
-                var entities = await _unitOfWork.WtLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<WtLineDto>>(entities);   
-                return ApiResponse<IEnumerable<WtLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WtLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<WtLineDto>>.ErrorResult(_localizationService.GetLocalizedString("WtLineErrorOccurred"), ex.Message ?? string.Empty, 500);
-            }
-        }
     }
 }

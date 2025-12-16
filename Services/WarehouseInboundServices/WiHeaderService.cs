@@ -119,8 +119,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        
-
         public async Task<ApiResponse<IEnumerable<WiHeaderDto>>> GetByInboundTypeAsync(string inboundType)
         {
             try
@@ -326,8 +324,6 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<WiAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderErrorOccurred"), ex.Message ?? String.Empty, 500);
             }
         }
-
-        
 
         public async Task<ApiResponse<PagedResponse<WiHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request)
         {
@@ -830,5 +826,6 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderErrorOccurred"), combined ?? String.Empty, 500);
             }
         }
+  
     }
 }

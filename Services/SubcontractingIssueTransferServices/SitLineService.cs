@@ -114,43 +114,7 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<SitLineDto>>> GetByStockCodeAsync(string stockCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.SitLines.FindAsync(x => x.StockCode == stockCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(_localizationService.GetLocalizedString("SitLineErrorOccurred"), ex.Message ?? String.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<SitLineDto>>> GetByErpOrderNoAsync(string erpOrderNo)
-        {
-            try
-            {
-                var entities = await _unitOfWork.SitLines.FindAsync(x => x.ErpOrderNo == erpOrderNo && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<SitLineDto>>(entities);
-                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enriched.Success)
-                {
-                    return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
-                }
-                return ApiResponse<IEnumerable<SitLineDto>>.SuccessResult(enriched.Data ?? dtos, _localizationService.GetLocalizedString("SitLineRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<SitLineDto>>.ErrorResult(_localizationService.GetLocalizedString("SitLineErrorOccurred"), ex.Message ?? String.Empty, 500);
-            }
-        }
+        
 
 
 
@@ -198,19 +162,54 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var exists = await _unitOfWork.SitLines.ExistsAsync(id);
-                if (!exists)
+                var entity = await _unitOfWork.SitLines.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
                     return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("SitLineNotFound"), _localizationService.GetLocalizedString("SitLineNotFound"), 404);
                 }
+
+                var hasActiveLineSerials = await _unitOfWork.SitLineSerials
+                    .AsQueryable()
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
+                if (hasActiveLineSerials)
+                {
+                    var msg = _localizationService.GetLocalizedString("SitLineLineSerialsExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
                 var importLines = await _unitOfWork.SitImportLines.FindAsync(x => x.LineId == id && !x.IsDeleted);
                 if (importLines.Any())
                 {
                     var msg = _localizationService.GetLocalizedString("SitLineImportLinesExist");
                     return ApiResponse<bool>.ErrorResult(msg, msg, 400);
                 }
-                await _unitOfWork.SitLines.SoftDelete(id);
-                await _unitOfWork.SaveChangesAsync();
+
+                var headerId = entity.HeaderId;
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    await _unitOfWork.SitLines.SoftDelete(id);
+
+                    var hasOtherLines = await _unitOfWork.SitLines
+                        .AsQueryable()
+                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerId);
+                    var hasOtherImportLines = await _unitOfWork.SitImportLines
+                        .AsQueryable()
+                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerId);
+                    if (!hasOtherLines && !hasOtherImportLines)
+                    {
+                        await _unitOfWork.SitHeaders.SoftDelete(headerId);
+                    }
+
+                    await _unitOfWork.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("SitLineDeletedSuccessfully"));
             }
             catch (Exception ex)

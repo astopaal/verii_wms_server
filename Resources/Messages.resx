@@ -197,6 +197,9 @@
   <data name="WtImportLineRoutesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
+  <data name="WtImportLineLineSerialsExist" xml:space="preserve">
+    <value>Active line serials exist for this line; remove them before deletion</value>
+  </data>
   <data name="WiImportLineRoutesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
