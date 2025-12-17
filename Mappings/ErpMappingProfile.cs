@@ -98,6 +98,19 @@ namespace WMS_WEBAPI.Mappings
             CreateMap<RII_FN_BRANCHES, BranchDto>()
                 .ForMember(dest => dest.SubeKodu, opt => opt.MapFrom(src => src.SUBE_KODU))
                 .ForMember(dest => dest.Unvan, opt => opt.MapFrom(src => src.UNVAN));
+
+            CreateMap<RII_FN_WAREHOUSE_SHELF, WarehouseAndShelvesDto>()
+                .ForMember(dest => dest.DepoKodu, opt => opt.MapFrom(src => src.DEPO_KODU))
+                .ForMember(dest => dest.HucreKodu, opt => opt.MapFrom(src => src.HUCRE_KODU));
+
+            CreateMap<RII_FN_STOCK_WAREHOUSE, WarehouseShelvesWithStockInformationDto>()
+                .ForMember(dest => dest.DepoKodu, opt => opt.MapFrom(src => src.DEPO_KODU))
+                .ForMember(dest => dest.HucreKodu, opt => opt.MapFrom(src => src.HUCRE_KODU))
+                .ForMember(dest => dest.StokKodu, opt => opt.MapFrom(src => src.STOK_KODU))
+                .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
+                .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
+                .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
+                .ForMember(dest => dest.Bakiye, opt => opt.MapFrom(src => src.BAKIYE));
         }
     }
 }

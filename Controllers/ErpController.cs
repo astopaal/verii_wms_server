@@ -76,6 +76,24 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getWarehouseAndShelves")]
+        public async Task<ActionResult<ApiResponse<List<WarehouseAndShelvesDto>>>> GetWarehouseAndShelves(
+            [FromQuery] string? depoKodu = null,
+            [FromQuery] string? raf = null)
+        {
+            var result = await _erpService.GetWarehouseAndShelvesAsync(depoKodu, raf);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getWarehouseShelvesWithStockInformation")]
+        public async Task<ActionResult<ApiResponse<List<WarehouseShelvesWithStockInformationDto>>>> GetWarehouseShelvesWithStockInformation(
+            [FromQuery] string? depoKodu = null,
+            [FromQuery] string? raf = null)
+        {
+            var result = await _erpService.GetWarehouseShelvesWithStockInformationAsync(depoKodu, raf);
+            return StatusCode(result.StatusCode, result);
+        }
+
 
         [HttpGet("health-check")]
         [AllowAnonymous]

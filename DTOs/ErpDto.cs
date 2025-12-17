@@ -182,4 +182,24 @@ namespace WMS_WEBAPI.DTOs
         public string? YplndrStokKod { get; set; }
         public short SubeKodu { get; set; }
     }
+
+    public class WarehouseAndShelvesDto
+    {
+        [MaxLength(100)]
+        public string? DepoKodu { get; set; }
+
+        [MaxLength(100)]
+        public string? HucreKodu { get; set; }
+    }
+
+    public class WarehouseShelvesWithStockInformationDto
+    {
+        public string? DepoKodu { get; set; }
+        public string? HucreKodu { get; set; }
+        public string? StokKodu { get; set; }
+        public string? StokAdi { get; set; }
+        public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
+        public decimal? Bakiye { get; set; }
+    }
 }

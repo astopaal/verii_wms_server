@@ -28,5 +28,9 @@ namespace WMS_WEBAPI.Interfaces
         // Şube işlemleri
         Task<ApiResponse<List<BranchDto>>> GetBranchesAsync(int? branchNo = null);
 
+        // Depo ve Raf işlemleri
+        Task<ApiResponse<List<WarehouseAndShelvesDto>>> GetWarehouseAndShelvesAsync(string? depoKodu = null, string? raf = null);
+        Task<ApiResponse<List<WarehouseShelvesWithStockInformationDto>>> GetWarehouseShelvesWithStockInformationAsync(string? depoKodu = null, string? raf = null);
+
     }
 }

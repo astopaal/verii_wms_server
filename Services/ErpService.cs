@@ -405,5 +405,44 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        // Depo ve Raf işlemleri
+        public async Task<ApiResponse<List<WarehouseAndShelvesDto>>> GetWarehouseAndShelvesAsync(string? depoKodu = null, string? raf = null)
+        {
+            try
+            {
+                var result = await _erpContext.WarehouseAndShelves
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_WAREHOUSE_SHELF({0}, {1})", depoKodu, raf)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var mappedResult = _mapper.Map<List<WarehouseAndShelvesDto>>(result);
+
+                return ApiResponse<List<WarehouseAndShelvesDto>>.SuccessResult(mappedResult, _localizationService.GetLocalizedString("WarehouseAndShelvesRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<WarehouseAndShelvesDto>>.ErrorResult(_localizationService.GetLocalizedString("WarehouseAndShelvesRetrievalError"), ex.Message, 500);
+            }
+        }
+
+        public async Task<ApiResponse<List<WarehouseShelvesWithStockInformationDto>>> GetWarehouseShelvesWithStockInformationAsync(string? depoKodu = null, string? raf = null)
+        {
+            try
+            {
+                var result = await _erpContext.StockWarehouses
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_STOCK_WAREHOUSE({0}, {1})", depoKodu, raf)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var mappedResult = _mapper.Map<List<WarehouseShelvesWithStockInformationDto>>(result);
+
+                return ApiResponse<List<WarehouseShelvesWithStockInformationDto>>.SuccessResult(mappedResult, _localizationService.GetLocalizedString("StockWarehouseRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<WarehouseShelvesWithStockInformationDto>>.ErrorResult(_localizationService.GetLocalizedString("StockWarehouseRetrievalError"), ex.Message, 500);
+            }
+        }
+
     }
 }
