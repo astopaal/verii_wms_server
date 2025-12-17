@@ -20,6 +20,8 @@ namespace WMS_WEBAPI.Data
         public DbSet<RII_FN_BRANCHES> Branches { get; set; }
         public DbSet<RII_FN_WAREHOUSE_SHELF> WarehouseAndShelves { get; set; }
         public DbSet<RII_FN_STOCK_WAREHOUSE> StockWarehouses { get; set; }
+        public DbSet<RII_FN_PRODUCT_HEADER> ProductHeaders { get; set; }
+        public DbSet<RII_FN_PRODUCT_LINE> ProductLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +41,8 @@ namespace WMS_WEBAPI.Data
             modelBuilder.Entity<RII_FN_STOKYAPKOD>().HasNoKey().ToFunction("RII_FN_STOKYAPKOD");
             modelBuilder.Entity<RII_FN_WAREHOUSE_SHELF>().HasNoKey().ToFunction("RII_FN_WAREHOUSE_SHELF");
             modelBuilder.Entity<RII_FN_STOCK_WAREHOUSE>().HasNoKey().ToFunction("RII_FN_STOCK_WAREHOUSE");
+            modelBuilder.Entity<RII_FN_PRODUCT_HEADER>().HasNoKey().ToFunction("RII_FN_PRODUCT_HEADER");
+            modelBuilder.Entity<RII_FN_PRODUCT_LINE>().HasNoKey().ToFunction("RII_FN_PRODUCT_LINE");
 
         }
     }

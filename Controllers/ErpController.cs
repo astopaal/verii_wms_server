@@ -94,6 +94,23 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getProductionHeader")]
+        public async Task<ActionResult<ApiResponse<List<ProductHeaderDto>>>> GetProductHeader([FromQuery] string isemriNo)
+        {
+            var result = await _erpService.GetProductHeaderAsync(isemriNo);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getProductionLines")]
+        public async Task<ActionResult<ApiResponse<List<ProductLineDto>>>> GetProductLines(
+            [FromQuery] string? isemriNo = null,
+            [FromQuery] string? fisNo = null,
+            [FromQuery] string? mamulKodu = null)
+        {
+            var result = await _erpService.GetProductLinesAsync(isemriNo, fisNo, mamulKodu);
+            return StatusCode(result.StatusCode, result);
+        }
+
 
         [HttpGet("health-check")]
         [AllowAnonymous]

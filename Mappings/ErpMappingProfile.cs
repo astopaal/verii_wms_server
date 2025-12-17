@@ -111,6 +111,27 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
                 .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
                 .ForMember(dest => dest.Bakiye, opt => opt.MapFrom(src => src.BAKIYE));
+
+            CreateMap<RII_FN_PRODUCT_HEADER, ProductHeaderDto>()
+                .ForMember(dest => dest.IsemriNo, opt => opt.MapFrom(src => src.ISEMRINO))
+                .ForMember(dest => dest.StokKodu, opt => opt.MapFrom(src => src.STOK_KODU))
+                .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
+                .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
+                .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
+                .ForMember(dest => dest.Miktar, opt => opt.MapFrom(src => src.MIKTAR))
+                .ForMember(dest => dest.Oncelik, opt => opt.MapFrom(src => src.ONCELIK))
+                .ForMember(dest => dest.RefIsemriNo, opt => opt.MapFrom(src => src.REFISEMRINO));
+
+            CreateMap<RII_FN_PRODUCT_LINE, ProductLineDto>()
+                .ForMember(dest => dest.MamulKodu, opt => opt.MapFrom(src => src.MAMUL_KODU))
+                .ForMember(dest => dest.MamulAdi, opt => opt.MapFrom(src => src.MAMUL_ADI))
+                .ForMember(dest => dest.IsemriNo, opt => opt.MapFrom(src => src.ISEMRINO))
+                .ForMember(dest => dest.SiparisNo, opt => opt.MapFrom(src => src.SIPARIS_NO))
+                .ForMember(dest => dest.HamKodu, opt => opt.MapFrom(src => src.HAM_KODU))
+                .ForMember(dest => dest.HamMaddeAdi, opt => opt.MapFrom(src => src.HAM_MADDE_ADI))
+                .ForMember(dest => dest.BirimMiktar, opt => opt.MapFrom(src => src.BIRIM_MIKTAR))
+                .ForMember(dest => dest.HesaplananToplamMiktar, opt => opt.MapFrom(src => src.HESAPLANAN_TOPLAM_MIKTAR))
+                .ForMember(dest => dest.OpNo, opt => opt.MapFrom(src => src.OPNO));
         }
     }
 }

@@ -202,4 +202,29 @@ namespace WMS_WEBAPI.DTOs
         public string? YapAcik { get; set; }
         public decimal? Bakiye { get; set; }
     }
+
+    public class ProductHeaderDto
+    {
+        public string? IsemriNo { get; set; }
+        public string? StokKodu { get; set; }
+        public string? StokAdi { get; set; }
+        public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
+        public decimal? Miktar { get; set; }
+        public int? Oncelik { get; set; }
+        public string? RefIsemriNo { get; set; }
+    }
+
+    public class ProductLineDto
+    {
+        public string? MamulKodu { get; set; }
+        public string? MamulAdi { get; set; }
+        public string? IsemriNo { get; set; }
+        public string? SiparisNo { get; set; }
+        public string? HamKodu { get; set; }
+        public string? HamMaddeAdi { get; set; }
+        public decimal? BirimMiktar { get; set; }
+        public decimal? HesaplananToplamMiktar { get; set; }
+        public string? OpNo { get; set; }
+    }
 }
