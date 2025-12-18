@@ -94,6 +94,14 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("getWarehouseShelvesNested")]
+        public async Task<ActionResult<ApiResponse<List<WarehouseShelfStocksDto>>>> GetWarehouseShelvesNested(
+            [FromQuery] string depoKodu)
+        {
+            var result = await _erpService.GetWarehouseShelvesNestedAsync(depoKodu);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("getProductionHeader")]
         public async Task<ActionResult<ApiResponse<List<ProductHeaderDto>>>> GetProductHeader([FromQuery] string isemriNo)
         {

@@ -110,6 +110,15 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
                 .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
                 .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))
+                .ForMember(dest => dest.SeriNo, opt => opt.MapFrom(src => src.SERI_NO))
+                .ForMember(dest => dest.Bakiye, opt => opt.MapFrom(src => src.BAKIYE));
+
+            CreateMap<RII_FN_STOCK_WAREHOUSE, ShelfStockDto>()
+                .ForMember(dest => dest.StokKodu, opt => opt.MapFrom(src => src.STOK_KODU))
+                .ForMember(dest => dest.StokAdi, opt => opt.MapFrom(src => src.STOK_ADI))
+                .ForMember(dest => dest.YapKod, opt => opt.MapFrom(src => src.YAPKOD))
+                .ForMember(dest => dest.YapAcik, opt => opt.MapFrom(src => src.YAPACIK))               
+                .ForMember(dest => dest.SeriNo, opt => opt.MapFrom(src => src.SERI_NO))
                 .ForMember(dest => dest.Bakiye, opt => opt.MapFrom(src => src.BAKIYE));
 
             CreateMap<RII_FN_PRODUCT_HEADER, ProductHeaderDto>()

@@ -31,6 +31,7 @@ namespace WMS_WEBAPI.Interfaces
         // Depo ve Raf işlemleri
         Task<ApiResponse<List<WarehouseAndShelvesDto>>> GetWarehouseAndShelvesAsync(string? depoKodu = null, string? raf = null);
         Task<ApiResponse<List<WarehouseShelvesWithStockInformationDto>>> GetWarehouseShelvesWithStockInformationAsync(string? depoKodu = null, string? raf = null);
+        Task<ApiResponse<List<WarehouseShelfStocksDto>>> GetWarehouseShelvesNestedAsync(string depoKodu);
 
         // Üretim Emri işlemleri
         Task<ApiResponse<List<ProductHeaderDto>>> GetProductHeaderAsync(string isemriNo);

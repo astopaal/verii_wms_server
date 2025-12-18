@@ -200,6 +200,8 @@ namespace WMS_WEBAPI.DTOs
         public string? StokAdi { get; set; }
         public string? YapKod { get; set; }
         public string? YapAcik { get; set; }
+        
+        public string? SeriNo { get; set; }
         public decimal? Bakiye { get; set; }
     }
 
@@ -226,5 +228,22 @@ namespace WMS_WEBAPI.DTOs
         public decimal? BirimMiktar { get; set; }
         public decimal? HesaplananToplamMiktar { get; set; }
         public string? OpNo { get; set; }
+    }
+
+    public class ShelfStockDto
+    {
+        public string? StokKodu { get; set; }
+        public string? StokAdi { get; set; }
+        public string? YapKod { get; set; }
+        public string? YapAcik { get; set; }
+        public string? SeriNo {get; set;}
+        public decimal? Bakiye { get; set; }
+    }
+
+    public class WarehouseShelfStocksDto
+    {
+        public string? DepoKodu { get; set; }
+        public string? HucreKodu { get; set; }
+        public List<ShelfStockDto> Stoklar { get; set; } = new();
     }
 }

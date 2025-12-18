@@ -23,6 +23,9 @@ namespace WMS_WEBAPI.Models
         [MaxLength(100)]
         public string? YAPACIK { get; set; }
 
+        [MaxLength(100)]
+        public string? SERI_NO { get; set; }
+
         [Column(TypeName = "decimal(18,4)")]
         public decimal? BAKIYE { get; set; }
     }

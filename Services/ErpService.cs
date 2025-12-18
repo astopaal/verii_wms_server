@@ -483,5 +483,43 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<List<WarehouseShelfStocksDto>>> GetWarehouseShelvesNestedAsync(string depoKodu)
+        {
+            try
+            {
+                var shelvesRows = await _erpContext.WarehouseAndShelves
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_WAREHOUSE_SHELF({0}, {1})", depoKodu, null)
+                    .AsNoTracking()
+                    .ToListAsync();
+                var shelves = _mapper.Map<List<WarehouseAndShelvesDto>>(shelvesRows);
+
+                var stocksRows = await _erpContext.StockWarehouses
+                    .FromSqlRaw("SELECT * FROM dbo.RII_FN_STOCK_WAREHOUSE({0}, {1})", depoKodu, null)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var stocksByShelf = stocksRows
+                    .Where(r => !string.IsNullOrWhiteSpace(r.HUCRE_KODU))
+                    .GroupBy(r => r.HUCRE_KODU!.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(g => g.Key, g => _mapper.Map<List<ShelfStockDto>>(g.ToList()), StringComparer.OrdinalIgnoreCase);
+
+                var result = shelves
+                    .OrderBy(s => s.HucreKodu)
+                    .Select(s => new WarehouseShelfStocksDto
+                    {
+                        DepoKodu = s.DepoKodu,
+                        HucreKodu = s.HucreKodu,
+                        Stoklar = s.HucreKodu != null && stocksByShelf.TryGetValue(s.HucreKodu.Trim(), out var list) ? list : new List<ShelfStockDto>()
+                    })
+                    .ToList();
+
+                return ApiResponse<List<WarehouseShelfStocksDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WarehouseShelvesNestedRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<WarehouseShelfStocksDto>>.ErrorResult(_localizationService.GetLocalizedString("WarehouseShelvesNestedRetrievalError"), ex.Message, 500);
+            }
+        }
+
     }
 }
