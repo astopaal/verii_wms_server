@@ -113,6 +113,7 @@ builder.Services.AddScoped<IWtTerminalLineService, WtTerminalLineService>();
 
 
 // Register Product Transfer Services
+builder.Services.AddScoped<IPtFunctionService, PtFunctionService>();
 builder.Services.AddScoped<IPtHeaderService, PtHeaderService>();
 builder.Services.AddScoped<IPtLineService, PtLineService>();
 builder.Services.AddScoped<IPtImportLineService, PtImportLineService>();
