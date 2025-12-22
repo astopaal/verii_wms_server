@@ -2093,6 +2093,30 @@
   <data name="PrHeaderGenerateError" xml:space="preserve">
     <value>Error occurred while generating production order</value>
   </data>
+  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned production orders retrieved successfully</value>
+  </data>
+  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned production orders</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned production order lines retrieved successfully</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned production order lines</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed production orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed production orders awaiting ERP approval</value>
+  </data>
+  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Production order approval updated successfully</value>
+  </data>
+  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating production order approval</value>
+  </data>
 
   <!-- Production / PrLine -->
   <data name="PrLineRetrievedSuccessfully" xml:space="preserve">

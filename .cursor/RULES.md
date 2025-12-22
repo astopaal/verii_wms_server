@@ -206,8 +206,15 @@
 
 - Projede tüm kullanıcıya dönen mesajlar LOCALIZED olmalıdır.
 - Hardcoded string mesaj kullanımı YASAK.
+- Her localization key’i, aşağıda belirtilen TÜM diller için EKSİKSİZ olarak tanımlanmak zorundadır:
+Türkçe (tr)
+İngilizce (en)
+İtalyanca (it)
+Fransızca (fr)
+İspanyolca (es)
+Almanca (de)
 
-- ApiResponse içerisinde dönen:
+- ApiResponse içerisinde dönen:ß
   - Message
   - Error
   - Validation mesajları

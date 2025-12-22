@@ -33,4 +33,12 @@ namespace WMS_WEBAPI.DTOs
         public string? SourceWarehouse { get; set; }
         public string? TargetWarehouse { get; set; }
     }
+
+    public class PrAssignedProductionOrderLinesDto
+    {
+        public IEnumerable<PrLineDto> Lines { get; set; } = Array.Empty<PrLineDto>();
+        public IEnumerable<PrLineSerialDto> LineSerials { get; set; } = Array.Empty<PrLineSerialDto>();
+        public IEnumerable<PrImportLineDto> ImportLines { get; set; } = Array.Empty<PrImportLineDto>();
+        public IEnumerable<PrRouteDto> Routes { get; set; } = Array.Empty<PrRouteDto>();
+    }
 }

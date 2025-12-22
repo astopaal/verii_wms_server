@@ -89,5 +89,45 @@ namespace WMS_WEBAPI.Controllers
             var result = await _prHeaderService.GenerateProductionOrderAsync(request);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("bulk-generate")]
+        public async Task<ActionResult<ApiResponse<PrHeaderDto>>> BulkPrGenerate([FromBody] BulkPrGenerateRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, ModelState);
+            }
+
+            var result = await _prHeaderService.BulkPrGenerateAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("assigned/{userId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<PrHeaderDto>>>> GetAssignedProductionOrders(long userId)
+        {
+            var result = await _prHeaderService.GetAssignedProductionOrdersAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getAssignedProductionOrderLines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<PrAssignedProductionOrderLinesDto>>> GetAssignedProductionOrderLines(long headerId)
+        {
+            var result = await _prHeaderService.GetAssignedProductionOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("completed-awaiting-erp-approval")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<PrHeaderDto>>>> GetCompletedAwaitingErpApproval([FromBody] PagedRequest request)
+        {
+            var result = await _prHeaderService.GetCompletedAwaitingErpApprovalPagedAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("approval/{id}")]
+        public async Task<ActionResult<ApiResponse<PrHeaderDto>>> SetApproval(long id, [FromQuery] bool approved)
+        {
+            var result = await _prHeaderService.SetApprovalAsync(id, approved);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

@@ -2022,6 +2022,30 @@
   <data name="PrHeaderGenerateError" xml:space="preserve">
     <value>Üretim emri oluşturulurken hata oluştu</value>
   </data>
+  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış üretim emirleri başarıyla getirildi</value>
+  </data>
+  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanmış üretim emirleri getirilirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış üretim emri satırları başarıyla getirildi</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanmış üretim emri satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış üretim emirleri başarıyla getirildi</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış üretim emirleri getirilirken hata oluştu</value>
+  </data>
+  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim emri onayı başarıyla güncellendi</value>
+  </data>
+  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Üretim emri onayı güncellenirken hata oluştu</value>
+  </data>
   <!-- #endregion Production.PrHeader -->
 
   <!-- #region Production.PrLine -->
