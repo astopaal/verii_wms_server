@@ -127,117 +127,6 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByBranchCodeAsync(string branchCode)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PrHeaders.FindAsync(x => x.BranchCode == branchCode && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PrHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrHeaderDto>>.SuccessResult(enrichedWarehouse.Data ?? dtos, _localizationService.GetLocalizedString("PrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var entities = await _unitOfWork.PrHeaders.FindAsync(x => x.PlannedDate >= startDate && x.PlannedDate <= endDate && !x.IsDeleted && x.BranchCode == branchCode);
-                var dtos = _mapper.Map<IEnumerable<PrHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrHeaderDto>>.SuccessResult(enrichedWarehouse.Data ?? dtos, _localizationService.GetLocalizedString("PrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByCustomerCodeAsync(string customerCode)
-        {
-            try
-            {
-                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var entities = await _unitOfWork.PrHeaders.FindAsync(x => x.CustomerCode == customerCode && !x.IsDeleted && x.BranchCode == branchCode);
-                var dtos = _mapper.Map<IEnumerable<PrHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                dtos = enrichedWarehouse.Data ?? dtos;
-                return ApiResponse<IEnumerable<PrHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        public async Task<ApiResponse<IEnumerable<PrHeaderDto>>> GetByDocumentTypeAsync(string documentType)
-        {
-            try
-            {
-                var entities = await _unitOfWork.PrHeaders.FindAsync(x => x.DocumentType == documentType && !x.IsDeleted);
-                var dtos = _mapper.Map<IEnumerable<PrHeaderDto>>(entities);
-
-                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
-                if (!enrichedCustomer.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
-                }
-                dtos = enrichedCustomer.Data ?? dtos;
-
-                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
-                if (!enrichedWarehouse.Success)
-                {
-                    return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
-                }
-                return ApiResponse<IEnumerable<PrHeaderDto>>.SuccessResult(enrichedWarehouse.Data ?? dtos, _localizationService.GetLocalizedString("PrHeaderRetrievedSuccessfully"));
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<IEnumerable<PrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
         public async Task<ApiResponse<PrHeaderDto>> CreateAsync(CreatePrHeaderDto createDto)
         {
             try
@@ -326,5 +215,157 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderCompletionError"), ex.Message ?? string.Empty, 500);
             }
         }
+
+        public async Task<ApiResponse<PrHeaderDto>> GenerateProductionOrderAsync(GenerateProductionOrderRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var header = _mapper.Map<PrHeader>(request.Header);
+                        header.CreatedDate = DateTime.UtcNow;
+                        header.IsDeleted = false;
+                        await _unitOfWork.PrHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var lineGuidToId = new Dictionary<Guid, long>();
+
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<PrLine>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                var line = new PrLine
+                                {
+                                    HeaderId = header.Id,
+                                    StockCode = l.StockCode,
+                                    Quantity = l.Quantity,
+                                    Unit = l.Unit,
+                                    ErpOrderNo = l.ErpOrderNo,
+                                    ErpOrderId = l.ErpOrderId,
+                                    Description = l.Description
+                                };
+                                lines.Add(line);
+                            }
+                            await _unitOfWork.PrLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                var guid = request.Lines[i].ClientGuid;
+                                var id = lines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key!] = id;
+                                }
+                                if (guid.HasValue)
+                                {
+                                    lineGuidToId[guid.Value] = id;
+                                }
+                            }
+                        }
+
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<PrLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (s.LineGroupGuid.HasValue)
+                                {
+                                    if (!lineGuidToId.TryGetValue(s.LineGroupGuid.Value, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineGroupGuidNotFound"), 400);
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"), 400);
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineReferenceMissing"), 400);
+                                }
+
+                                var serial = new PrLineSerial
+                                {
+                                    LineId = lineId,
+                                    Quantity = s.Quantity,
+                                    SerialNo = s.SerialNo,
+                                    SerialNo2 = s.SerialNo2,
+                                    SerialNo3 = s.SerialNo3,
+                                    SerialNo4 = s.SerialNo4,
+                                    SourceCellCode = s.SourceCellCode,
+                                    TargetCellCode = s.TargetCellCode
+                                };
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.PrLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        if (request.HeaderSerials != null && request.HeaderSerials.Count > 0)
+                        {
+                            var headerSerials = new List<PrHeaderSerial>(request.HeaderSerials.Count);
+                            foreach (var hs in request.HeaderSerials)
+                            {
+                                var hSerial = new PrHeaderSerial
+                                {
+                                    HeaderId = header.Id,
+                                    SerialNo = hs.SerialNo,
+                                    SerialNo2 = hs.SerialNo2,
+                                    SerialNo3 = hs.SerialNo3,
+                                    SerialNo4 = hs.SerialNo4,
+                                    Amount = hs.Amount
+                                };
+                                headerSerials.Add(hSerial);
+                            }
+                            await _unitOfWork.PrHeaderSerials.AddRangeAsync(headerSerials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                        {
+                            var tlines = new List<PrTerminalLine>(request.TerminalLines.Count);
+                            foreach (var t in request.TerminalLines)
+                            {
+                                tlines.Add(new PrTerminalLine
+                                {
+                                    HeaderId = header.Id,
+                                    TerminalUserId = t.TerminalUserId
+                                });
+                            }
+                            await _unitOfWork.PrTerminalLines.AddRangeAsync(tlines);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        await _unitOfWork.CommitTransactionAsync();
+
+                        var dto = _mapper.Map<PrHeaderDto>(header);
+                        return ApiResponse<PrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PrHeaderGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderGenerateError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+   
     }
 }

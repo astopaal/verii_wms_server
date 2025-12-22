@@ -341,9 +341,7 @@ namespace WMS_WEBAPI.Services
             {
                 return ApiResponse<WtAssignedTransferOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
-        }
- 
-        
+        } 
 
         public async Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request)
         {
