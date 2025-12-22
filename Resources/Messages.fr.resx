@@ -371,6 +371,26 @@
     <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- #region PR.ImportLine -->
+  <data name="PrImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de production créée avec succès</value>
+  </data>
+  <data name="PrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <data name="PrImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="PrImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="PrImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <!-- #endregion PR.ImportLine -->
   <!-- Production / PrHeader -->
   <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
     <value>Clé de corrélation invalide fournie</value>
