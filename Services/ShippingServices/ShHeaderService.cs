@@ -155,16 +155,20 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var existing = await _unitOfWork.ShHeaders.GetByIdAsync(id);
-                if (existing == null)
+                var entity = await _unitOfWork.ShHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
                 {
-                    var nf = _localizationService.GetLocalizedString("ShHeaderNotFound");
-                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                    var notFound = _localizationService.GetLocalizedString("ShHeaderNotFound");
+                    return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
-                existing.IsCompleted = true;
-                existing.CompletionDate = DateTime.UtcNow;
-                _unitOfWork.ShHeaders.Update(existing);
+
+                entity.IsCompleted = true;
+                entity.CompletionDate = DateTime.UtcNow;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.ShHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShHeaderCompletedSuccessfully"));
             }
             catch (Exception ex)
@@ -242,11 +246,31 @@ namespace WMS_WEBAPI.Services
                         .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
                 }
 
+                var lineDtos = _mapper.Map<IEnumerable<ShLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
+
+                var importLineDtos = _mapper.Map<IEnumerable<ShImportLineDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
+
                 var dto = new ShAssignedOrderLinesDto
                 {
-                    Lines = _mapper.Map<IEnumerable<ShLineDto>>(lines),
+                    Lines = lineDtos,
                     LineSerials = _mapper.Map<IEnumerable<ShLineSerialDto>>(lineSerials),
-                    ImportLines = _mapper.Map<IEnumerable<ShImportLineDto>>(importLines),
+                    ImportLines = importLineDtos,
                     Routes = _mapper.Map<IEnumerable<ShRouteDto>>(routes)
                 };
 
@@ -298,7 +322,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -332,11 +356,11 @@ namespace WMS_WEBAPI.Services
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<ShHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
-                return ApiResponse<PagedResponse<ShHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<ShHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<ShHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<PagedResponse<ShHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderCompletedAwaitingErpApprovalRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -360,17 +384,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<ShLine>(request.Lines.Count);
                             foreach (var l in request.Lines)
                             {
-                                var line = new ShLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = l.StockCode,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description,
-                                    YapKod = l.YapKod
-                                };
+                                var line = _mapper.Map<ShLine>(l);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.ShLines.AddRangeAsync(lines);
@@ -421,17 +436,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<ShHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var serial = new ShLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
+                                var serial = _mapper.Map<ShLineSerial>(s);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.ShLineSerials.AddRangeAsync(serials);
@@ -443,11 +449,9 @@ namespace WMS_WEBAPI.Services
                             var tlines = new List<ShTerminalLine>(request.TerminalLines.Count);
                             foreach (var t in request.TerminalLines)
                             {
-                                tlines.Add(new ShTerminalLine
-                                {
-                                    HeaderId = header.Id,
-                                    TerminalUserId = t.TerminalUserId
-                                });
+                                var tline = _mapper.Map<ShTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
                             }
                             await _unitOfWork.ShTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
@@ -490,17 +494,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<ShLine>(request.Lines.Count);
                             foreach (var lineDto in request.Lines)
                             {
-                                var line = new ShLine
-                                {
-                                    HeaderId = shHeader.Id,
-                                    StockCode = lineDto.StockCode,
-                                    YapKod = lineDto.YapKod,
-                                    Quantity = lineDto.Quantity,
-                                    Unit = lineDto.Unit,
-                                    ErpOrderNo = lineDto.ErpOrderNo,
-                                    ErpOrderId = lineDto.ErpOrderId,
-                                    Description = lineDto.Description
-                                };
+                                var line = _mapper.Map<ShLine>(lineDto);
+                                line.HeaderId = shHeader.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.ShLines.AddRangeAsync(lines);
@@ -551,17 +546,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var serial = new ShLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = sDto.Quantity,
-                                    SerialNo = sDto.SerialNo,
-                                    SerialNo2 = sDto.SerialNo2,
-                                    SerialNo3 = sDto.SerialNo3,
-                                    SerialNo4 = sDto.SerialNo4,
-                                    SourceCellCode = sDto.SourceCellCode,
-                                    TargetCellCode = sDto.TargetCellCode
-                                };
+                                var serial = _mapper.Map<ShLineSerial>(sDto);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.ShLineSerials.AddRangeAsync(serials);
@@ -602,12 +588,9 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("ShHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var importLine = new ShImportLine
-                                {
-                                    HeaderId = shHeader.Id,
-                                    LineId = lineId,
-                                    StockCode = importDto.StockCode
-                                };
+                                var importLine = _mapper.Map<ShImportLine>(importDto);
+                                importLine.HeaderId = shHeader.Id;
+                                importLine.LineId = lineId;
                                 importLines.Add(importLine);
                             }
 
@@ -714,18 +697,8 @@ namespace WMS_WEBAPI.Services
                                     }
                                 }
 
-                                var route = new ShRoute
-                                {
-                                    ImportLineId = importLineId,
-                                    Quantity = rDto.Quantity,
-                                    SerialNo = rDto.SerialNo,
-                                    SerialNo2 = rDto.SerialNo2,
-                                    SourceWarehouse = rDto.SourceWarehouse,
-                                    TargetWarehouse = rDto.TargetWarehouse,
-                                    SourceCellCode = rDto.SourceCellCode,
-                                    TargetCellCode = rDto.TargetCellCode,
-                                    Description = rDto.Description
-                                };
+                                var route = _mapper.Map<ShRoute>(rDto);
+                                route.ImportLineId = importLineId;
                                 routes.Add(route);
                             }
 

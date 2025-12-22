@@ -436,16 +436,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<WtLine>(request.Lines.Count);
                             foreach (var l in request.Lines)
                             {
-                                var line = new WtLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = l.StockCode,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description
-                                };
+                                var line = _mapper.Map<WtLine>(l);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.WtLines.AddRangeAsync(lines);
@@ -496,17 +488,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var serial = new WtLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
+                                var serial = _mapper.Map<WtLineSerial>(s);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.WtLineSerials.AddRangeAsync(serials);
@@ -518,11 +501,9 @@ namespace WMS_WEBAPI.Services
                             var tlines = new List<WtTerminalLine>(request.TerminalLines.Count);
                             foreach (var t in request.TerminalLines)
                             {
-                                tlines.Add(new WtTerminalLine
-                                {
-                                    HeaderId = header.Id,
-                                    TerminalUserId = t.TerminalUserId
-                                });
+                                var tline = _mapper.Map<WtTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
                             }
                             await _unitOfWork.WtTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
@@ -570,17 +551,8 @@ namespace WMS_WEBAPI.Services
                                     await _unitOfWork.RollbackTransactionAsync();
                                     return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
                                 }
-                                var line = new WtLine
-                                {
-                                    HeaderId = hdrId,
-                                    StockCode = l.StockCode,
-                                    YapKod = l.YapKod,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description
-                                };
+                                var line = _mapper.Map<WtLine>(l);
+                                line.HeaderId = hdrId;
                                 lines.Add(line);
                                 lineKeys.Add(l.LineKey);
                             }
@@ -601,17 +573,8 @@ namespace WMS_WEBAPI.Services
                                     await _unitOfWork.RollbackTransactionAsync();
                                     return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
                                 }
-                                var serial = new WtLineSerial
-                                {
-                                    LineId = lid,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
+                                var serial = _mapper.Map<WtLineSerial>(s);
+                                serial.LineId = lid;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.WtLineSerials.AddRangeAsync(serials);
@@ -639,12 +602,9 @@ namespace WMS_WEBAPI.Services
                                     }
                                     linkedLineId = lId;
                                 }
-                                var importLine = new WtImportLine
-                                {
-                                    HeaderId = hdrId,
-                                    LineId = linkedLineId,
-                                    StockCode = il.StockCode
-                                };
+                                var importLine = _mapper.Map<WtImportLine>(il);
+                                importLine.HeaderId = hdrId;
+                                importLine.LineId = linkedLineId;
                                 importLines.Add(importLine);
                                 importKeys.Add(il.ImportLineKey);
                             }
@@ -665,21 +625,12 @@ namespace WMS_WEBAPI.Services
                                     await _unitOfWork.RollbackTransactionAsync();
                                     return ApiResponse<WtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("WtHeaderInvalidCorrelationKey"), 400);
                                 }
-                                var route = new WtRoute
+                                var route = _mapper.Map<WtRoute>(r);
+                                route.ImportLineId = ilId;
+                                if (string.IsNullOrEmpty(route.ScannedBarcode))
                                 {
-                                    ImportLineId = ilId,
-                                    Quantity = r.Quantity,
-                                    SerialNo = r.SerialNo,
-                                    SerialNo2 = r.SerialNo2,
-                                    SerialNo3 = r.SerialNo3,
-                                    SerialNo4 = r.SerialNo4,
-                                    ScannedBarcode = r.ScannedBarcode ?? string.Empty,
-                                    SourceWarehouse = r.SourceWarehouse,
-                                    TargetWarehouse = r.TargetWarehouse,
-                                    SourceCellCode = r.SourceCellCode,
-                                    TargetCellCode = r.TargetCellCode,
-                                    Description = r.Description
-                                };
+                                    route.ScannedBarcode = string.Empty;
+                                }
                                 routes.Add(route);
                             }
 

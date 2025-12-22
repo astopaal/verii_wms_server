@@ -63,6 +63,11 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.Line, opt => opt.Ignore())
                 
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<CreatePtImportLineWithGuidDto, PtImportLine>()
+                .IncludeBase<CreatePtImportLineDto, PtImportLine>()
+                .ForMember(dest => dest.HeaderId, opt => opt.Ignore())
+                .ForMember(dest => dest.LineId, opt => opt.Ignore());
         }
     }
 }

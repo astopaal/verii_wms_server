@@ -58,6 +58,14 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.Line, opt => opt.Ignore())
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<CreatePtLineSerialWithLineKeyDto, PtLineSerial>()
+                .IncludeBase<CreatePtLineSerialDto, PtLineSerial>()
+                .ForMember(dest => dest.LineId, opt => opt.Ignore());
+
+            CreateMap<CreatePtLineSerialWithGuidDto, PtLineSerial>()
+                .IncludeBase<CreatePtLineSerialDto, PtLineSerial>()
+                .ForMember(dest => dest.LineId, opt => opt.Ignore());
         }
     }
 }

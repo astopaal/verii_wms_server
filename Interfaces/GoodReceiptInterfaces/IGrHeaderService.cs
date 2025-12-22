@@ -17,6 +17,10 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<bool>> CompleteAsync(int id);
         Task<ApiResponse<IEnumerable<GrHeaderDto>>> GetByCustomerCodeAsync(string customerCode);
         Task<ApiResponse<long>> BulkCreateAsync(BulkCreateGrRequestDto request);
+        Task<ApiResponse<IEnumerable<GrHeaderDto>>> GetAssignedOrdersAsync(long userId);
+        Task<ApiResponse<GrAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
+        Task<ApiResponse<PagedResponse<GrHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
+        Task<ApiResponse<GrHeaderDto>> SetApprovalAsync(long id, bool approved);
 
     }
 }

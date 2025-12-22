@@ -54,6 +54,24 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Line, opt => opt.Ignore())
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            // CreateWtImportLineWithGuidDto to WtImportLine (for BulkWtGenerateAsync)
+            CreateMap<CreateWtImportLineWithGuidDto, WtImportLine>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.HeaderId, opt => opt.Ignore())
+                .ForMember(dest => dest.LineId, opt => opt.Ignore())
+                .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.DeletedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                .ForMember(dest => dest.Line, opt => opt.Ignore())
+                .ForMember(dest => dest.ImportLineKey, opt => opt.Ignore())
+                .ForMember(dest => dest.HeaderKey, opt => opt.Ignore())
+                .ForMember(dest => dest.LineKey, opt => opt.Ignore());
         }
     }
 }

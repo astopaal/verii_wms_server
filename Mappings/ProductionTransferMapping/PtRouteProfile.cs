@@ -67,6 +67,10 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.ImportLine, opt => opt.Ignore())
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<CreatePtRouteWithImportGuidDto, PtRoute>()
+                .IncludeBase<CreatePtRouteDto, PtRoute>()
+                .ForMember(dest => dest.ImportLineId, opt => opt.Ignore());
         }
     }
 }

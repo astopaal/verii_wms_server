@@ -18,5 +18,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PtHeaderDto>> SetApprovalAsync(long id, bool approved);
         Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetAssignedProductionTransferOrdersAsync(long userId);
         Task<ApiResponse<PtAssignedProductionTransferOrderLinesDto>> GetAssignedProductionTransferOrderLinesAsync(long headerId);
+        Task<ApiResponse<PtHeaderDto>> GenerateProductionTransferOrderAsync(GenerateProductionTransferOrderRequestDto request);
+        Task<ApiResponse<PtHeaderDto>> BulkPtGenerateAsync(BulkPtGenerateRequestDto request);
     }
 }

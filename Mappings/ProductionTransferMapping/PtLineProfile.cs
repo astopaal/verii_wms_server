@@ -59,6 +59,12 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.ImportLines, opt => opt.Ignore())
                 
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<CreatePtLineWithKeyDto, PtLine>()
+                .IncludeBase<CreatePtLineDto, PtLine>();
+
+            CreateMap<CreatePtLineWithKeysDto, PtLine>()
+                .IncludeBase<CreatePtLineDto, PtLine>();
         }
     }
 }

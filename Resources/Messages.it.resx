@@ -62,17 +62,149 @@
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Magazzino Entrata non trovata</value>
   </data>
+  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di magazzino entrata assegnati recuperati con successo</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di magazzino entrata assegnati</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di magazzino entrata assegnate recuperate con successo</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di magazzino entrata assegnate</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di magazzino entrata completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di magazzino entrata completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di magazzino entrata aggiornata con successo</value>
+  </data>
+  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di magazzino entrata</value>
+  </data>
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Magazzino Uscita non trovata</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di magazzino uscita assegnati recuperati con successo</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di magazzino uscita assegnati</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di magazzino uscita assegnate recuperate con successo</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di magazzino uscita assegnate</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di magazzino uscita completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di magazzino uscita completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di magazzino uscita aggiornata con successo</value>
+  </data>
+  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di magazzino uscita</value>
   </data>
   <data name="ShHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Spedizione non trovata</value>
   </data>
+  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di spedizione assegnati recuperati con successo</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di spedizione assegnati</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di spedizione assegnate recuperate con successo</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di spedizione assegnate</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di spedizione completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di spedizione completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="ShHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di spedizione aggiornata con successo</value>
+  </data>
+  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di spedizione</value>
+  </data>
+  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordine di spedizione creato con successo</value>
+  </data>
+  <data name="ShHeaderGenerateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione dell'ordine di spedizione</value>
+  </data>
+  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
+    <value>Creazione in massa di spedizioni completata con successo</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione in massa di spedizioni</value>
+  </data>
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Sottofornitura Uscita non trovata</value>
   </data>
+  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di sottofornitura uscita assegnati recuperati con successo</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di sottofornitura uscita assegnati</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di sottofornitura uscita assegnate recuperate con successo</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di sottofornitura uscita assegnate</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di sottofornitura uscita completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di sottofornitura uscita completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di sottofornitura uscita aggiornata con successo</value>
+  </data>
+  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di sottofornitura uscita</value>
+  </data>
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Sottofornitura Ricezione non trovata</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di sottofornitura ricezione assegnati recuperati con successo</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di sottofornitura ricezione assegnati</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di sottofornitura ricezione assegnate recuperate con successo</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di sottofornitura ricezione assegnate</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di sottofornitura ricezione completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di sottofornitura ricezione completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di sottofornitura ricezione aggiornata con successo</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di sottofornitura ricezione</value>
   </data>
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Trasferimento Produzione non trovata</value>
@@ -245,6 +377,36 @@
   <data name="PrHeaderGenerateError" xml:space="preserve">
     <value>Si è verificato un errore durante la creazione dell'ordine di produzione</value>
   </data>
+  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di produzione assegnati recuperati con successo</value>
+  </data>
+  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di produzione assegnati</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di produzione assegnate recuperate con successo</value>
+  </data>
+  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di produzione assegnate</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di produzione completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di produzione completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di produzione aggiornata con successo</value>
+  </data>
+  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di produzione</value>
+  </data>
+  <data name="PrHeaderBulkPrGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Creazione in massa di ordini di produzione completata con successo</value>
+  </data>
+  <data name="PrHeaderBulkPrGenerateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione in massa di ordini di produzione</value>
+  </data>
   <!-- Production / PrHeaderSerial -->
   <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
     <value>Informazioni sulla serie dell'intestazione di produzione recuperate con successo</value>
@@ -277,4 +439,30 @@
   <data name="ProductLinesRetrievalError" xml:space="preserve">
     <value>Si è verificato un errore durante il recupero delle righe dell'ordine di produzione</value>
   </data>
+  <!-- #region GR.Header -->
+  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di ricevimento merci assegnati recuperati con successo</value>
+  </data>
+  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di ricevimento merci assegnati</value>
+  </data>
+  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di ricevimento merci assegnate recuperate con successo</value>
+  </data>
+  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di ricevimento merci assegnate</value>
+  </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di ricevimento merci completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di ricevimento merci completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di ricevimento merci aggiornata con successo</value>
+  </data>
+  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di ricevimento merci</value>
+  </data>
+  <!-- #endregion GR.Header -->
 </root>

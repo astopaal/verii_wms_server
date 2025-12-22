@@ -409,6 +409,36 @@
   <data name="GrHeaderSoftDeletionError" xml:space="preserve">
     <value>Error occurred while soft deleting Goods Receipt Header</value>
   </data>
+  <data name="GrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Header completed successfully</value>
+  </data>
+  <data name="GrHeaderCompletionError" xml:space="preserve">
+    <value>Error occurred while completing Goods Receipt Header</value>
+  </data>
+  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned goods receipt orders retrieved successfully</value>
+  </data>
+  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned goods receipt orders</value>
+  </data>
+  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned goods receipt order lines retrieved successfully</value>
+  </data>
+  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned goods receipt order lines</value>
+  </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed goods receipt orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed goods receipt orders awaiting ERP approval</value>
+  </data>
+  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Goods receipt order approval updated successfully</value>
+  </data>
+  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating goods receipt order approval</value>
+  </data>
   <!-- #endregion GR.Header -->
   <!-- Inventorycount Service Messages -->
   <!-- #region IC.Header -->
@@ -523,6 +553,30 @@
   </data>
   <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Header completed successfully</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned warehouse inbound orders retrieved successfully</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned warehouse inbound orders</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned warehouse inbound order lines retrieved successfully</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned warehouse inbound order lines</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed warehouse inbound orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed warehouse inbound orders awaiting ERP approval</value>
+  </data>
+  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Warehouse inbound order approval updated successfully</value>
+  </data>
+  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating warehouse inbound order approval</value>
   </data>
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Warehouse Inbound Header not found</value>
@@ -647,6 +701,30 @@
   </data>
   <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Header completed successfully</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned subcontracting issue orders retrieved successfully</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned subcontracting issue orders</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned subcontracting issue order lines retrieved successfully</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned subcontracting issue order lines</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed subcontracting issue orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed subcontracting issue orders awaiting ERP approval</value>
+  </data>
+  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Subcontracting issue order approval updated successfully</value>
+  </data>
+  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating subcontracting issue order approval</value>
   </data>
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Subcontracting Issue Header not found</value>
@@ -1081,6 +1159,30 @@
   <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
     <value>Error occurred while updating production transfer order approval</value>
   </data>
+  <data name="PtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Production transfer order generated successfully</value>
+  </data>
+  <data name="PtHeaderGenerateError" xml:space="preserve">
+    <value>Error occurred while generating production transfer order</value>
+  </data>
+  <data name="PtHeaderBulkPtGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Bulk production transfer order generation completed successfully</value>
+  </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Error occurred during bulk production transfer order generation</value>
+  </data>
+  <data name="PtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key provided</value>
+  </data>
+  <data name="PtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>LineGroupGuid not found</value>
+  </data>
+  <data name="PtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>LineClientKey not found</value>
+  </data>
+  <data name="PtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Line reference is required</value>
+  </data>
   <!-- #endregion PT.Header -->
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Header information retrieved successfully</value>
@@ -1157,6 +1259,30 @@
   </data>
   <data name="WoHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Warehouse Outbound Header</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned warehouse outbound orders retrieved successfully</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned warehouse outbound orders</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned warehouse outbound order lines retrieved successfully</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned warehouse outbound order lines</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed warehouse outbound orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed warehouse outbound orders awaiting ERP approval</value>
+  </data>
+  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Warehouse outbound order approval updated successfully</value>
+  </data>
+  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating warehouse outbound order approval</value>
   </data>
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Warehouse Outbound Header not found</value>
@@ -1613,6 +1739,30 @@
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Subcontracting Receipt Transfer header</value>
   </data>
+  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned subcontracting receipt transfer orders retrieved successfully</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned subcontracting receipt transfer orders</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned subcontracting receipt transfer order lines retrieved successfully</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned subcontracting receipt transfer order lines</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed subcontracting receipt transfer orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed subcontracting receipt transfer orders awaiting ERP approval</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Subcontracting receipt transfer order approval updated successfully</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating subcontracting receipt transfer order approval</value>
+  </data>
   <data name="WtFunctionTransferOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse transfer open order header information retrieved successfully</value>
   </data>
@@ -1883,6 +2033,15 @@
   </data>
   <data name="ShHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Shipping Header</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed shipping orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed shipping orders awaiting ERP approval</value>
+  </data>
+  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating shipping order approval</value>
   </data>
   <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
     <value>Assigned shipping orders retrieved successfully</value>

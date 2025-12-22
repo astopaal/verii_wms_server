@@ -507,6 +507,30 @@
   <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Depo Giriş Başlık başarıyla tamamlandı</value>
   </data>
+  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan depo giriş siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanan depo giriş siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan depo giriş sipariş satırları başarıyla getirildi</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanan depo giriş sipariş satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış depo giriş siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış depo giriş siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Depo giriş sipariş onayı başarıyla güncellendi</value>
+  </data>
+  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Depo giriş sipariş onayı güncellenirken hata oluştu</value>
+  </data>
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Depo Giriş Başlık bulunamadı</value>
   </data>
@@ -710,6 +734,15 @@
   </data>
   <data name="ShHeaderCompletionError" xml:space="preserve">
     <value>Sevkiyat Başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış sevkiyat siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış sevkiyat siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Sevkiyat sipariş onayı güncellenirken hata oluştu</value>
   </data>
   <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
     <value>Atanmış sevkiyat siparişleri başarıyla getirildi</value>
@@ -936,6 +969,30 @@
   </data>
   <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık başarıyla tamamlandı</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan alt yüklenici çıkış siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanan alt yüklenici çıkış siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan alt yüklenici çıkış sipariş satırları başarıyla getirildi</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanan alt yüklenici çıkış sipariş satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış alt yüklenici çıkış siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış alt yüklenici çıkış siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Alt yüklenici çıkış sipariş onayı başarıyla güncellendi</value>
+  </data>
+  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Alt yüklenici çıkış sipariş onayı güncellenirken hata oluştu</value>
   </data>
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık bulunamadı</value>
@@ -1801,6 +1858,30 @@
   </data>
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan alt yüklenici kabul transfer siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanan alt yüklenici kabul transfer siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanan alt yüklenici kabul transfer sipariş satırları başarıyla getirildi</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanan alt yüklenici kabul transfer sipariş satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış alt yüklenici kabul transfer siparişleri başarıyla getirildi</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış alt yüklenici kabul transfer siparişleri getirilirken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Alt yüklenici kabul transfer sipariş onayı başarıyla güncellendi</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Alt yüklenici kabul transfer sipariş onayı güncellenirken hata oluştu</value>
   </data>
   <!-- #region WT.Function.OpenOrder -->
   <data name="WtFunctionTransferOpenOrderHeaderRetrievedSuccessfully" xml:space="preserve">

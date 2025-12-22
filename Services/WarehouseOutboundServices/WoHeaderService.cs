@@ -183,12 +183,20 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var existing = await _unitOfWork.WoHeaders.GetByIdAsync(id);
-                if (existing == null) { var nf = _localizationService.GetLocalizedString("WoHeaderNotFound"); return ApiResponse<bool>.ErrorResult(nf, nf, 404); }
-                existing.IsCompleted = true;
-                existing.CompletionDate = DateTime.UtcNow;
-                _unitOfWork.WoHeaders.Update(existing);
+                var entity = await _unitOfWork.WoHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var notFound = _localizationService.GetLocalizedString("WoHeaderNotFound");
+                    return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
+                }
+
+                entity.IsCompleted = true;
+                entity.CompletionDate = DateTime.UtcNow;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.WoHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WoHeaderCompletedSuccessfully"));
             }
             catch (Exception ex)
@@ -224,11 +232,11 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WoHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
                 }
                 dtos = enriched.Data ?? dtos;
-                return ApiResponse<IEnumerable<WoHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WoHeaderRetrievedSuccessfully"));
+                return ApiResponse<IEnumerable<WoHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("WoHeaderAssignedOrdersRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<WoHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<IEnumerable<WoHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderAssignedOrdersRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -260,19 +268,39 @@ namespace WMS_WEBAPI.Services
                         .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
                 }
 
+                var lineDtos = _mapper.Map<IEnumerable<WoLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
+
+                var importLineDtos = _mapper.Map<IEnumerable<WoImportLineDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
+
                 var dto = new WoAssignedOrderLinesDto
                 {
-                    Lines = _mapper.Map<IEnumerable<WoLineDto>>(lines),
+                    Lines = lineDtos,
                     LineSerials = _mapper.Map<IEnumerable<WoLineSerialDto>>(lineSerials),
-                    ImportLines = _mapper.Map<IEnumerable<WoImportLineDto>>(importLines),
+                    ImportLines = importLineDtos,
                     Routes = _mapper.Map<IEnumerable<WoRouteDto>>(routes)
                 };
 
-                return ApiResponse<WoAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WoHeaderRetrievedSuccessfully"));
+                return ApiResponse<WoAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WoHeaderAssignedOrderLinesRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<WoAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<WoAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -308,11 +336,11 @@ namespace WMS_WEBAPI.Services
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<WoHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
-                return ApiResponse<PagedResponse<WoHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WoHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<WoHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<WoHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<PagedResponse<WoHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCompletedAwaitingErpApprovalRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -354,7 +382,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<WoHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<WoHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -378,16 +406,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<WoLine>(request.Lines.Count);
                             foreach (var l in request.Lines)
                             {
-                                var line = new WoLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = l.StockCode,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description
-                                };
+                                var line = _mapper.Map<WoLine>(l);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.WoLines.AddRangeAsync(lines);
@@ -450,17 +470,8 @@ namespace WMS_WEBAPI.Services
                                     );
                                 }
 
-                                var serial = new WoLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
+                                var serial = _mapper.Map<WoLineSerial>(s);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.WoLineSerials.AddRangeAsync(serials);
@@ -472,11 +483,9 @@ namespace WMS_WEBAPI.Services
                             var tlines = new List<WoTerminalLine>(request.TerminalLines.Count);
                             foreach (var t in request.TerminalLines)
                             {
-                                tlines.Add(new WoTerminalLine
-                                {
-                                    HeaderId = header.Id,
-                                    TerminalUserId = t.TerminalUserId
-                                });
+                                var tline = _mapper.Map<WoTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
                             }
                             await _unitOfWork.WoTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
@@ -519,17 +528,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<WoLine>(request.Lines.Count);
                             foreach (var lineDto in request.Lines)
                             {
-                                var line = new WoLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = lineDto.StockCode,
-                                    YapKod = lineDto.YapKod,
-                                    Quantity = lineDto.Quantity,
-                                    Unit = lineDto.Unit,
-                                    ErpOrderNo = lineDto.ErpOrderNo,
-                                    ErpOrderId = lineDto.ErpOrderId,
-                                    Description = lineDto.Description
-                                };
+                                var line = _mapper.Map<WoLine>(lineDto);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.WoLines.AddRangeAsync(lines);
@@ -580,17 +580,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
                                 }
 
-                                var serial = new WoLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = sDto.Quantity,
-                                    SerialNo = sDto.SerialNo,
-                                    SerialNo2 = sDto.SerialNo2,
-                                    SerialNo3 = sDto.SerialNo3,
-                                    SerialNo4 = sDto.SerialNo4,
-                                    SourceCellCode = sDto.SourceCellCode,
-                                    TargetCellCode = sDto.TargetCellCode
-                                };
+                                var serial = _mapper.Map<WoLineSerial>(sDto);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.WoLineSerials.AddRangeAsync(serials);
@@ -631,12 +622,9 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
                                 }
 
-                                var importLine = new WoImportLine
-                                {
-                                    HeaderId = header.Id,
-                                    LineId = lineId,
-                                    StockCode = importDto.StockCode
-                                };
+                                var importLine = _mapper.Map<WoImportLine>(importDto);
+                                importLine.HeaderId = header.Id;
+                                importLine.LineId = lineId;
                                 importLines.Add(importLine);
                             }
 
@@ -743,18 +731,8 @@ namespace WMS_WEBAPI.Services
                                     }
                                 }
 
-                                var route = new WoRoute
-                                {
-                                    ImportLineId = importLineId,
-                                    Quantity = rDto.Quantity,
-                                    SerialNo = rDto.SerialNo,
-                                    SerialNo2 = rDto.SerialNo2,
-                                    SourceWarehouse = rDto.SourceWarehouse,
-                                    TargetWarehouse = rDto.TargetWarehouse,
-                                    SourceCellCode = rDto.SourceCellCode,
-                                    TargetCellCode = rDto.TargetCellCode,
-                                    Description = rDto.Description
-                                };
+                                var route = _mapper.Map<WoRoute>(rDto);
+                                route.ImportLineId = importLineId;
                                 routes.Add(route);
                             }
 

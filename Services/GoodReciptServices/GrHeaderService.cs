@@ -6,7 +6,7 @@ using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
 using Microsoft.AspNetCore.Http;
- 
+using System.Security.Claims;
 using System.Linq;
 
 namespace WMS_WEBAPI.Services
@@ -540,16 +540,9 @@ namespace WMS_WEBAPI.Services
                 var lines = new List<GrLine>(linesDto.Count);
                 foreach (var l in linesDto)
                 {
-                    lines.Add(new GrLine
-                    {
-                        HeaderId = headerId,
-                        StockCode = l.StockCode,
-                        Quantity = l.Quantity,
-                        Unit = l.Unit,
-                        ErpOrderNo = l.ErpOrderNo,
-                        ErpOrderId = l.ErpOrderId,
-                        Description = l.Description
-                    });
+                    var line = _mapper.Map<GrLine>(l);
+                    line.HeaderId = headerId;
+                    lines.Add(line);
                 }
                 await _unitOfWork.GrLines.AddRangeAsync(lines);
                 await _unitOfWork.SaveChangesAsync();
@@ -574,19 +567,10 @@ namespace WMS_WEBAPI.Services
                 var serials = new List<GrLineSerial>(serialsDto.Count);
                 foreach (var s in serialsDto)
                 {
-                    serials.Add(new GrLineSerial
-                    {
-                        ImportLineId = null,
-                        ClientKey = s.ImportLineClientKey,
-                        Quantity = s.Quantity,
-                        SerialNo = s.SerialNo,
-                        SerialNo2 = s.SerialNo2,
-                        SerialNo3 = s.SerialNo3,
-                        SerialNo4 = s.SerialNo4,
-                        SourceCellCode = s.SourceCellCode,
-                        TargetCellCode = s.TargetCellCode,
-                        CreatedDate = DateTime.UtcNow
-                    });
+                    var serial = _mapper.Map<GrLineSerial>(s);
+                    serial.ImportLineId = null;
+                    serial.ClientKey = s.ImportLineClientKey;
+                    serials.Add(serial);
                 }
                 await _unitOfWork.GrLineSerials.AddRangeAsync(serials);
                 await _unitOfWork.SaveChangesAsync();
@@ -617,14 +601,10 @@ namespace WMS_WEBAPI.Services
                         throw new Exception(_localizationService.GetLocalizedString("InvalidModelState"));
                     }
                     var lineId = lineKeyToId[iDto.LineClientKey];
-                    importLines.Add(new GrImportLine
-                    {
-                        HeaderId = headerId,
-                        LineId = lineId,
-                        StockCode = iDto.StockCode,
-                        Description1 = iDto.Description1,
-                        Description2 = iDto.Description2
-                    });
+                    var importLine = _mapper.Map<GrImportLine>(iDto);
+                    importLine.HeaderId = headerId;
+                    importLine.LineId = lineId;
+                    importLines.Add(importLine);
                 }
                 await _unitOfWork.GrImportLines.AddRangeAsync(importLines);
                 await _unitOfWork.SaveChangesAsync();
@@ -685,22 +665,9 @@ namespace WMS_WEBAPI.Services
                     {
                         return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"), 400);
                     }
-                    routes.Add(new GrRoute
-                    {
-                        ImportLineId = importLineId,
-                        ScannedBarcode = r.ScannedBarcode,
-                        Quantity = r.Quantity,
-                        Description = r.Description,
-                        SerialNo = r.SerialNo,
-                        SerialNo2 = r.SerialNo2,
-                        SerialNo3 = r.SerialNo3,
-                        SerialNo4 = r.SerialNo4,
-                        SourceWarehouse = r.SourceWarehouse,
-                        TargetWarehouse = r.TargetWarehouse,
-                        SourceCellCode = r.SourceCellCode,
-                        TargetCellCode = r.TargetCellCode,
-                        CreatedDate = DateTime.UtcNow
-                    });
+                    var route = _mapper.Map<GrRoute>(r);
+                    route.ImportLineId = importLineId;
+                    routes.Add(route);
                 }
                 await _unitOfWork.GrRoutes.AddRangeAsync(routes);
                 await _unitOfWork.SaveChangesAsync();
@@ -717,10 +684,10 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var entity = await _unitOfWork.GrHeaders.GetByIdAsync(id);
-                if (entity == null)
+                if (entity == null || entity.IsDeleted)
                 {
-                    var nf = _localizationService.GetLocalizedString("GrHeaderNotFound");
-                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                    var notFound = _localizationService.GetLocalizedString("GrHeaderNotFound");
+                    return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
 
                 entity.IsCompleted = true;
@@ -738,6 +705,178 @@ namespace WMS_WEBAPI.Services
                     _localizationService.GetLocalizedString("GrHeaderCompletionError"),
                     ex.Message,
                     500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<GrHeaderDto>>> GetAssignedOrdersAsync(long userId)
+        {
+            try
+            {
+                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
+                var headersQuery = _unitOfWork.GrHeaders.AsQueryable();
+                var terminalsQuery = _unitOfWork.GrTerminalLines.AsQueryable();
+
+                var query = headersQuery
+                    .Join(
+                        terminalsQuery,
+                        h => h.Id,
+                        t => t.HeaderId,
+                        (h, t) => new { h, t }
+                    )
+                    .Where(x => !x.h.IsDeleted && !x.h.IsCompleted && !x.t.IsDeleted && x.t.TerminalUserId == userId && x.h.BranchCode == branchCode)
+                    .Select(x => x.h)
+                    .Distinct();
+
+                var entities = await query.ToListAsync();
+                var dtos = _mapper.Map<IEnumerable<GrHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+                return ApiResponse<IEnumerable<GrHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("GrHeaderAssignedOrdersRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderAssignedOrdersRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<GrAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId)
+        {
+            try
+            {
+                var lines = await _unitOfWork.GrLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var lineIds = lines.Select(l => l.Id).ToList();
+
+                IEnumerable<GrLineSerial> lineSerials = Array.Empty<GrLineSerial>();
+                if (lineIds.Count > 0)
+                {
+                    lineSerials = await _unitOfWork.GrLineSerials
+                        .FindAsync(x => lineIds.Contains(x.LineId ?? 0) && !x.IsDeleted);
+                }
+
+                var importLines = await _unitOfWork.GrImportLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+
+                IEnumerable<GrRoute> routes = Array.Empty<GrRoute>();
+                if (importLineIds.Count > 0)
+                {
+                    routes = await _unitOfWork.GrRoutes
+                        .FindAsync(x => importLineIds.Contains(x.ImportLineId ?? 0) && !x.IsDeleted);
+                }
+
+                var lineDtos = _mapper.Map<IEnumerable<GrLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
+
+                var importLineDtos = _mapper.Map<IEnumerable<GrImportLDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
+
+                var dto = new GrAssignedOrderLinesDto
+                {
+                    Lines = lineDtos,
+                    LineSerials = _mapper.Map<IEnumerable<GrLineSerialDto>>(lineSerials),
+                    ImportLines = importLineDtos,
+                    Routes = _mapper.Map<IEnumerable<GrRouteDto>>(routes)
+                };
+
+                return ApiResponse<GrAssignedOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("GrHeaderAssignedOrderLinesRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<GrAssignedOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<PagedResponse<GrHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request)
+        {
+            try
+            {
+                var query = _unitOfWork.GrHeaders.AsQueryable()
+                    .Where(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
+
+                var totalCount = await query.CountAsync();
+                var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
+                var dtos = _mapper.Map<List<GrHeaderDto>>(items);
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data?.ToList() ?? dtos;
+
+                var result = new PagedResponse<GrHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
+                return ApiResponse<PagedResponse<GrHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCompletedAwaitingErpApprovalRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<GrHeaderDto>> SetApprovalAsync(long id, bool approved)
+        {
+            try
+            {
+                var entity = await _unitOfWork.GrHeaders.GetByIdAsync(id);
+                if (entity == null || entity.IsDeleted)
+                {
+                    var nf = _localizationService.GetLocalizedString("GrHeaderNotFound");
+                    return ApiResponse<GrHeaderDto>.ErrorResult(nf, nf, 404);
+                }
+
+                if (!(entity.IsCompleted && entity.IsPendingApproval && entity.ApprovalStatus == null))
+                {
+                    var msg = _localizationService.GetLocalizedString("GrHeaderApprovalUpdateError");
+                    return ApiResponse<GrHeaderDto>.ErrorResult(msg, msg, 400);
+                }
+
+                var httpUser = _httpContextAccessor.HttpContext?.User;
+                long? approvedByUserId = null;
+                var claimVal = httpUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (long.TryParse(claimVal, out var uid))
+                {
+                    approvedByUserId = uid;
+                }
+
+                entity.ApprovalStatus = approved;
+                entity.ApprovedByUserId = approvedByUserId;
+                entity.ApprovalDate = DateTime.Now;
+                entity.IsPendingApproval = false;
+
+                _unitOfWork.GrHeaders.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var dto = _mapper.Map<GrHeaderDto>(entity);
+                return ApiResponse<GrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("GrHeaderApprovalUpdatedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 

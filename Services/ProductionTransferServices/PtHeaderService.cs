@@ -6,6 +6,7 @@ using WMS_WEBAPI.Interfaces;
 using WMS_WEBAPI.Models;
 using WMS_WEBAPI.UnitOfWork;
 using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace WMS_WEBAPI.Services
 {
@@ -466,6 +467,244 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<PtAssignedProductionTransferOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<PtHeaderDto>> GenerateProductionTransferOrderAsync(GenerateProductionTransferOrderRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var header = _mapper.Map<PtHeader>(request.Header);
+                        await _unitOfWork.PtHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        var lineGuidToId = new Dictionary<Guid, long>();
+
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<PtLine>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                var line = _mapper.Map<PtLine>(l);
+                                line.HeaderId = header.Id;
+                                lines.Add(line);
+                            }
+                            await _unitOfWork.PtLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                var guid = request.Lines[i].ClientGuid;
+                                var id = lines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key!] = id;
+                                }
+                                if (guid.HasValue)
+                                {
+                                    lineGuidToId[guid.Value] = id;
+                                }
+                            }
+                        }
+
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<PtLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (s.LineGroupGuid.HasValue)
+                                {
+                                    var lg = s.LineGroupGuid.Value;
+                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderLineGroupGuidNotFound"), 400);
+                                    }
+                                }
+                                else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderLineClientKeyNotFound"), 400);
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderLineReferenceMissing"), 400);
+                                }
+
+                                var serial = _mapper.Map<PtLineSerial>(s);
+                                serial.LineId = lineId;
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.PtLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                        {
+                            var tlines = new List<PtTerminalLine>(request.TerminalLines.Count);
+                            foreach (var t in request.TerminalLines)
+                            {
+                                var tline = _mapper.Map<PtTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
+                            }
+                            await _unitOfWork.PtTerminalLines.AddRangeAsync(tlines);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        await _unitOfWork.CommitTransactionAsync();
+
+                        var dto = _mapper.Map<PtHeaderDto>(header);
+                        return ApiResponse<PtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PtHeaderGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderGenerateError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<PtHeaderDto>> BulkPtGenerateAsync(BulkPtGenerateRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var headerEntity = _mapper.Map<PtHeader>(request.Header.Header);
+                        await _unitOfWork.PtHeaders.AddAsync(headerEntity);
+                        await _unitOfWork.SaveChangesAsync();
+                        var headerKeyToId = new Dictionary<Guid, long> { { request.Header.HeaderKey, headerEntity.Id } };
+                        var lineKeyToId = new Dictionary<Guid, long>();
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<PtLine>(request.Lines.Count);
+                            var lineKeys = new List<Guid>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                if (!headerKeyToId.TryGetValue(l.HeaderKey, out var hdrId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var line = _mapper.Map<PtLine>(l);
+                                line.HeaderId = hdrId;
+                                lines.Add(line);
+                                lineKeys.Add(l.LineKey);
+                            }
+                            await _unitOfWork.PtLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+                            for (int i = 0; i < lines.Count; i++)
+                            {
+                                lineKeyToId[lineKeys[i]] = lines[i].Id;
+                            }
+                        }
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<PtLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                if (!lineKeyToId.TryGetValue(s.LineKey, out var lid))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var serial = _mapper.Map<PtLineSerial>(s);
+                                serial.LineId = lid;
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.PtLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+                        var importLineKeyToId = new Dictionary<Guid, long>();
+                        if (request.ImportLines != null && request.ImportLines.Count > 0)
+                        {
+                            var importLines = new List<PtImportLine>(request.ImportLines.Count);
+                            var importKeys = new List<Guid>(request.ImportLines.Count);
+                            foreach (var il in request.ImportLines)
+                            {
+                                if (!headerKeyToId.TryGetValue(il.HeaderKey, out var hdrId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                long? linkedLineId = null;
+                                if (il.LineKey.HasValue)
+                                {
+                                    if (!lineKeyToId.TryGetValue(il.LineKey.Value, out var lId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                    }
+                                    linkedLineId = lId;
+                                }
+                                var importLine = _mapper.Map<PtImportLine>(il);
+                                importLine.HeaderId = hdrId;
+                                importLine.LineId = linkedLineId;
+                                importLines.Add(importLine);
+                                importKeys.Add(il.ImportLineKey);
+                            }
+                            await _unitOfWork.PtImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+                            for (int i = 0; i < importLines.Count; i++)
+                            {
+                                importLineKeyToId[importKeys[i]] = importLines[i].Id;
+                            }
+                        }
+                        if (request.Routes != null && request.Routes.Count > 0)
+                        {
+                            var routes = new List<PtRoute>(request.Routes.Count);
+                            foreach (var r in request.Routes)
+                            {
+                                if (!importLineKeyToId.TryGetValue(r.ImportLineKey, out var ilId))
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                }
+                                var route = _mapper.Map<PtRoute>(r);
+                                route.ImportLineId = ilId;
+                                if (string.IsNullOrEmpty(route.ScannedBarcode))
+                                {
+                                    route.ScannedBarcode = string.Empty;
+                                }
+                                routes.Add(route);
+                            }
+
+                            await _unitOfWork.PtRoutes.AddRangeAsync(routes);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+                        await _unitOfWork.CommitTransactionAsync();
+                        var dto = _mapper.Map<PtHeaderDto>(headerEntity);
+                        return ApiResponse<PtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PtHeaderBulkPtGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderBulkPtGenerateError"), ex.Message ?? string.Empty, 500);
             }
         }
     }

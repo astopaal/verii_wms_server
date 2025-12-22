@@ -342,13 +342,17 @@ namespace WMS_WEBAPI.Services
                 var entity = await _unitOfWork.SrtHeaders.GetByIdAsync(id);
                 if (entity == null || entity.IsDeleted)
                 {
-                    var nf = _localizationService.GetLocalizedString("SrtHeaderNotFound");
-                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                    var notFound = _localizationService.GetLocalizedString("SrtHeaderNotFound");
+                    return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
+
                 entity.IsCompleted = true;
                 entity.CompletionDate = DateTime.UtcNow;
+                entity.IsPendingApproval = false;
+
                 _unitOfWork.SrtHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("SrtHeaderCompletedSuccessfully"));
             }
             catch (Exception ex)
@@ -428,11 +432,11 @@ namespace WMS_WEBAPI.Services
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<SrtHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
-                return ApiResponse<PagedResponse<SrtHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SrtHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<SrtHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<SrtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<PagedResponse<SrtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderCompletedAwaitingErpApprovalRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
         public async Task<ApiResponse<SrtAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId)
@@ -463,11 +467,31 @@ namespace WMS_WEBAPI.Services
                         .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
                 }
 
+                var lineDtos = _mapper.Map<IEnumerable<SrtLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
+
+                var importLineDtos = _mapper.Map<IEnumerable<SrtImportLineDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
+
                 var dto = new SrtAssignedOrderLinesDto
                 {
-                    Lines = _mapper.Map<IEnumerable<SrtLineDto>>(lines),
+                    Lines = lineDtos,
                     LineSerials = _mapper.Map<IEnumerable<SrtLineSerialDto>>(lineSerials),
-                    ImportLines = _mapper.Map<IEnumerable<SrtImportLineDto>>(importLines),
+                    ImportLines = importLineDtos,
                     Routes = _mapper.Map<IEnumerable<SrtRouteDto>>(routes)
                 };
 
@@ -519,7 +543,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -543,16 +567,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<SrtLine>(request.Lines.Count);
                             foreach (var l in request.Lines)
                             {
-                                var line = new SrtLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = l.StockCode,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description
-                                };
+                                var line = _mapper.Map<SrtLine>(l);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.SrtLines.AddRangeAsync(lines);
@@ -603,17 +619,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<SrtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var serial = new SrtLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
+                                var serial = _mapper.Map<SrtLineSerial>(s);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.SrtLineSerials.AddRangeAsync(serials);
@@ -625,11 +632,9 @@ namespace WMS_WEBAPI.Services
                             var tlines = new List<SrtTerminalLine>(request.TerminalLines.Count);
                             foreach (var t in request.TerminalLines)
                             {
-                                tlines.Add(new SrtTerminalLine
-                                {
-                                    HeaderId = header.Id,
-                                    TerminalUserId = t.TerminalUserId
-                                });
+                                var tline = _mapper.Map<SrtTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
                             }
                             await _unitOfWork.SrtTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
@@ -672,17 +677,8 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<SrtLine>(request.Lines.Count);
                             foreach (var lineDto in request.Lines)
                             {
-                                var line = new SrtLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = lineDto.StockCode,
-                                    YapKod = lineDto.YapKod,
-                                    Quantity = lineDto.Quantity,
-                                    Unit = lineDto.Unit,
-                                    ErpOrderNo = lineDto.ErpOrderNo,
-                                    ErpOrderId = lineDto.ErpOrderId,
-                                    Description = lineDto.Description
-                                };
+                                var line = _mapper.Map<SrtLine>(lineDto);
+                                line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
                             await _unitOfWork.SrtLines.AddRangeAsync(lines);
@@ -733,17 +729,8 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var serial = new SrtLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = sDto.Quantity,
-                                    SerialNo = sDto.SerialNo,
-                                    SerialNo2 = sDto.SerialNo2,
-                                    SerialNo3 = sDto.SerialNo3,
-                                    SerialNo4 = sDto.SerialNo4,
-                                    SourceCellCode = sDto.SourceCellCode,
-                                    TargetCellCode = sDto.TargetCellCode
-                                };
+                                var serial = _mapper.Map<SrtLineSerial>(sDto);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
                             await _unitOfWork.SrtLineSerials.AddRangeAsync(serials);
@@ -784,12 +771,9 @@ namespace WMS_WEBAPI.Services
                                     return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("SrtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("SrtHeaderLineReferenceMissing"), 400);
                                 }
 
-                                var importLine = new SrtImportLine
-                                {
-                                    HeaderId = header.Id,
-                                    LineId = lineId,
-                                    StockCode = importDto.StockCode
-                                };
+                                var importLine = _mapper.Map<SrtImportLine>(importDto);
+                                importLine.HeaderId = header.Id;
+                                importLine.LineId = lineId;
                                 importLines.Add(importLine);
                             }
 
@@ -896,18 +880,8 @@ namespace WMS_WEBAPI.Services
                                     }
                                 }
 
-                                var route = new SrtRoute
-                                {
-                                    ImportLineId = importLineId,
-                                    Quantity = rDto.Quantity,
-                                    SerialNo = rDto.SerialNo,
-                                    SerialNo2 = rDto.SerialNo2,
-                                    SourceWarehouse = rDto.SourceWarehouse,
-                                    TargetWarehouse = rDto.TargetWarehouse,
-                                    SourceCellCode = rDto.SourceCellCode,
-                                    TargetCellCode = rDto.TargetCellCode,
-                                    Description = rDto.Description
-                                };
+                                var route = _mapper.Map<SrtRoute>(rDto);
+                                route.ImportLineId = importLineId;
                                 routes.Add(route);
                             }
 
