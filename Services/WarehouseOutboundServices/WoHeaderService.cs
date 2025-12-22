@@ -210,19 +210,20 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var headersQuery = _unitOfWork.WoHeaders.AsQueryable();
-                var terminalsQuery = _unitOfWork.WoTerminalLines.AsQueryable();
-
-                var query = headersQuery
-                    .Join(
-                        terminalsQuery,
-                        h => h.Id,
-                        t => t.HeaderId,
-                        (h, t) => new { h, t }
-                    )
-                    .Where(x => !x.h.IsDeleted && !x.h.IsCompleted && !x.t.IsDeleted && x.t.TerminalUserId == userId && x.h.BranchCode == branchCode)
-                    .Select(x => x.h)
-                    .Distinct();
+                
+                // Daha performanslı: Subquery kullanarak EXISTS benzeri kontrol
+                // SQL'de daha verimli bir sorgu üretir ve Distinct() gerektirmez
+                // Header ve TerminalLine'ın silinmemiş olduğunu kontrol eder
+                var query = _unitOfWork.WoHeaders
+                    .AsQueryable()
+                    .Where(h => !h.IsDeleted 
+                        && !h.IsCompleted 
+                        && h.BranchCode == branchCode
+                        && _unitOfWork.WoTerminalLines
+                            .AsQueryable()
+                            .Any(t => t.HeaderId == h.Id 
+                                && !t.IsDeleted 
+                                && t.TerminalUserId == userId));
 
                 var entities = await query.ToListAsync();
                 var dtos = _mapper.Map<IEnumerable<WoHeaderDto>>(entities);
