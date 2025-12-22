@@ -90,9 +90,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedByUser, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLine, opt => opt.Ignore())
-                .ForMember(dest => dest.ClientKey, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLineClientKey, opt => opt.Ignore());
+                .ForMember(dest => dest.ImportLine, opt => opt.Ignore());
         }
     }
 }

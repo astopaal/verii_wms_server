@@ -16,6 +16,8 @@ namespace WMS_WEBAPI.Data
         public DbSet<GrImportDocument> GrImportDocuments { get; set; }
         public DbSet<GrImportLine> GrImportLines { get; set; }
         public DbSet<GrLineSerial> GrLineSerials { get; set; }
+        public DbSet<GrRoute> GrRoutes { get; set; }
+        public DbSet<GrTerminalLine> GrTerminalLines { get; set; }
         public DbSet<UserAuthority> UserAuthorities { get; set; }
         
         // MobileSidebar DbSets
@@ -110,6 +112,8 @@ namespace WMS_WEBAPI.Data
             modelBuilder.ApplyConfiguration(new GrImportDocumentConfiguration());
             modelBuilder.ApplyConfiguration(new GrImportLineConfiguration());
             modelBuilder.ApplyConfiguration(new GrLineSerialConfiguration());
+            modelBuilder.ApplyConfiguration(new GrRouteConfiguration());
+            modelBuilder.ApplyConfiguration(new GrTerminalLineConfiguration());
             modelBuilder.ApplyConfiguration(new UserAuthorityConfiguration());
 
             // Apply MobileSidebar configurations

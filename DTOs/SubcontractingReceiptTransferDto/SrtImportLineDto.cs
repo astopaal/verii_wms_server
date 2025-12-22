@@ -9,7 +9,7 @@ namespace WMS_WEBAPI.DTOs
         public long? RouteId { get; set; }
     }
 
-    public class CreateSrtImportLineDto
+    public class CreateSrtImportLineDto : BaseImportLineCreateDto
     {
         [Required]
         public long HeaderId { get; set; }
@@ -18,19 +18,6 @@ namespace WMS_WEBAPI.DTOs
         public long LineId { get; set; }
 
         public long? RouteId { get; set; }
-
-        [Required]
-        [StringLength(35)]
-        public string StockCode { get; set; } = string.Empty;
-
-        [StringLength(30)]
-        public string? Description1 { get; set; }
-
-        [StringLength(50)]
-        public string? Description2 { get; set; }
-
-        [StringLength(255)]
-        public string? Description { get; set; }
     }
 
     public class UpdateSrtImportLineDto

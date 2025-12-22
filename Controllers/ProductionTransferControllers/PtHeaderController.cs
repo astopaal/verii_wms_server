@@ -41,9 +41,6 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        
-
-
         [HttpGet("customer/{customerCode}")]
         public async Task<ActionResult<ApiResponse<IEnumerable<PtHeaderDto>>>> GetByCustomerCode(string customerCode)
         {
@@ -112,6 +109,20 @@ namespace WMS_WEBAPI.Controllers
         public async Task<ActionResult<ApiResponse<PtAssignedProductionTransferOrderLinesDto>>> GetAssignedProductionTransferOrderLines(long headerId)
         {
             var result = await _service.GetAssignedProductionTransferOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("generate")]
+        public async Task<ActionResult<ApiResponse<PtHeaderDto>>> GenerateProductionTransferOrder([FromBody] GenerateProductionTransferOrderRequestDto request)
+        {
+            var result = await _service.GenerateProductionTransferOrderAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("bulk-generate")]
+        public async Task<ActionResult<ApiResponse<PtHeaderDto>>> BulkPtGenerate([FromBody] BulkPtGenerateRequestDto request)
+        {
+            var result = await _service.BulkPtGenerateAsync(request);
             return StatusCode(result.StatusCode, result);
         }
     }

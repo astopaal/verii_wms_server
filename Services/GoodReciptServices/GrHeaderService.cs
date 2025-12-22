@@ -750,25 +750,23 @@ namespace WMS_WEBAPI.Services
                 var lines = await _unitOfWork.GrLines
                     .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
 
-                var lineIds = lines.Select(l => l.Id).ToList();
-
-                IEnumerable<GrLineSerial> lineSerials = Array.Empty<GrLineSerial>();
-                if (lineIds.Count > 0)
-                {
-                    lineSerials = await _unitOfWork.GrLineSerials
-                        .FindAsync(x => lineIds.Contains(x.LineId ?? 0) && !x.IsDeleted);
-                }
-
                 var importLines = await _unitOfWork.GrImportLines
                     .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
 
                 var importLineIds = importLines.Select(il => il.Id).ToList();
 
+                IEnumerable<GrLineSerial> lineSerials = Array.Empty<GrLineSerial>();
+                if (importLineIds.Count > 0)
+                {
+                    lineSerials = await _unitOfWork.GrLineSerials
+                        .FindAsync(x => x.ImportLineId.HasValue && importLineIds.Contains(x.ImportLineId.Value) && !x.IsDeleted);
+                }
+
                 IEnumerable<GrRoute> routes = Array.Empty<GrRoute>();
                 if (importLineIds.Count > 0)
                 {
                     routes = await _unitOfWork.GrRoutes
-                        .FindAsync(x => importLineIds.Contains(x.ImportLineId ?? 0) && !x.IsDeleted);
+                        .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
                 }
 
                 var lineDtos = _mapper.Map<IEnumerable<GrLineDto>>(lines);

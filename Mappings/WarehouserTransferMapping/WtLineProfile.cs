@@ -76,9 +76,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Header, opt => opt.Ignore())
                 .ForMember(dest => dest.ImportLines, opt => opt.Ignore())
-                .ForMember(dest => dest.SerialLines, opt => opt.Ignore())
-                .ForMember(dest => dest.ClientKey, opt => opt.Ignore())
-                .ForMember(dest => dest.ClientGuid, opt => opt.Ignore());
+                .ForMember(dest => dest.SerialLines, opt => opt.Ignore());
 
             // CreateWtLineWithKeysDto to WtLine (for BulkWtGenerateAsync)
             CreateMap<CreateWtLineWithKeysDto, WtLine>()
@@ -100,9 +98,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Header, opt => opt.Ignore())
                 .ForMember(dest => dest.ImportLines, opt => opt.Ignore())
-                .ForMember(dest => dest.SerialLines, opt => opt.Ignore())
-                .ForMember(dest => dest.HeaderKey, opt => opt.Ignore())
-                .ForMember(dest => dest.LineKey, opt => opt.Ignore());
+                .ForMember(dest => dest.SerialLines, opt => opt.Ignore());
         }
     }
 }

@@ -19,6 +19,7 @@ namespace WMS_WEBAPI.UnitOfWork
         IGenericRepository<GrImportLine> GrImportLines { get; }
         IGenericRepository<GrLineSerial> GrLineSerials { get; }
         IGenericRepository<GrRoute> GrRoutes { get; }
+        IGenericRepository<GrTerminalLine> GrTerminalLines { get; }
         
         // User and Authority repositories
         IGenericRepository<UserAuthority> UserAuthorities { get; }

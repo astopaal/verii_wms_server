@@ -440,6 +440,26 @@
     <value>Error occurred while updating goods receipt order approval</value>
   </data>
   <!-- #endregion GR.Header -->
+  <!-- #region GR.TerminalLine -->
+  <data name="GrTerminalLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Terminal Line information retrieved successfully</value>
+  </data>
+  <data name="GrTerminalLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Goods Receipt Terminal Line</value>
+  </data>
+  <data name="GrTerminalLineNotFound" xml:space="preserve">
+    <value>Goods Receipt Terminal Line not found</value>
+  </data>
+  <data name="GrTerminalLineCreatedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Terminal Line created successfully</value>
+  </data>
+  <data name="GrTerminalLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Terminal Line updated successfully</value>
+  </data>
+  <data name="GrTerminalLineDeletedSuccessfully" xml:space="preserve">
+    <value>Goods Receipt Terminal Line deleted successfully</value>
+  </data>
+  <!-- #endregion GR.TerminalLine -->
   <!-- Inventorycount Service Messages -->
   <!-- #region IC.Header -->
   <data name="IcHeaderRetrievedSuccessfully" xml:space="preserve">
@@ -2348,6 +2368,18 @@
   </data>
   <data name="PrImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Production Import Line deleted successfully</value>
+  </data>
+  <data name="PrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="PrImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Duplicate record found</value>
+  </data>
+  <data name="PrImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
   </data>
 
   <!-- Production / PrRoute -->

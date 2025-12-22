@@ -26,6 +26,7 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<GrImportLine>? _grImportLines;
         private IGenericRepository<GrLineSerial>? _grLineSerials;
         private IGenericRepository<GrRoute>? _grRoutes;
+        private IGenericRepository<GrTerminalLine>? _grTerminalLines;
         
         // User and Authority repository instances
         private IGenericRepository<UserAuthority>? _userAuthorities;
@@ -144,6 +145,9 @@ namespace WMS_WEBAPI.UnitOfWork
         public IGenericRepository<GrRoute> GrRoutes =>
             _grRoutes ??= new GenericRepository<GrRoute>(_context, _httpContextAccessor);
 
+        public IGenericRepository<GrTerminalLine> GrTerminalLines =>
+            _grTerminalLines ??= new GenericRepository<GrTerminalLine>(_context, _httpContextAccessor);
+        
         // User and Authority repository properties
         public IGenericRepository<UserAuthority> UserAuthorities =>
             _userAuthorities ??= new GenericRepository<UserAuthority>(_context, _httpContextAccessor);

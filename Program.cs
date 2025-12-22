@@ -100,6 +100,7 @@ builder.Services.AddScoped<IGrImportDocumentService, GrImportDocumentService>();
 builder.Services.AddScoped<IGrImportLService, GrImportLService>();
 builder.Services.AddScoped<IGrRouteService, GrRouteService>();
 builder.Services.AddScoped<IGrLineSerialService, GrLineSerialService>();
+builder.Services.AddScoped<IGrTerminalLineService, GrTerminalLineService>();
 
 
 // Register Warehouse Transfer Services (kept disabled to avoid build issues)

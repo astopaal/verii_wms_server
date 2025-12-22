@@ -169,7 +169,7 @@ namespace WMS_WEBAPI.Services
                     .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
                 var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
 
-                long headerIdToCheck = importLine?.HeaderId ?? 0;
+                long headerIdToCheck = importLine?.HeaderId ?? 0L;
                 var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
                     ? await _unitOfWork.SrtImportLines
                         .AsQueryable()

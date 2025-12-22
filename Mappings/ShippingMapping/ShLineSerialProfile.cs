@@ -37,9 +37,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
-                .ForMember(dest => dest.Line, opt => opt.Ignore())
-                .ForMember(dest => dest.LineClientKey, opt => opt.Ignore())
-                .ForMember(dest => dest.LineGroupGuid, opt => opt.Ignore());
+                .ForMember(dest => dest.Line, opt => opt.Ignore());
         }
     }
 }

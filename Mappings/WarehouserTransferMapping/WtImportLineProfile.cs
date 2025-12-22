@@ -68,10 +68,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-                .ForMember(dest => dest.Line, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLineKey, opt => opt.Ignore())
-                .ForMember(dest => dest.HeaderKey, opt => opt.Ignore())
-                .ForMember(dest => dest.LineKey, opt => opt.Ignore());
+                .ForMember(dest => dest.Line, opt => opt.Ignore());
         }
     }
 }
