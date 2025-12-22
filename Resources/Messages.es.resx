@@ -215,4 +215,36 @@
     <value>Se produjo un error al procesar la línea de importación</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- Production / PrHeaderSerial -->
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Información de serie del encabezado de producción recuperada con éxito</value>
+  </data>
+  <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
+    <value>Ocurrió un error en la operación de serie del encabezado de producción</value>
+  </data>
+  <data name="PrHeaderSerialNotFound" xml:space="preserve">
+    <value>Serie del encabezado de producción no encontrada</value>
+  </data>
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Serie del encabezado de producción creada con éxito</value>
+  </data>
+  <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Serie del encabezado de producción actualizada con éxito</value>
+  </data>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Serie del encabezado de producción eliminada con éxito</value>
+  </data>
+  <!-- Production / Functions -->
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Información del encabezado de la orden de producción recuperada con éxito</value>
+  </data>
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Ocurrió un error al recuperar la información del encabezado de la orden de producción</value>
+  </data>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Líneas de orden de producción recuperadas con éxito</value>
+  </data>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Ocurrió un error al recuperar las líneas de la orden de producción</value>
+  </data>
 </root>

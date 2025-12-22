@@ -2160,5 +2160,43 @@
     <value>Üretim satır seri başarıyla silindi</value>
   </data>
   <!-- #endregion Production.PrLineSerial -->
+  
+  <!-- #region Production.PrHeaderSerial -->
+  <!-- Production / PrHeaderSerial -->
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık seri bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
+    <value>Üretim başlık seri işleminde hata oluştu</value>
+  </data>
+  <data name="PrHeaderSerialNotFound" xml:space="preserve">
+    <value>Üretim başlık seri bulunamadı</value>
+  </data>
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık seri başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık seri başarıyla güncellendi</value>
+  </data>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Üretim başlık seri başarıyla silindi</value>
+  </data>
+  <!-- #endregion Production.PrHeaderSerial -->
+
+  <!-- #region Production.Functions -->
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim emri başlık bilgisi başarıyla getirildi</value>
+  </data>
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Üretim emri başlık bilgisi getirilirken hata oluştu</value>
+  </data>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Üretim emri satırları başarıyla getirildi</value>
+  </data>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Üretim emri satırları getirilirken hata oluştu</value>
+  </data>
+  <!-- #endregion Production.Functions -->
+
   <!-- #endregion Production -->
 </root>

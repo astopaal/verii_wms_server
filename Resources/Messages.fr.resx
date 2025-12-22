@@ -215,4 +215,36 @@
     <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- Production / PrHeaderSerial -->
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations sur la série de l'en-tête de production récupérées avec succès</value>
+  </data>
+  <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'opération sur la série de l'en-tête de production</value>
+  </data>
+  <data name="PrHeaderSerialNotFound" xml:space="preserve">
+    <value>Série de l'en-tête de production introuvable</value>
+  </data>
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Série de l'en-tête de production créée avec succès</value>
+  </data>
+  <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Série de l'en-tête de production mise à jour avec succès</value>
+  </data>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Série de l'en-tête de production supprimée avec succès</value>
+  </data>
+  <!-- Production / Functions -->
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations sur l'en-tête de l'ordre de production récupérées avec succès</value>
+  </data>
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de l'en-tête de l'ordre de production</value>
+  </data>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes de l'ordre de production récupérées avec succès</value>
+  </data>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes de l'ordre de production</value>
+  </data>
 </root>

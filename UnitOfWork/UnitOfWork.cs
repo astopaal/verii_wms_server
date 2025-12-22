@@ -65,6 +65,7 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<PrRoute>? _prRoutes;
         private IGenericRepository<PrTerminalLine>? _prTerminalLines;
         private IGenericRepository<PrLineSerial>? _prLineSerials;
+        private IGenericRepository<PrHeaderSerial>? _prHeaderSerials;
 
         // SubcontractingIssueTransfer repository instances
         private IGenericRepository<SitHeader>? _sitHeaders;
@@ -229,6 +230,9 @@ namespace WMS_WEBAPI.UnitOfWork
 
         public IGenericRepository<PrLineSerial> PrLineSerials =>
             _prLineSerials ??= new GenericRepository<PrLineSerial>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrHeaderSerial> PrHeaderSerials =>
+            _prHeaderSerials ??= new GenericRepository<PrHeaderSerial>(_context, _httpContextAccessor);
 
         // SubcontractingIssueTransfer repository properties
         public IGenericRepository<SitHeader> SitHeaders =>

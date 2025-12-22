@@ -52,6 +52,7 @@ namespace WMS_WEBAPI.Data
         public DbSet<PrRoute> PrRoutes { get; set; }
         public DbSet<PrTerminalLine> PrTerminalLines { get; set; }
         public DbSet<PrLineSerial> PrLineSerials { get; set; }
+        public DbSet<PrHeaderSerial> PrHeaderSerials { get; set; }
 
         // SubcontractingIssueTransfer DbSets
         public DbSet<SitHeader> SitHeaders { get; set; }
@@ -137,6 +138,7 @@ namespace WMS_WEBAPI.Data
             modelBuilder.ApplyConfiguration(new PrRouteConfiguration());
             modelBuilder.ApplyConfiguration(new PrTerminalLineConfiguration());
             modelBuilder.ApplyConfiguration(new PrLineSerialConfiguration());
+            modelBuilder.ApplyConfiguration(new PrHeaderSerialConfiguration());
 
             // Apply SubcontractingIssueTransfer configurations
             modelBuilder.ApplyConfiguration(new SitHeaderConfiguration());

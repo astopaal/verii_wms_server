@@ -122,12 +122,14 @@ builder.Services.AddScoped<IPtTerminalLineService, PtTerminalLineService>();
 builder.Services.AddScoped<IPtLineSerialService, PtLineSerialService>();
 
 // Register Production Services
+builder.Services.AddScoped<IPrFunctionService, PrFunctionService>();
 builder.Services.AddScoped<IPrHeaderService, PrHeaderService>();
 builder.Services.AddScoped<IPrLineService, PrLineService>();
 builder.Services.AddScoped<IPrImportLineService, PrImportLineService>();
 builder.Services.AddScoped<IPrRouteService, PrRouteService>();
 builder.Services.AddScoped<IPrTerminalLineService, PrTerminalLineService>();
 builder.Services.AddScoped<IPrLineSerialService, PrLineSerialService>();
+builder.Services.AddScoped<IPrHeaderSerialService, PrHeaderSerialService>();
 
 // Register Subcontracting Issue Transfer Services
 builder.Services.AddScoped<ISitHeaderService, SitHeaderService>();

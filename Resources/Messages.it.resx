@@ -202,4 +202,36 @@
     <value>Si è verificato un errore durante l'elaborazione della riga di importazione</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- Production / PrHeaderSerial -->
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni sulla serie dell'intestazione di produzione recuperate con successo</value>
+  </data>
+  <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
+    <value>Si è verificato un errore nell'operazione sulla serie dell'intestazione di produzione</value>
+  </data>
+  <data name="PrHeaderSerialNotFound" xml:space="preserve">
+    <value>Serie dell'intestazione di produzione non trovata</value>
+  </data>
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Serie dell'intestazione di produzione creata con successo</value>
+  </data>
+  <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Serie dell'intestazione di produzione aggiornata con successo</value>
+  </data>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Serie dell'intestazione di produzione eliminata con successo</value>
+  </data>
+  <!-- Production / Functions -->
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni sull'intestazione dell'ordine di produzione recuperate con successo</value>
+  </data>
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni sull'intestazione dell'ordine di produzione</value>
+  </data>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe dell'ordine di produzione recuperate con successo</value>
+  </data>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe dell'ordine di produzione</value>
+  </data>
 </root>

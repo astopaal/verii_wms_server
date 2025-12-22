@@ -215,4 +215,36 @@
     <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- Production / PrHeaderSerial -->
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer-Informationen erfolgreich abgerufen</value>
+  </data>
+  <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
+    <value>Fehler beim Vorgang mit der Produktionskopfseriennummer</value>
+  </data>
+  <data name="PrHeaderSerialNotFound" xml:space="preserve">
+    <value>Produktionskopfseriennummer nicht gefunden</value>
+  </data>
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer erfolgreich erstellt</value>
+  </data>
+  <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer erfolgreich aktualisiert</value>
+  </data>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer erfolgreich gelöscht</value>
+  </data>
+  <!-- Production / Functions -->
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionsauftragskopf-Informationen erfolgreich abgerufen</value>
+  </data>
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Produktionsauftragskopf-Informationen</value>
+  </data>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionsauftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Produktionsauftragszeilen</value>
+  </data>
 </root>
