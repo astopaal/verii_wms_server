@@ -2349,18 +2349,6 @@
   <data name="PrImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Production Import Line deleted successfully</value>
   </data>
-  <data name="PrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Stock code and YapKod do not match existing import lines</value>
-  </data>
-  <data name="PrImportLineSerialNotMatch" xml:space="preserve">
-    <value>Serial number does not match line serial records</value>
-  </data>
-  <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Duplicate record found</value>
-  </data>
-  <data name="PrImportLineQuantityInvalid" xml:space="preserve">
-    <value>Quantity must be greater than 0</value>
-  </data>
 
   <!-- Production / PrRoute -->
   <data name="PrRouteRetrievedSuccessfully" xml:space="preserve">

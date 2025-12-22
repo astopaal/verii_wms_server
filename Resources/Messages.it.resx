@@ -358,26 +358,6 @@
     <value>Si è verificato un errore durante l'elaborazione della riga di importazione</value>
   </data>
   <!-- #endregion PT.ImportLine -->
-  <!-- #region PR.ImportLine -->
-  <data name="PrImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Riga di importazione Produzione creata correttamente</value>
-  </data>
-  <data name="PrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Il codice articolo e YapKod non corrispondono alle righe di importazione esistenti</value>
-  </data>
-  <data name="PrImportLineSerialNotMatch" xml:space="preserve">
-    <value>Il numero di serie non corrisponde ai registri di serie della riga</value>
-  </data>
-  <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Record duplicato trovato</value>
-  </data>
-  <data name="PrImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantità deve essere maggiore di 0</value>
-  </data>
-  <data name="PrImportLineErrorOccurred" xml:space="preserve">
-    <value>Si è verificato un errore durante l'elaborazione della riga di importazione</value>
-  </data>
-  <!-- #endregion PR.ImportLine -->
   <!-- Production / PrHeader -->
   <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
     <value>Chiave di correlazione non valida fornita</value>

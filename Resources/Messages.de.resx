@@ -371,26 +371,6 @@
     <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
   </data>
   <!-- #endregion PT.ImportLine -->
-  <!-- #region PR.ImportLine -->
-  <data name="PrImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Produktions Importzeile erfolgreich erstellt</value>
-  </data>
-  <data name="PrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="PrImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="PrImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="PrImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
-  </data>
-  <!-- #endregion PR.ImportLine -->
   <!-- Production / PrHeader -->
   <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
     <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
