@@ -16,5 +16,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<bool>> CompleteAsync(long id);
         Task<ApiResponse<PagedResponse<PtHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
         Task<ApiResponse<PtHeaderDto>> SetApprovalAsync(long id, bool approved);
+        Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetAssignedProductionTransferOrdersAsync(long userId);
+        Task<ApiResponse<PtAssignedProductionTransferOrderLinesDto>> GetAssignedProductionTransferOrderLinesAsync(long headerId);
     }
 }

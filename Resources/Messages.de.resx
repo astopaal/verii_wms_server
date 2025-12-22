@@ -88,6 +88,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Produktionsübertrag Kopf nicht gefunden</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsübertrag-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Aufträge</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsübertrag-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Auftragszeilen</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Produktionsübertrag-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Produktionsübertrag-Auftragsgenehmigung</value>
+  </data>
   <!-- #endregion PT.Header -->
 
   <!-- #region WI.ImportLine -->

@@ -88,6 +88,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>En-tête de transfert de production introuvable</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de transfert de production assignés récupérés avec succès</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production assignés</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de transfert de production assignées récupérées avec succès</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de transfert de production assignées</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de transfert de production terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de transfert de production mise à jour avec succès</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de transfert de production</value>
+  </data>
   <!-- #endregion PT.Header -->
 
   <!-- #region WI.ImportLine -->

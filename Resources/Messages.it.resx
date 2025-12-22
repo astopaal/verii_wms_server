@@ -77,6 +77,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Trasferimento Produzione non trovata</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di trasferimento produzione assegnati recuperati con successo</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di trasferimento produzione assegnati</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Righe ordini di trasferimento produzione assegnate recuperate con successo</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ordini di trasferimento produzione assegnate</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordini di trasferimento produzione completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero degli ordini di trasferimento produzione completati in attesa di approvazione ERP</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approvazione ordine di trasferimento produzione aggiornata con successo</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'approvazione dell'ordine di trasferimento produzione</value>
+  </data>
   <!-- #region WI.ImportLine -->
   <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Riga di importazione Magazzino Entrata creata correttamente</value>

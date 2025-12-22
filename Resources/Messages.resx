@@ -1057,6 +1057,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Production Transfer Header not found</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned production transfer orders retrieved successfully</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned production transfer orders</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Assigned production transfer order lines retrieved successfully</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving assigned production transfer order lines</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Completed production transfer orders awaiting ERP approval retrieved successfully</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving completed production transfer orders awaiting ERP approval</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Production transfer order approval updated successfully</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Error occurred while updating production transfer order approval</value>
+  </data>
   <!-- #endregion PT.Header -->
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Header information retrieved successfully</value>

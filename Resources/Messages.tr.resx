@@ -1262,6 +1262,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Üretim transfer başlık bulunamadı</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış üretim transfer emirleri başarıyla getirildi</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Atanmış üretim transfer emirleri getirilirken hata oluştu</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Atanmış üretim transfer emri satırları başarıyla getirildi</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Atanmış üretim transfer emri satırları getirilirken hata oluştu</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış üretim transfer emirleri başarıyla getirildi</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>ERP onayı bekleyen tamamlanmış üretim transfer emirleri getirilirken hata oluştu</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Üretim transfer emri onayı başarıyla güncellendi</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Üretim transfer emri onayı güncellenirken hata oluştu</value>
+  </data>
   <!-- #endregion PT.Header -->
   <!-- #region SRT.Header -->
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">

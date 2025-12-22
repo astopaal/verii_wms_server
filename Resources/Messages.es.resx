@@ -88,6 +88,30 @@
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Encabezado de transferencia de producción no encontrado</value>
   </data>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Órdenes de transferencia de producción asignadas recuperadas con éxito</value>
+  </data>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Se produjo un error al recuperar las órdenes de transferencia de producción asignadas</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Líneas de órdenes de transferencia de producción asignadas recuperadas con éxito</value>
+  </data>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Se produjo un error al recuperar las líneas de órdenes de transferencia de producción asignadas</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Órdenes de transferencia de producción completadas en espera de aprobación ERP recuperadas con éxito</value>
+  </data>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Se produjo un error al recuperar las órdenes de transferencia de producción completadas en espera de aprobación ERP</value>
+  </data>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Aprobación de orden de transferencia de producción actualizada con éxito</value>
+  </data>
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Se produjo un error al actualizar la aprobación de la orden de transferencia de producción</value>
+  </data>
   <!-- #endregion PT.Header -->
 
   <!-- #region WI.ImportLine -->

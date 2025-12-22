@@ -25,4 +25,12 @@ namespace WMS_WEBAPI.DTOs
         public string? SourceWarehouse { get; set; }
         public string? TargetWarehouse { get; set; }
     }
+
+    public class PtAssignedProductionTransferOrderLinesDto
+    {
+        public IEnumerable<PtLineDto> Lines { get; set; } = Array.Empty<PtLineDto>();
+        public IEnumerable<PtLineSerialDto> LineSerials { get; set; } = Array.Empty<PtLineSerialDto>();
+        public IEnumerable<PtImportLineDto> ImportLines { get; set; } = Array.Empty<PtImportLineDto>();
+        public IEnumerable<PtRouteDto> Routes { get; set; } = Array.Empty<PtRouteDto>();
+    }
 }

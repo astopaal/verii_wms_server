@@ -269,6 +269,7 @@ namespace WMS_WEBAPI.Services
                 }
                 entity.IsCompleted = true;
                 entity.CompletionDate = DateTime.UtcNow;
+                entity.IsPendingApproval = false;
                 _unitOfWork.PtHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PtHeaderCompletedSuccessfully"));
@@ -319,7 +320,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderApprovalUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -356,11 +357,115 @@ namespace WMS_WEBAPI.Services
                 dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
                 var result = new PagedResponse<PtHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
-                return ApiResponse<PagedResponse<PtHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("PtHeaderRetrievedSuccessfully"));
+                return ApiResponse<PagedResponse<PtHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<PtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
+                return ApiResponse<PagedResponse<PtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderCompletedAwaitingErpApprovalRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<PtHeaderDto>>> GetAssignedProductionTransferOrdersAsync(long userId)
+        {
+            try
+            {
+                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
+                var headersQuery = _unitOfWork.PtHeaders.AsQueryable();
+                var terminalsQuery = _unitOfWork.PtTerminalLines.AsQueryable();
+
+                var query = headersQuery
+                    .Join(
+                        terminalsQuery,
+                        h => h.Id,
+                        t => t.HeaderId,
+                        (h, t) => new { h, t }
+                    )
+                    .Where(x => !x.h.IsDeleted && !x.h.IsCompleted && !x.t.IsDeleted && x.t.TerminalUserId == userId && x.h.BranchCode == branchCode)
+                    .Select(x => x.h)
+                    .Distinct();
+
+                var entities = await query.ToListAsync();
+                var dtos = _mapper.Map<IEnumerable<PtHeaderDto>>(entities);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<PtHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<IEnumerable<PtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data ?? dtos;
+
+                return ApiResponse<IEnumerable<PtHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PtHeaderAssignedOrdersRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<PtHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderAssignedOrdersRetrievalError"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
+        public async Task<ApiResponse<PtAssignedProductionTransferOrderLinesDto>> GetAssignedProductionTransferOrderLinesAsync(long headerId)
+        {
+            try
+            {
+                var lines = await _unitOfWork.PtLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var lineDtos = _mapper.Map<IEnumerable<PtLineDto>>(lines);
+                if (lineDtos.Any())
+                {
+                    var enrichedLines = await _erpService.PopulateStockNamesAsync(lineDtos);
+                    if (enrichedLines.Success)
+                    {
+                        lineDtos = enrichedLines.Data ?? lineDtos;
+                    }
+                }
+
+                var lineIds = lines.Select(l => l.Id).ToList();
+
+                IEnumerable<PtLineSerial> lineSerials = Array.Empty<PtLineSerial>();
+                if (lineIds.Count > 0)
+                {
+                    lineSerials = await _unitOfWork.PtLineSerials
+                        .FindAsync(x => lineIds.Contains(x.LineId) && !x.IsDeleted);
+                }
+
+                var importLines = await _unitOfWork.PtImportLines
+                    .FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var importLineDtos = _mapper.Map<IEnumerable<PtImportLineDto>>(importLines);
+                if (importLineDtos.Any())
+                {
+                    var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                    if (enrichedImportLines.Success)
+                    {
+                        importLineDtos = enrichedImportLines.Data ?? importLineDtos;
+                    }
+                }
+
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+
+                IEnumerable<PtRoute> routes = Array.Empty<PtRoute>();
+                if (importLineIds.Count > 0)
+                {
+                    routes = await _unitOfWork.PtRoutes
+                        .FindAsync(x => importLineIds.Contains(x.ImportLineId) && !x.IsDeleted);
+                }
+
+                var dto = new PtAssignedProductionTransferOrderLinesDto
+                {
+                    Lines = lineDtos,
+                    LineSerials = _mapper.Map<IEnumerable<PtLineSerialDto>>(lineSerials),
+                    ImportLines = importLineDtos,
+                    Routes = _mapper.Map<IEnumerable<PtRouteDto>>(routes)
+                };
+
+                return ApiResponse<PtAssignedProductionTransferOrderLinesDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PtHeaderAssignedOrderLinesRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PtAssignedProductionTransferOrderLinesDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderAssignedOrderLinesRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
     }

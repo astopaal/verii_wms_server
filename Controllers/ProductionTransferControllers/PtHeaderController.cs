@@ -100,5 +100,19 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.SetApprovalAsync(id, approved);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("assigned/{userId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<PtHeaderDto>>>> GetAssignedProductionTransferOrders(long userId)
+        {
+            var result = await _service.GetAssignedProductionTransferOrdersAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getAssignedProductionTransferOrderLines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<PtAssignedProductionTransferOrderLinesDto>>> GetAssignedProductionTransferOrderLines(long headerId)
+        {
+            var result = await _service.GetAssignedProductionTransferOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
