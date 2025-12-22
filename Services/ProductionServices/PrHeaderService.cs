@@ -222,147 +222,114 @@ namespace WMS_WEBAPI.Services
             {
                 using (var tx = await _unitOfWork.BeginTransactionAsync())
                 {
-                    try
+                    var header = _mapper.Map<PrHeader>(request.Header);
+                    header.CreatedDate = DateTime.UtcNow;
+                    header.IsDeleted = false;
+                    await _unitOfWork.PrHeaders.AddAsync(header);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                    var lineGuidToId = new Dictionary<Guid, long>();
+
+                    if (request.Lines != null && request.Lines.Count > 0)
                     {
-                        var header = _mapper.Map<PrHeader>(request.Header);
-                        header.CreatedDate = DateTime.UtcNow;
-                        header.IsDeleted = false;
-                        await _unitOfWork.PrHeaders.AddAsync(header);
+                        var lines = new List<PrLine>(request.Lines.Count);
+                        foreach (var l in request.Lines)
+                        {
+                            var line = _mapper.Map<PrLine>(l);
+                            line.HeaderId = header.Id;
+                            lines.Add(line);
+                        }
+                        await _unitOfWork.PrLines.AddRangeAsync(lines);
                         await _unitOfWork.SaveChangesAsync();
 
-                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-                        var lineGuidToId = new Dictionary<Guid, long>();
-
-                        if (request.Lines != null && request.Lines.Count > 0)
+                        for (int i = 0; i < request.Lines.Count; i++)
                         {
-                            var lines = new List<PrLine>(request.Lines.Count);
-                            foreach (var l in request.Lines)
+                            var key = request.Lines[i].ClientKey;
+                            var guid = request.Lines[i].ClientGuid;
+                            var id = lines[i].Id;
+                            if (!string.IsNullOrWhiteSpace(key))
                             {
-                                var line = new PrLine
-                                {
-                                    HeaderId = header.Id,
-                                    StockCode = l.StockCode,
-                                    Quantity = l.Quantity,
-                                    Unit = l.Unit,
-                                    ErpOrderNo = l.ErpOrderNo,
-                                    ErpOrderId = l.ErpOrderId,
-                                    Description = l.Description
-                                };
-                                lines.Add(line);
+                                lineKeyToId[key!] = id;
                             }
-                            await _unitOfWork.PrLines.AddRangeAsync(lines);
-                            await _unitOfWork.SaveChangesAsync();
-
-                            for (int i = 0; i < request.Lines.Count; i++)
+                            if (guid.HasValue)
                             {
-                                var key = request.Lines[i].ClientKey;
-                                var guid = request.Lines[i].ClientGuid;
-                                var id = lines[i].Id;
-                                if (!string.IsNullOrWhiteSpace(key))
-                                {
-                                    lineKeyToId[key!] = id;
-                                }
-                                if (guid.HasValue)
-                                {
-                                    lineGuidToId[guid.Value] = id;
-                                }
+                                lineGuidToId[guid.Value] = id;
                             }
                         }
+                    }
 
-                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                    if (request.LineSerials != null && request.LineSerials.Count > 0)
+                    {
+                        var serials = new List<PrLineSerial>(request.LineSerials.Count);
+                        foreach (var s in request.LineSerials)
                         {
-                            var serials = new List<PrLineSerial>(request.LineSerials.Count);
-                            foreach (var s in request.LineSerials)
+                            long lineId = 0;
+                            if (s.LineGroupGuid.HasValue)
                             {
-                                long lineId = 0;
-                                if (s.LineGroupGuid.HasValue)
-                                {
-                                    if (!lineGuidToId.TryGetValue(s.LineGroupGuid.Value, out lineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineGroupGuidNotFound"), 400);
-                                    }
-                                }
-                                else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
-                                {
-                                    if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"), 400);
-                                    }
-                                }
-                                else
+                                if (!lineGuidToId.TryGetValue(s.LineGroupGuid.Value, out lineId))
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineReferenceMissing"), 400);
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineGroupGuidNotFound"), 400);
                                 }
-
-                                var serial = new PrLineSerial
-                                {
-                                    LineId = lineId,
-                                    Quantity = s.Quantity,
-                                    SerialNo = s.SerialNo,
-                                    SerialNo2 = s.SerialNo2,
-                                    SerialNo3 = s.SerialNo3,
-                                    SerialNo4 = s.SerialNo4,
-                                    SourceCellCode = s.SourceCellCode,
-                                    TargetCellCode = s.TargetCellCode
-                                };
-                                serials.Add(serial);
                             }
-                            await _unitOfWork.PrLineSerials.AddRangeAsync(serials);
-                            await _unitOfWork.SaveChangesAsync();
-                        }
-
-                        if (request.HeaderSerials != null && request.HeaderSerials.Count > 0)
-                        {
-                            var headerSerials = new List<PrHeaderSerial>(request.HeaderSerials.Count);
-                            foreach (var hs in request.HeaderSerials)
+                            else if (!string.IsNullOrWhiteSpace(s.LineClientKey))
                             {
-                                var hSerial = new PrHeaderSerial
+                                if (!lineKeyToId.TryGetValue(s.LineClientKey!, out lineId))
                                 {
-                                    HeaderId = header.Id,
-                                    SerialNo = hs.SerialNo,
-                                    SerialNo2 = hs.SerialNo2,
-                                    SerialNo3 = hs.SerialNo3,
-                                    SerialNo4 = hs.SerialNo4,
-                                    Amount = hs.Amount
-                                };
-                                headerSerials.Add(hSerial);
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"), 400);
+                                }
                             }
-                            await _unitOfWork.PrHeaderSerials.AddRangeAsync(headerSerials);
-                            await _unitOfWork.SaveChangesAsync();
-                        }
-
-                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
-                        {
-                            var tlines = new List<PrTerminalLine>(request.TerminalLines.Count);
-                            foreach (var t in request.TerminalLines)
+                            else
                             {
-                                tlines.Add(new PrTerminalLine
-                                {
-                                    HeaderId = header.Id,
-                                    TerminalUserId = t.TerminalUserId
-                                });
+                                await _unitOfWork.RollbackTransactionAsync();
+                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineReferenceMissing"), 400);
                             }
-                            await _unitOfWork.PrTerminalLines.AddRangeAsync(tlines);
-                            await _unitOfWork.SaveChangesAsync();
+
+                            var serial = _mapper.Map<PrLineSerial>(s);
+                            serial.LineId = lineId;
+                            serials.Add(serial);
                         }
-
-                        await _unitOfWork.CommitTransactionAsync();
-
-                        var dto = _mapper.Map<PrHeaderDto>(header);
-                        return ApiResponse<PrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PrHeaderGenerateCompletedSuccessfully"));
+                        await _unitOfWork.PrLineSerials.AddRangeAsync(serials);
+                        await _unitOfWork.SaveChangesAsync();
                     }
-                    catch
+
+                    if (request.HeaderSerials != null && request.HeaderSerials.Count > 0)
                     {
-                        await _unitOfWork.RollbackTransactionAsync();
-                        throw;
+                        var headerSerials = new List<PrHeaderSerial>(request.HeaderSerials.Count);
+                        foreach (var hs in request.HeaderSerials)
+                        {
+                            var hSerial = _mapper.Map<PrHeaderSerial>(hs);
+                            hSerial.HeaderId = header.Id;
+                            headerSerials.Add(hSerial);
+                        }
+                        await _unitOfWork.PrHeaderSerials.AddRangeAsync(headerSerials);
+                        await _unitOfWork.SaveChangesAsync();
                     }
+
+                    if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                    {
+                        var tlines = new List<PrTerminalLine>(request.TerminalLines.Count);
+                        foreach (var t in request.TerminalLines)
+                        {
+                            var tline = _mapper.Map<PrTerminalLine>(t);
+                            tline.HeaderId = header.Id;
+                            tlines.Add(tline);
+                        }
+                        await _unitOfWork.PrTerminalLines.AddRangeAsync(tlines);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+
+                    await _unitOfWork.CommitTransactionAsync();
+
+                    var dto = _mapper.Map<PrHeaderDto>(header);
+                    return ApiResponse<PrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PrHeaderGenerateCompletedSuccessfully"));
                 }
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync();
                 return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderGenerateError"), ex.Message ?? string.Empty, 500);
             }
         }

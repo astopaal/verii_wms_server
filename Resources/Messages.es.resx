@@ -215,6 +215,25 @@
     <value>Se produjo un error al procesar la línea de importación</value>
   </data>
   <!-- #endregion PT.ImportLine -->
+  <!-- Production / PrHeader -->
+  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Clave de correlación inválida proporcionada</value>
+  </data>
+  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID del grupo de líneas no encontrado</value>
+  </data>
+  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Clave de cliente de línea no encontrada</value>
+  </data>
+  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Referencia de línea (clave de cliente o GUID de grupo) faltante</value>
+  </data>
+  <data name="PrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Orden de producción creada con éxito</value>
+  </data>
+  <data name="PrHeaderGenerateError" xml:space="preserve">
+    <value>Se produjo un error al crear la orden de producción</value>
+  </data>
   <!-- Production / PrHeaderSerial -->
   <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
     <value>Información de serie del encabezado de producción recuperada con éxito</value>

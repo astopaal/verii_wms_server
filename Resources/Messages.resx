@@ -2075,6 +2075,24 @@
   <data name="PrHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Production Header</value>
   </data>
+  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key provided</value>
+  </data>
+  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Line group GUID not found</value>
+  </data>
+  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Line client key not found</value>
+  </data>
+  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Line reference (client key or group GUID) is missing</value>
+  </data>
+  <data name="PrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Production order generated successfully</value>
+  </data>
+  <data name="PrHeaderGenerateError" xml:space="preserve">
+    <value>Error occurred while generating production order</value>
+  </data>
 
   <!-- Production / PrLine -->
   <data name="PrLineRetrievedSuccessfully" xml:space="preserve">

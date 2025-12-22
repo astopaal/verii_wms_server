@@ -2004,6 +2004,24 @@
   <data name="PrHeaderCompletionError" xml:space="preserve">
     <value>Üretim başlık tamamlanırken hata oluştu</value>
   </data>
+  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Geçersiz korelasyon anahtarı sağlandı</value>
+  </data>
+  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Satır grup GUID bulunamadı</value>
+  </data>
+  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Satır istemci anahtarı bulunamadı</value>
+  </data>
+  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Satır referansı (istemci anahtarı veya grup GUID) eksik</value>
+  </data>
+  <data name="PrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Üretim emri başarıyla oluşturuldu</value>
+  </data>
+  <data name="PrHeaderGenerateError" xml:space="preserve">
+    <value>Üretim emri oluşturulurken hata oluştu</value>
+  </data>
   <!-- #endregion Production.PrHeader -->
 
   <!-- #region Production.PrLine -->
