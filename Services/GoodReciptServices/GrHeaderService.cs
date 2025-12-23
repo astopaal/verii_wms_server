@@ -614,7 +614,7 @@ namespace WMS_WEBAPI.Services
                     }
                 }
 
-                var importLineDtos = _mapper.Map<IEnumerable<GrImportLDto>>(importLines);
+                var importLineDtos = _mapper.Map<IEnumerable<GrImportLineDto>>(importLines);
                 if (importLineDtos.Any())
                 {
                     var enrichedImportLines = await _erpService.PopulateStockNamesAsync(importLineDtos);

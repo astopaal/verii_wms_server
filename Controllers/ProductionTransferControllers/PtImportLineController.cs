@@ -78,5 +78,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.AddBarcodeBasedonAssignedOrderAsync(request);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("productionTransferOrderCollectedBarcodes/{headerId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<PtImportLineWithRoutesDto>>>> ProductionTransferOrderCollectedBarcodes(long headerId)
+        {
+            var result = await _service.GetCollectedBarcodesByHeaderIdAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

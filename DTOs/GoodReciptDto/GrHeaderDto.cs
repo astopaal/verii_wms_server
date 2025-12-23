@@ -68,7 +68,7 @@ namespace WMS_WEBAPI.DTOs
     {
         public IEnumerable<GrLineDto> Lines { get; set; } = Array.Empty<GrLineDto>();
         public IEnumerable<GrLineSerialDto> LineSerials { get; set; } = Array.Empty<GrLineSerialDto>();
-        public IEnumerable<GrImportLDto> ImportLines { get; set; } = Array.Empty<GrImportLDto>();
+        public IEnumerable<GrImportLineDto> ImportLines { get; set; } = Array.Empty<GrImportLineDto>();
         public IEnumerable<GrRouteDto> Routes { get; set; } = Array.Empty<GrRouteDto>();
     }
 }

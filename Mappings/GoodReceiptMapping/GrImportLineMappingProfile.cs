@@ -4,11 +4,11 @@ using WMS_WEBAPI.Models;
 
 namespace WMS_WEBAPI.Mappings
 {
-    public class GrImportLMappingProfile : Profile
+    public class GrImportLineMappingProfile : Profile
     {
-        public GrImportLMappingProfile()
+        public GrImportLineMappingProfile()
         {
-            CreateMap<GrImportLine, GrImportLDto>()
+            CreateMap<GrImportLine, GrImportLineDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
@@ -19,9 +19,9 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
-                .ApplyFullUserNames<GrImportLine, GrImportLDto>();
+                .ApplyFullUserNames<GrImportLine, GrImportLineDto>();
 
-            CreateMap<GrImportLine, GrImportLWithRoutesDto>()
+            CreateMap<GrImportLine, GrImportLineWithRoutesDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
@@ -33,9 +33,9 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
                 .ForMember(dest => dest.Routes, opt => opt.MapFrom(src => src.Routes.Where(r => !r.IsDeleted)))
-                .ApplyFullUserNames<GrImportLine, GrImportLWithRoutesDto>();
+                .ApplyFullUserNames<GrImportLine, GrImportLineWithRoutesDto>();
 
-            CreateMap<CreateGrImportLDto, GrImportLine>()
+            CreateMap<CreateGrImportLineDto, GrImportLine>()
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
@@ -49,7 +49,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.Line, opt => opt.Ignore())
                 .ForMember(dest => dest.Header, opt => opt.Ignore());
 
-            CreateMap<UpdateGrImportLDto, GrImportLine>()
+            CreateMap<UpdateGrImportLineDto, GrImportLine>()
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
                 .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
@@ -63,8 +63,8 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.Line, opt => opt.Ignore())
                 .ForMember(dest => dest.Header, opt => opt.Ignore());
 
-            // CreateGrImportLWithLineKeyDto to GrImportLine (for BulkCreateAsync)
-            CreateMap<CreateGrImportLWithLineKeyDto, GrImportLine>()
+            // CreateGrImportLineWithLineKeyDto to GrImportLine (for BulkCreateAsync)
+            CreateMap<CreateGrImportLineWithLineKeyDto, GrImportLine>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.HeaderId, opt => opt.Ignore())
                 .ForMember(dest => dest.LineId, opt => opt.Ignore())
@@ -81,3 +81,4 @@ namespace WMS_WEBAPI.Mappings
         }
     }
 }
+

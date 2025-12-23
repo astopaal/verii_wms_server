@@ -381,31 +381,31 @@
   <!-- #endregion GrImportDocument -->
 
   <!-- #region GrImportLine -->
-  <data name="GrImportLCreatedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı başarıyla oluşturuldu</value>
   </data>
-  <data name="GrImportLCreationError" xml:space="preserve">
+  <data name="GrImportLineCreationError" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı oluşturulurken hata oluştu</value>
   </data>
-  <data name="GrImportLDeletedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı başarıyla silindi</value>
   </data>
-  <data name="GrImportLDeletionError" xml:space="preserve">
+  <data name="GrImportLineDeletionError" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı silinirken hata oluştu</value>
   </data>
-  <data name="GrImportLNotFound" xml:space="preserve">
+  <data name="GrImportLineNotFound" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı bulunamadı</value>
   </data>
-  <data name="GrImportLRetrievalError" xml:space="preserve">
+  <data name="GrImportLineRetrievalError" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı bilgileri getirilirken hata oluştu</value>
   </data>
-  <data name="GrImportLRetrievedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı bilgisi başarıyla getirildi</value>
   </data>
-  <data name="GrImportLUpdateError" xml:space="preserve">
+  <data name="GrImportLineUpdateError" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı güncellenirken hata oluştu</value>
   </data>
-  <data name="GrImportLUpdatedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı başarıyla güncellendi</value>
   </data>
   <data name="GrImportSerialLineGetByImportLineIdError" xml:space="preserve">
@@ -495,7 +495,7 @@
   <!-- #endregion GrLineSerial -->
 
   <!-- #region GrRoute -->
-  <data name="GrImportLRoutesExist" xml:space="preserve">
+  <data name="GrImportLineRoutesExist" xml:space="preserve">
     <value>Emre toplanmış stokları listeden çıkartmanız gereklidir</value>
   </data>
   <!-- #endregion GrRoute -->

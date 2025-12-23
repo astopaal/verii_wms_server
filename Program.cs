@@ -97,7 +97,7 @@ builder.Services.AddScoped<IGrHeaderService, GrHeaderService>();
 builder.Services.AddScoped<IGrHeaderService, GrHeaderService>();
 builder.Services.AddScoped<IGrLineService, GrLineService>();
 builder.Services.AddScoped<IGrImportDocumentService, GrImportDocumentService>();
-builder.Services.AddScoped<IGrImportLService, GrImportLService>();
+builder.Services.AddScoped<IGrImportLineService, GrImportLineService>();
 builder.Services.AddScoped<IGrRouteService, GrRouteService>();
 builder.Services.AddScoped<IGrLineSerialService, GrLineSerialService>();
 builder.Services.AddScoped<IGrTerminalLineService, GrTerminalLineService>();

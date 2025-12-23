@@ -88,6 +88,54 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>> GetCollectedBarcodesByHeaderIdAsync(long headerId)
+        {
+            try
+            {
+                var header = await _unitOfWork.ICHeaders.GetByIdAsync(headerId);
+                if (header == null || header.IsDeleted)
+                {
+                    return ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("IcHeaderNotFound"), _localizationService.GetLocalizedString("IcHeaderNotFound"), 404);
+                }
+
+                var importLines = await _unitOfWork.IcImportLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
+                var items = new List<IcImportLineWithRoutesDto>();
+
+                foreach (var il in importLines)
+                {
+                    var routes = await _unitOfWork.IcRoutes.FindAsync(r => r.ImportLineId == il.Id && !r.IsDeleted);
+                    var dto = new IcImportLineWithRoutesDto
+                    {
+                        ImportLine = _mapper.Map<IcImportLineDto>(il),
+                        Routes = _mapper.Map<List<IcRouteDto>>(routes)
+                    };
+                    items.Add(dto);
+                }
+
+                var importLineDtos = items.Select(i => i.ImportLine).ToList();
+                var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+                var enrichedList = enriched.Data?.ToList() ?? importLineDtos;
+                for (int i = 0; i < items.Count && i < enrichedList.Count; i++)
+                {
+                    items[i].ImportLine = enrichedList[i];
+                }
+
+                return ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>.SuccessResult(items, _localizationService.GetLocalizedString("IcImportLineRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("IcImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
         public async Task<ApiResponse<IcImportLineDto>> CreateAsync(CreateIcImportLineDto createDto)
         {
             try

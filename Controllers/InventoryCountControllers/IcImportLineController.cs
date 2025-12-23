@@ -61,5 +61,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _service.SoftDeleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("inventoryCountOrderCollectedBarcodes/{headerId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<IcImportLineWithRoutesDto>>>> InventoryCountOrderCollectedBarcodes(long headerId)
+        {
+            var result = await _service.GetCollectedBarcodesByHeaderIdAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace WMS_WEBAPI.DTOs
 
     }
 
-    public class CreateGrImportLWithLineKeyDto
+    public class CreateGrImportLineWithLineKeyDto
     {
         public string? LineClientKey { get; set; }
 
@@ -80,7 +80,7 @@ namespace WMS_WEBAPI.DTOs
 
         public List<CreateGrImportDocumentSimpleDto>? Documents { get; set; }
         public List<CreateGrLineWithKeyDto>? Lines { get; set; }
-        public List<CreateGrImportLWithLineKeyDto>? ImportLines { get; set; }
+        public List<CreateGrImportLineWithLineKeyDto>? ImportLines { get; set; }
         public List<CreateGrImportSerialLineWithImportLineKeyDto>? SerialLines { get; set; }
         public List<CreateGrRouteWithImportLineKeyDto>? Routes { get; set; }
     }

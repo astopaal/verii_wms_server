@@ -100,7 +100,7 @@ namespace WMS_WEBAPI.Services
                 var importLineExists = await _unitOfWork.GrImportLines.ExistsAsync(createDto.ImportLineId);
                 if (!importLineExists)
                 {
-                    var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
+                    var nf = _localizationService.GetLocalizedString("GrImportLineNotFound");
                     return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 400);
                 }
                 var serialLine = _mapper.Map<GrLineSerial>(createDto);
@@ -130,7 +130,7 @@ namespace WMS_WEBAPI.Services
                     var importLineExists = await _unitOfWork.GrImportLines.ExistsAsync(updateDto.ImportLineId.Value);
                     if (!importLineExists)
                     {
-                        var nf = _localizationService.GetLocalizedString("GrImportLNotFound");
+                        var nf = _localizationService.GetLocalizedString("GrImportLineNotFound");
                         return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 400);
                     }
                     serialLine.ImportLineId = updateDto.ImportLineId.Value;

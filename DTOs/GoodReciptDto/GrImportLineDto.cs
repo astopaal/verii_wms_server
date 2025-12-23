@@ -2,18 +2,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WMS_WEBAPI.DTOs
 {
-    public class GrImportLDto : BaseImportLineEntityDto
+    public class GrImportLineDto : BaseImportLineEntityDto
     {
         public long? LineId { get; set; }
         public long HeaderId { get; set; }
     }
 
-    public class GrImportLWithRoutesDto : GrImportLDto
+    public class GrImportLineWithRoutesDto : GrImportLineDto
     {
         public List<GrRouteDto> Routes { get; set; } = new List<GrRouteDto>();
     }
 
-    public class CreateGrImportLDto : BaseImportLineCreateDto
+    public class CreateGrImportLineDto : BaseImportLineCreateDto
     {
         public long? LineId { get; set; }
         
@@ -21,9 +21,10 @@ namespace WMS_WEBAPI.DTOs
         public long HeaderId { get; set; }
     }
 
-    public class UpdateGrImportLDto : BaseImportLineUpdateDto
+    public class UpdateGrImportLineDto : BaseImportLineUpdateDto
     {
         public long? LineId { get; set; }
         public long? HeaderId { get; set; }
     }
 }
+

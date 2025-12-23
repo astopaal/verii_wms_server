@@ -75,5 +75,12 @@ namespace WMS_WEBAPI.Controllers
             var result = await _prImportLineService.SoftDeleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("productionOrderCollectedBarcodes/{headerId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<PrImportLineWithRoutesDto>>>> ProductionOrderCollectedBarcodes(long headerId)
+        {
+            var result = await _prImportLineService.GetCollectedBarcodesByHeaderIdAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

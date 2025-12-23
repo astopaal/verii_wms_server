@@ -423,31 +423,31 @@
   <!-- #endregion GrImportDocument -->
 
   <!-- #region GrImportLine -->
-  <data name="GrImportLCreatedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineCreatedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Line created successfully</value>
   </data>
-  <data name="GrImportLCreationError" xml:space="preserve">
+  <data name="GrImportLineCreationError" xml:space="preserve">
     <value>Error occurred while creating Goods Receipt Import Line</value>
   </data>
-  <data name="GrImportLDeletedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Line deleted successfully</value>
   </data>
-  <data name="GrImportLDeletionError" xml:space="preserve">
+  <data name="GrImportLineDeletionError" xml:space="preserve">
     <value>Error occurred while deleting Goods Receipt Import Line</value>
   </data>
-  <data name="GrImportLNotFound" xml:space="preserve">
+  <data name="GrImportLineNotFound" xml:space="preserve">
     <value>Goods Receipt Import Line not found</value>
   </data>
-  <data name="GrImportLRetrievalError" xml:space="preserve">
+  <data name="GrImportLineRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Receipt Import Line information</value>
   </data>
-  <data name="GrImportLRetrievedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Line information retrieved successfully</value>
   </data>
-  <data name="GrImportLUpdateError" xml:space="preserve">
+  <data name="GrImportLineUpdateError" xml:space="preserve">
     <value>Error occurred while updating Goods Receipt Import Line</value>
   </data>
-  <data name="GrImportLUpdatedSuccessfully" xml:space="preserve">
+  <data name="GrImportLineUpdatedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Line updated successfully</value>
   </data>
   <data name="GrImportSerialLineGetByImportLineIdError" xml:space="preserve">
@@ -540,7 +540,7 @@
   <!-- #endregion GrLineSerial -->
 
   <!-- #region GrRoute -->
-  <data name="GrImportLRoutesExist" xml:space="preserve">
+  <data name="GrImportLineRoutesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
   <!-- #endregion GrRoute -->
