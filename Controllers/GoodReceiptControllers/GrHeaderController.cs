@@ -69,12 +69,39 @@ namespace WMS_WEBAPI.Controllers
         
 
         [HttpPost("complete/{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> Complete(int id)
+        public async Task<ActionResult<ApiResponse<bool>>> Complete(long id)
         {
-            var result = await _grHeaderService.CompleteAsync(id);
+            var result = await _grHeaderService.CompleteAsync((int)id);
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("assigned/{userId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<GrHeaderDto>>>> GetAssignedOrders(long userId)
+        {
+            var result = await _grHeaderService.GetAssignedOrdersAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("getAssignedOrderLines/{headerId}")]
+        public async Task<ActionResult<ApiResponse<GrAssignedOrderLinesDto>>> GetAssignedOrderLines(long headerId)
+        {
+            var result = await _grHeaderService.GetAssignedOrderLinesAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("completed-awaiting-erp-approval")]
+        public async Task<ActionResult<ApiResponse<PagedResponse<GrHeaderDto>>>> GetCompletedAwaitingErpApproval([FromBody] PagedRequest request)
+        {
+            var result = await _grHeaderService.GetCompletedAwaitingErpApprovalPagedAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("approval/{id}")]
+        public async Task<ActionResult<ApiResponse<GrHeaderDto>>> SetApproval(long id, [FromQuery] bool approved)
+        {
+            var result = await _grHeaderService.SetApprovalAsync(id, approved);
+            return StatusCode(result.StatusCode, result);
+        }
 
         [HttpGet("by-customer/{customerCode}")]
         public async Task<ActionResult<ApiResponse<IEnumerable<GrHeaderDto>>>> GetByCustomerCode(string customerCode)
