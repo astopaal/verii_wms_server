@@ -590,98 +590,165 @@ namespace WMS_WEBAPI.Services
                 {
                     try
                     {
+                        // ============================================
+                        // 1. VALIDATION
+                        // ============================================
+                        if (request == null || request.Header == null || request.Header.Header == null)
+                        {
+                            return ApiResponse<PtHeaderDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("InvalidModelState"),
+                                _localizationService.GetLocalizedString("RequestOrHeaderMissing"),
+                                400);
+                        }
+
+                        // ============================================
+                        // 2. CREATE HEADER
+                        // ============================================
                         var headerEntity = _mapper.Map<PtHeader>(request.Header.Header);
                         await _unitOfWork.PtHeaders.AddAsync(headerEntity);
                         await _unitOfWork.SaveChangesAsync();
+
+                        if (headerEntity?.Id <= 0)
+                        {
+                            await tx.RollbackAsync();
+                            return ApiResponse<PtHeaderDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("PtHeaderBulkPtGenerateError"),
+                                _localizationService.GetLocalizedString("HeaderInsertFailed"),
+                                500);
+                        }
+
                         var headerKeyToId = new Dictionary<Guid, long> { { request.Header.HeaderKey, headerEntity.Id } };
+
+                        // ============================================
+                        // 3. CREATE LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
                         var lineKeyToId = new Dictionary<Guid, long>();
                         if (request.Lines != null && request.Lines.Count > 0)
                         {
                             var lines = new List<PtLine>(request.Lines.Count);
                             var lineKeys = new List<Guid>(request.Lines.Count);
-                            foreach (var l in request.Lines)
+                            foreach (var lineDto in request.Lines)
                             {
-                                if (!headerKeyToId.TryGetValue(l.HeaderKey, out var hdrId))
+                                if (!headerKeyToId.TryGetValue(lineDto.HeaderKey, out var hdrId))
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
                                 }
-                                var line = _mapper.Map<PtLine>(l);
+                                var line = _mapper.Map<PtLine>(lineDto);
                                 line.HeaderId = hdrId;
                                 lines.Add(line);
-                                lineKeys.Add(l.LineKey);
+                                lineKeys.Add(lineDto.LineKey);
                             }
+
                             await _unitOfWork.PtLines.AddRangeAsync(lines);
                             await _unitOfWork.SaveChangesAsync();
+
+                            // Build LineKey -> Id mapping
                             for (int i = 0; i < lines.Count; i++)
                             {
                                 lineKeyToId[lineKeys[i]] = lines[i].Id;
                             }
                         }
+
+                        // ============================================
+                        // 4. CREATE LINE SERIALS
+                        // ============================================
                         if (request.LineSerials != null && request.LineSerials.Count > 0)
                         {
                             var serials = new List<PtLineSerial>(request.LineSerials.Count);
-                            foreach (var s in request.LineSerials)
+                            foreach (var serialDto in request.LineSerials)
                             {
-                                if (!lineKeyToId.TryGetValue(s.LineKey, out var lid))
+                                if (!lineKeyToId.TryGetValue(serialDto.LineKey, out var lineId))
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("LineKeyNotFound"),
+                                        400);
                                 }
-                                var serial = _mapper.Map<PtLineSerial>(s);
-                                serial.LineId = lid;
+
+                                var serial = _mapper.Map<PtLineSerial>(serialDto);
+                                serial.LineId = lineId;
                                 serials.Add(serial);
                             }
+
                             await _unitOfWork.PtLineSerials.AddRangeAsync(serials);
                             await _unitOfWork.SaveChangesAsync();
                         }
+
+                        // ============================================
+                        // 5. CREATE IMPORT LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
                         var importLineKeyToId = new Dictionary<Guid, long>();
                         if (request.ImportLines != null && request.ImportLines.Count > 0)
                         {
                             var importLines = new List<PtImportLine>(request.ImportLines.Count);
                             var importKeys = new List<Guid>(request.ImportLines.Count);
-                            foreach (var il in request.ImportLines)
+                            foreach (var importDto in request.ImportLines)
                             {
-                                if (!headerKeyToId.TryGetValue(il.HeaderKey, out var hdrId))
+                                if (!headerKeyToId.TryGetValue(importDto.HeaderKey, out var hdrId))
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
                                 }
+
+                                // LineKey is optional - if provided, validate and link to Line
                                 long? linkedLineId = null;
-                                if (il.LineKey.HasValue)
+                                if (importDto.LineKey.HasValue)
                                 {
-                                    if (!lineKeyToId.TryGetValue(il.LineKey.Value, out var lId))
+                                    if (!lineKeyToId.TryGetValue(importDto.LineKey.Value, out var foundLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<PtHeaderDto>.ErrorResult(
+                                            _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("LineKeyNotFound"),
+                                            400);
                                     }
-                                    linkedLineId = lId;
+                                    linkedLineId = foundLineId;
                                 }
-                                var importLine = _mapper.Map<PtImportLine>(il);
+
+                                var importLine = _mapper.Map<PtImportLine>(importDto);
                                 importLine.HeaderId = hdrId;
                                 importLine.LineId = linkedLineId;
                                 importLines.Add(importLine);
-                                importKeys.Add(il.ImportLineKey);
+                                importKeys.Add(importDto.ImportLineKey);
                             }
+
                             await _unitOfWork.PtImportLines.AddRangeAsync(importLines);
                             await _unitOfWork.SaveChangesAsync();
+
+                            // Build ImportLineKey -> Id mapping
                             for (int i = 0; i < importLines.Count; i++)
                             {
                                 importLineKeyToId[importKeys[i]] = importLines[i].Id;
                             }
                         }
+
+                        // ============================================
+                        // 6. CREATE ROUTES
+                        // ============================================
                         if (request.Routes != null && request.Routes.Count > 0)
                         {
                             var routes = new List<PtRoute>(request.Routes.Count);
-                            foreach (var r in request.Routes)
+                            foreach (var routeDto in request.Routes)
                             {
-                                if (!importLineKeyToId.TryGetValue(r.ImportLineKey, out var ilId))
+                                if (!importLineKeyToId.TryGetValue(routeDto.ImportLineKey, out var importLineId))
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PtHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PtHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineKeyNotFound"),
+                                        400);
                                 }
-                                var route = _mapper.Map<PtRoute>(r);
-                                route.ImportLineId = ilId;
+
+                                var route = _mapper.Map<PtRoute>(routeDto);
+                                route.ImportLineId = importLineId;
                                 if (string.IsNullOrEmpty(route.ScannedBarcode))
                                 {
                                     route.ScannedBarcode = string.Empty;
@@ -692,20 +759,31 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.PtRoutes.AddRangeAsync(routes);
                             await _unitOfWork.SaveChangesAsync();
                         }
-                        await _unitOfWork.CommitTransactionAsync();
+
+                        // ============================================
+                        // 7. COMMIT TRANSACTION
+                        // ============================================
+                        await tx.CommitAsync();
                         var dto = _mapper.Map<PtHeaderDto>(headerEntity);
-                        return ApiResponse<PtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PtHeaderBulkPtGenerateCompletedSuccessfully"));
+                        return ApiResponse<PtHeaderDto>.SuccessResult(
+                            dto,
+                            _localizationService.GetLocalizedString("PtHeaderBulkPtGenerateCompletedSuccessfully"));
                     }
                     catch
                     {
-                        await _unitOfWork.RollbackTransactionAsync();
+                        await tx.RollbackAsync();
                         throw;
                     }
                 }
             }
             catch (Exception ex)
             {
-                return ApiResponse<PtHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PtHeaderBulkPtGenerateError"), ex.Message ?? string.Empty, 500);
+                var inner = ex.InnerException?.Message ?? string.Empty;
+                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : $"{ex.Message} | Inner: {inner}";
+                return ApiResponse<PtHeaderDto>.ErrorResult(
+                    _localizationService.GetLocalizedString("PtHeaderBulkPtGenerateError"),
+                    combined,
+                    500);
             }
         }
     }

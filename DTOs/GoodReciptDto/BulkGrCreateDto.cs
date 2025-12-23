@@ -13,8 +13,7 @@ namespace WMS_WEBAPI.DTOs
 
     public class CreateGrImportLWithLineKeyDto
     {
-        [Required]
-        public string LineClientKey { get; set; } = null!;
+        public string? LineClientKey { get; set; }
 
         [Required]
         public string ClientKey { get; set; } = null!;

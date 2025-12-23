@@ -518,10 +518,36 @@ namespace WMS_WEBAPI.Services
                 {
                     try
                     {
+                        // ============================================
+                        // 1. VALIDATION
+                        // ============================================
+                        if (request == null || request.Header == null)
+                        {
+                            return ApiResponse<int>.ErrorResult(
+                                _localizationService.GetLocalizedString("InvalidModelState"),
+                                _localizationService.GetLocalizedString("RequestOrHeaderMissing"),
+                                400);
+                        }
+
+                        // ============================================
+                        // 2. CREATE HEADER
+                        // ============================================
                         var header = _mapper.Map<WoHeader>(request.Header);
                         await _unitOfWork.WoHeaders.AddAsync(header);
                         await _unitOfWork.SaveChangesAsync();
 
+                        if (header?.Id <= 0)
+                        {
+                            await tx.RollbackAsync();
+                            return ApiResponse<int>.ErrorResult(
+                                _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                _localizationService.GetLocalizedString("HeaderInsertFailed"),
+                                500);
+                        }
+
+                        // ============================================
+                        // 3. CREATE LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
                         var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
                         var lineGuidToId = new Dictionary<Guid, long>();
                         if (request.Lines != null && request.Lines.Count > 0)
@@ -529,21 +555,26 @@ namespace WMS_WEBAPI.Services
                             var lines = new List<WoLine>(request.Lines.Count);
                             foreach (var lineDto in request.Lines)
                             {
+                                // ClientKey is required for correlation (if provided)
+                                // Note: ClientKey is optional in DTO, but if provided, it's used for mapping
                                 var line = _mapper.Map<WoLine>(lineDto);
                                 line.HeaderId = header.Id;
                                 lines.Add(line);
                             }
+
                             await _unitOfWork.WoLines.AddRangeAsync(lines);
                             await _unitOfWork.SaveChangesAsync();
 
+                            // Build ClientKey -> Id and ClientGuid -> Id mappings
                             for (int i = 0; i < request.Lines.Count; i++)
                             {
                                 var key = request.Lines[i].ClientKey;
                                 var guid = request.Lines[i].ClientGuid;
                                 var id = lines[i].Id;
+
                                 if (!string.IsNullOrWhiteSpace(key))
                                 {
-                                    lineKeyToId[key!] = id;
+                                    lineKeyToId[key] = id;
                                 }
                                 if (guid.HasValue)
                                 {
@@ -552,43 +583,61 @@ namespace WMS_WEBAPI.Services
                             }
                         }
 
+                        // ============================================
+                        // 4. CREATE LINE SERIALS
+                        // ============================================
                         if (request.LineSerials != null && request.LineSerials.Count > 0)
                         {
                             var serials = new List<WoLineSerial>(request.LineSerials.Count);
-                            foreach (var sDto in request.LineSerials)
+                            foreach (var serialDto in request.LineSerials)
                             {
-                                long lineId = 0;
-                                if (sDto.LineGroupGuid.HasValue)
+                                // LineSerial requires LineId - find by LineGroupGuid first, then LineClientKey
+                                long lineId;
+                                if (serialDto.LineGroupGuid.HasValue)
                                 {
-                                    var lg = sDto.LineGroupGuid.Value;
-                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    if (!lineGuidToId.TryGetValue(serialDto.LineGroupGuid.Value, out var foundLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("LineGroupGuidNotFound"),
+                                            400);
                                     }
+                                    lineId = foundLineId;
                                 }
-                                else if (!string.IsNullOrWhiteSpace(sDto.LineClientKey))
+                                else if (!string.IsNullOrWhiteSpace(serialDto.LineClientKey))
                                 {
-                                    if (!lineKeyToId.TryGetValue(sDto.LineClientKey!, out lineId))
+                                    if (!lineKeyToId.TryGetValue(serialDto.LineClientKey, out var foundLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("LineClientKeyNotFound"),
+                                            400);
                                     }
+                                    lineId = foundLineId;
                                 }
                                 else
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                        _localizationService.GetLocalizedString("LineReferenceMissing"),
+                                        400);
                                 }
 
-                                var serial = _mapper.Map<WoLineSerial>(sDto);
+                                var serial = _mapper.Map<WoLineSerial>(serialDto);
                                 serial.LineId = lineId;
                                 serials.Add(serial);
                             }
+
                             await _unitOfWork.WoLineSerials.AddRangeAsync(serials);
                             await _unitOfWork.SaveChangesAsync();
                         }
 
+                        // ============================================
+                        // 5. CREATE IMPORT LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
                         var importLineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
                         var importLineGuidToId = new Dictionary<Guid, long>();
                         var routeKeyToImportLineId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
@@ -599,28 +648,41 @@ namespace WMS_WEBAPI.Services
                             var importLines = new List<WoImportLine>(request.ImportLines.Count);
                             foreach (var importDto in request.ImportLines)
                             {
-                                long lineId = 0;
+                                // ClientKey is required for correlation
+                                if (string.IsNullOrWhiteSpace(importDto.ClientKey))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
+                                        400);
+                                }
+
+                                // LineClientKey/LineGroupGuid is optional - if provided, validate and link to Line
+                                long? lineId = null;
                                 if (importDto.LineGroupGuid.HasValue)
                                 {
-                                    var lg = importDto.LineGroupGuid.Value;
-                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    if (!lineGuidToId.TryGetValue(importDto.LineGroupGuid.Value, out var foundLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("LineGroupGuidNotFound"),
+                                            400);
                                     }
+                                    lineId = foundLineId;
                                 }
                                 else if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
                                 {
-                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey!, out lineId))
+                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey, out var foundLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("LineClientKeyNotFound"),
+                                            400);
                                     }
-                                }
-                                else
-                                {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                    lineId = foundLineId;
                                 }
 
                                 var importLine = _mapper.Map<WoImportLine>(importDto);
@@ -632,108 +694,105 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.WoImportLines.AddRangeAsync(importLines);
                             await _unitOfWork.SaveChangesAsync();
 
+                            // Build ClientKey -> Id, ClientGroupGuid -> Id, RouteClientKey -> Id, RouteGroupGuid -> Id mappings
                             for (int i = 0; i < request.ImportLines.Count; i++)
                             {
                                 var id = importLines[i].Id;
-                                var key1 = request.ImportLines[i].ClientKey;
-                                var guid1 = request.ImportLines[i].ClientGroupGuid;
-                                if (!string.IsNullOrWhiteSpace(key1))
-                                {
-                                    importLineKeyToId[key1!] = id;
-                                }
-                                if (guid1.HasValue)
-                                {
-                                    importLineGuidToId[guid1.Value] = id;
-                                }
+                                var clientKey = request.ImportLines[i].ClientKey;
+                                var clientGuid = request.ImportLines[i].ClientGroupGuid;
+                                var routeKey = request.ImportLines[i].RouteClientKey;
+                                var routeGuid = request.ImportLines[i].RouteGroupGuid;
 
-                                var key2 = request.ImportLines[i].RouteClientKey;
-                                var guid2 = request.ImportLines[i].RouteGroupGuid;
-                                if (!string.IsNullOrWhiteSpace(key2))
+                                if (!string.IsNullOrWhiteSpace(clientKey))
                                 {
-                                    routeKeyToImportLineId[key2!] = id;
+                                    importLineKeyToId[clientKey] = id;
                                 }
-                                if (guid2.HasValue)
+                                if (clientGuid.HasValue)
                                 {
-                                    routeGuidToImportLineId[guid2.Value] = id;
+                                    importLineGuidToId[clientGuid.Value] = id;
+                                }
+                                if (!string.IsNullOrWhiteSpace(routeKey))
+                                {
+                                    routeKeyToImportLineId[routeKey] = id;
+                                }
+                                if (routeGuid.HasValue)
+                                {
+                                    routeGuidToImportLineId[routeGuid.Value] = id;
                                 }
                             }
                         }
 
+                        // ============================================
+                        // 6. CREATE ROUTES
+                        // ============================================
                         if (request.Routes != null && request.Routes.Count > 0)
                         {
                             var routes = new List<WoRoute>(request.Routes.Count);
-                            foreach (var rDto in request.Routes)
+                            foreach (var routeDto in request.Routes)
                             {
-                                long lineId = 0;
-                                if (rDto.LineGroupGuid.HasValue)
+                                // Find ImportLineId by priority: ImportLineGroupGuid > ImportLineClientKey > RouteGroupGuid > RouteClientKey
+                                long? importLineId = null;
+
+                                if (routeDto.ImportLineGroupGuid.HasValue)
                                 {
-                                    var lg = rDto.LineGroupGuid.Value;
-                                    if (!lineGuidToId.TryGetValue(lg, out lineId))
+                                    if (!importLineGuidToId.TryGetValue(routeDto.ImportLineGroupGuid.Value, out var foundImportLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("ImportLineGroupGuidNotFound"),
+                                            400);
                                     }
+                                    importLineId = foundImportLineId;
                                 }
-                                else if (!string.IsNullOrWhiteSpace(rDto.LineClientKey))
+                                else if (!string.IsNullOrWhiteSpace(routeDto.ImportLineClientKey))
                                 {
-                                    if (!lineKeyToId.TryGetValue(rDto.LineClientKey!, out lineId))
+                                    if (!importLineKeyToId.TryGetValue(routeDto.ImportLineClientKey, out var foundImportLineId))
                                     {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"),
+                                            400);
                                     }
+                                    importLineId = foundImportLineId;
                                 }
-                                else
+                                else if (routeDto.ClientGroupGuid.HasValue)
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
+                                    if (!routeGuidToImportLineId.TryGetValue(routeDto.ClientGroupGuid.Value, out var foundImportLineId))
+                                    {
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("RouteGroupGuidNotFound"),
+                                            400);
+                                    }
+                                    importLineId = foundImportLineId;
+                                }
+                                else if (!string.IsNullOrWhiteSpace(routeDto.ClientKey))
+                                {
+                                    if (!routeKeyToImportLineId.TryGetValue(routeDto.ClientKey, out var foundImportLineId))
+                                    {
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<int>.ErrorResult(
+                                            _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                            _localizationService.GetLocalizedString("RouteClientKeyNotFound"),
+                                            400);
+                                    }
+                                    importLineId = foundImportLineId;
                                 }
 
-                                long importLineId = 0;
-                                if (rDto.ImportLineGroupGuid.HasValue)
+                                if (!importLineId.HasValue)
                                 {
-                                    var ig = rDto.ImportLineGroupGuid.Value;
-                                    if (!importLineGuidToId.TryGetValue(ig, out importLineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
-                                    }
-                                }
-                                else if (!string.IsNullOrWhiteSpace(rDto.ImportLineClientKey))
-                                {
-                                    if (!importLineKeyToId.TryGetValue(rDto.ImportLineClientKey!, out importLineId))
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
-                                    }
-                                }
-                                else
-                                {
-                                    if (rDto.ClientGroupGuid.HasValue)
-                                    {
-                                        var rg = rDto.ClientGroupGuid.Value;
-                                        if (!routeGuidToImportLineId.TryGetValue(rg, out importLineId))
-                                        {
-                                            await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
-                                        }
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(rDto.ClientKey))
-                                    {
-                                        if (!routeKeyToImportLineId.TryGetValue(rDto.ClientKey!, out importLineId))
-                                        {
-                                            await _unitOfWork.RollbackTransactionAsync();
-                                            return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        await _unitOfWork.RollbackTransactionAsync();
-                                        return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), _localizationService.GetLocalizedString("WoHeaderCreationError"), 400);
-                                    }
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<int>.ErrorResult(
+                                        _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                                        _localizationService.GetLocalizedString("ImportLineReferenceMissing"),
+                                        400);
                                 }
 
-                                var route = _mapper.Map<WoRoute>(rDto);
-                                route.ImportLineId = importLineId;
+                                var route = _mapper.Map<WoRoute>(routeDto);
+                                route.ImportLineId = importLineId.Value;
                                 routes.Add(route);
                             }
 
@@ -741,12 +800,17 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.SaveChangesAsync();
                         }
 
-                        await _unitOfWork.CommitTransactionAsync();
-                        return ApiResponse<int>.SuccessResult(1, _localizationService.GetLocalizedString("WoHeaderCreatedSuccessfully"));
+                        // ============================================
+                        // 7. COMMIT TRANSACTION
+                        // ============================================
+                        await tx.CommitAsync();
+                        return ApiResponse<int>.SuccessResult(
+                            1,
+                            _localizationService.GetLocalizedString("WoHeaderCreatedSuccessfully"));
                     }
                     catch
                     {
-                        await _unitOfWork.RollbackTransactionAsync();
+                        await tx.RollbackAsync();
                         throw;
                     }
                 }
@@ -754,8 +818,11 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 var inner = ex.InnerException?.Message ?? string.Empty;
-                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : ($"{ex.Message} | Inner: {inner}");
-                return ApiResponse<int>.ErrorResult(_localizationService.GetLocalizedString("WoHeaderCreationError"), combined ?? string.Empty, 500);
+                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : $"{ex.Message} | Inner: {inner}";
+                return ApiResponse<int>.ErrorResult(
+                    _localizationService.GetLocalizedString("WoHeaderCreationError"),
+                    combined,
+                    500);
             }
         }
     }

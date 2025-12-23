@@ -63,6 +63,21 @@
   <!-- #endregion AuthService -->
 
   <!-- #region Common -->
+  <data name="ImportLineClientKeyMissing" xml:space="preserve">
+    <value>Falta la clave de cliente de la línea de importación</value>
+  </data>
+  <data name="ImportLineClientKeyNotFound" xml:space="preserve">
+    <value>No se encontró la clave de cliente de la línea de importación</value>
+  </data>
+  <data name="ImportLineReferenceMissing" xml:space="preserve">
+    <value>Falta la referencia de la línea de importación</value>
+  </data>
+  <data name="LineClientKeyNotFound" xml:space="preserve">
+    <value>No se encontró la clave de cliente de la línea</value>
+  </data>
+  <data name="LineReferenceMissing" xml:space="preserve">
+    <value>Falta la referencia de la línea</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->

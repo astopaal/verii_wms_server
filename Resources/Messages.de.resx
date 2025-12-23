@@ -63,6 +63,21 @@
   <!-- #endregion AuthService -->
 
   <!-- #region Common -->
+  <data name="ImportLineClientKeyMissing" xml:space="preserve">
+    <value>Importzeilen-Client-Schlüssel fehlt</value>
+  </data>
+  <data name="ImportLineClientKeyNotFound" xml:space="preserve">
+    <value>Importzeilen-Client-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="ImportLineReferenceMissing" xml:space="preserve">
+    <value>Importzeilen-Referenz fehlt</value>
+  </data>
+  <data name="LineClientKeyNotFound" xml:space="preserve">
+    <value>Zeilen-Client-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="LineReferenceMissing" xml:space="preserve">
+    <value>Zeilen-Referenz fehlt</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->

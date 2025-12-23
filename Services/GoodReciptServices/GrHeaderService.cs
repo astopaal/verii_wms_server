@@ -124,6 +124,14 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var grHeaderDto = _mapper.Map<GrHeaderDto>(grHeader);
+                
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { grHeaderDto });
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<GrHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                grHeaderDto = enrichedCustomer.Data?.FirstOrDefault() ?? grHeaderDto;
+                
                 return ApiResponse<GrHeaderDto>.SuccessResult(grHeaderDto,_localizationService.GetLocalizedString("GrHeaderCreatedSuccessfully"));
             }
             catch (Exception ex)
@@ -150,6 +158,14 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var grHeaderDto = _mapper.Map<GrHeaderDto>(grHeader);
+                
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { grHeaderDto });
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<GrHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                grHeaderDto = enrichedCustomer.Data?.FirstOrDefault() ?? grHeaderDto;
+                
                 return ApiResponse<GrHeaderDto>.SuccessResult(grHeaderDto,_localizationService.GetLocalizedString("GrHeaderUpdatedSuccessfully"));
             }
             catch (Exception ex)
@@ -214,83 +230,270 @@ namespace WMS_WEBAPI.Services
                 {
                     try
                     {
-                        // İstek ve başlık doğrulamaları
+                        // ============================================
+                        // 1. VALIDATION
+                        // ============================================
                         if (request == null || request.Header == null)
                         {
-                            return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), _localizationService.GetLocalizedString("RequestOrHeaderMissing"), 400);
+                            return ApiResponse<long>.ErrorResult(
+                                _localizationService.GetLocalizedString("InvalidModelState"),
+                                _localizationService.GetLocalizedString("RequestOrHeaderMissing"),
+                                400);
                         }
 
-                        if (string.IsNullOrWhiteSpace(request.Header.BranchCode) || string.IsNullOrWhiteSpace(request.Header.CustomerCode))
+                        // Set default BranchCode if empty
+                        if (string.IsNullOrWhiteSpace(request.Header.BranchCode))
                         {
-                            return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), _localizationService.GetLocalizedString("HeaderFieldsMissing"), 400);
+                            request.Header.BranchCode = "0";
                         }
+
+                        if (string.IsNullOrWhiteSpace(request.Header.CustomerCode))
+                        {
+                            return ApiResponse<long>.ErrorResult(
+                                _localizationService.GetLocalizedString("InvalidModelState"),
+                                _localizationService.GetLocalizedString("HeaderFieldsMissing"),
+                                400);
+                        }
+
+                        // ============================================
+                        // 2. CREATE HEADER
+                        // ============================================
+                        var header = _mapper.Map<GrHeader>(request.Header);
+                        await _unitOfWork.GrHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        if (header?.Id <= 0)
+                        {
+                            await tx.RollbackAsync();
+                            return ApiResponse<long>.ErrorResult(
+                                _localizationService.GetLocalizedString("GrHeaderCreateError"),
+                                _localizationService.GetLocalizedString("HeaderInsertFailed"),
+                                500);
+                        }
+
                         
-                        var header = await InsertHeaderAsync(request.Header);
 
-                        // Başlık ekleme sonrası kontrol
-                        if (header == null || header.Id <= 0)
+                        // ============================================
+                        // 3. CREATE DOCUMENTS
+                        // ============================================
+                        if (request.Documents?.Count > 0)
                         {
-                            return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreateError"), _localizationService.GetLocalizedString("HeaderInsertFailed"), 500);
-                        }
-                        if (request.Documents != null && request.Documents.Count > 0)
-                        {
-                            await InsertDocumentsAsync(header.Id, request.Documents);
-                        }
-
-                        // Satır ve İçe Aktarma Satır Oluşturma
-                        if (request.ImportLines == null || request.ImportLines.Count == 0)
-                        {
-                            request = await CreateLineAndImportLineAsync(request);
-                            // FIFO tahsisi sonrası gerekli Lines/ImportLines üretildi mi?
-                            if (request == null || request.Lines == null || request.Lines.Count == 0 || request.ImportLines == null || request.ImportLines.Count == 0)
+                            var documents = new List<GrImportDocument>(request.Documents.Count);
+                            foreach (var doc in request.Documents)
                             {
-                                return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("GrLineCreationError"), _localizationService.GetLocalizedString("LineGenerationFailed"), 400);
+                                if (doc?.Base64 == null)
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidModelState"),
+                                        _localizationService.GetLocalizedString("InvalidModelState"),
+                                        400);
+                                }
+                                documents.Add(new GrImportDocument
+                                {
+                                    HeaderId = header.Id,
+                                    Base64 = doc.Base64
+                                });
+                            }
+                            await _unitOfWork.GrImportDocuments.AddRangeAsync(documents);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        // ============================================
+                        // 4. CREATE LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<GrLine>(request.Lines.Count);
+                            foreach (var lineDto in request.Lines)
+                            {
+                                if (string.IsNullOrWhiteSpace(lineDto.ClientKey))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("LineClientKeyMissing"),
+                                        400);
+                                }
+
+                                var line = _mapper.Map<GrLine>(lineDto);
+                                line.HeaderId = header.Id;
+                                lines.Add(line);
+                            }
+
+                            await _unitOfWork.GrLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            // Build ClientKey -> Id mapping
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key] = lines[i].Id;
+                                }
                             }
                         }
 
-                        var lineKeyToId = request.Lines != null && request.Lines.Count > 0
-                            ? await InsertLinesAsync(header.Id, request.Lines)
-                            : new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+                        // ============================================
+                        // 5. CREATE LINE SERIALS (ImportLineId will be updated later)
+                        // ============================================
+                        var insertedSerials = new List<GrLineSerial>();
+                        if (request.SerialLines != null && request.SerialLines.Count > 0)
+                        {
+                            var serials = new List<GrLineSerial>(request.SerialLines.Count);
+                            foreach (var serialDto in request.SerialLines)
+                            {
+                                if (string.IsNullOrWhiteSpace(serialDto.ImportLineClientKey))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
+                                        400);
+                                }
 
-                        var insertedSerials = request.SerialLines != null && request.SerialLines.Count > 0
-                            ? await InsertSerialsPreImportAsync(request.SerialLines)
-                            : new List<GrLineSerial>();
+                                // Note: ImportLineId will be set after ImportLines are created
+                                // Store ImportLineClientKey in ClientKey for later mapping
+                                var serial = _mapper.Map<GrLineSerial>(serialDto);
+                                serial.ImportLineId = null;
+                                serial.ClientKey = serialDto.ImportLineClientKey;
+                                serials.Add(serial);
+                            }
 
+                            await _unitOfWork.GrLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                            insertedSerials = serials;
+                        }
 
+                        // ============================================
+                        // 6. CREATE IMPORT LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
                         var importLineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-                        var importLineIdToStockCode = new Dictionary<long, string>();
                         if (request.ImportLines != null && request.ImportLines.Count > 0)
                         {
+                            var importLines = new List<GrImportLine>(request.ImportLines.Count);
                             foreach (var importDto in request.ImportLines)
                             {
-                                if (string.IsNullOrWhiteSpace(importDto.LineClientKey))
+                                if (string.IsNullOrWhiteSpace(importDto.ClientKey))
                                 {
-                                    return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("LineClientKeyMissing"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
+                                        400);
                                 }
-                                if (!lineKeyToId.TryGetValue(importDto.LineClientKey, out var lineId))
+
+                                // LineClientKey is optional - if provided, validate and link to Line
+                                long? lineId = null;
+                                if (!string.IsNullOrWhiteSpace(importDto.LineClientKey))
                                 {
-                                    return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("LineClientKeyNotFound"), 400);
+                                    if (!lineKeyToId.TryGetValue(importDto.LineClientKey, out var foundLineId))
+                                    {
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<long>.ErrorResult(
+                                            _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("LineClientKeyNotFound"),
+                                            400);
+                                    }
+                                    lineId = foundLineId;
+                                }
+
+                                var importLine = _mapper.Map<GrImportLine>(importDto);
+                                importLine.HeaderId = header.Id;
+                                importLine.LineId = lineId;
+                                importLines.Add(importLine);
+                            }
+
+                            await _unitOfWork.GrImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            // Build ClientKey -> Id mapping for ImportLines
+                            for (int i = 0; i < request.ImportLines.Count; i++)
+                            {
+                                var key = request.ImportLines[i].ClientKey;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    importLineKeyToId[key] = importLines[i].Id;
                                 }
                             }
-                            var result = await InsertImportLinesAsync(header.Id, request.ImportLines, lineKeyToId);
-                            importLineKeyToId = result.importLineKeyToId;
-                            importLineIdToStockCode = result.importLineIdToStockCode;
                         }
 
+                        // ============================================
+                        // 7. UPDATE SERIALS WITH IMPORT LINE IDs
+                        // ============================================
                         if (insertedSerials.Count > 0)
                         {
-                            var err = await ResolveSerialsImportIdsAsync(insertedSerials, importLineKeyToId);
-                            if (err != null) { return err; }
+                            foreach (var serial in insertedSerials)
+                            {
+                                if (string.IsNullOrWhiteSpace(serial.ClientKey))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
+                                        400);
+                                }
+
+                                if (!importLineKeyToId.TryGetValue(serial.ClientKey, out var importLineId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"),
+                                        400);
+                                }
+
+                                serial.ImportLineId = importLineId;
+                                _unitOfWork.GrLineSerials.Update(serial);
+                            }
+
+                            await _unitOfWork.SaveChangesAsync();
                         }
 
+                        // ============================================
+                        // 8. CREATE ROUTES
+                        // ============================================
                         if (request.Routes != null && request.Routes.Count > 0)
                         {
-                            var err = await InsertRoutesAsync(request.Routes, importLineKeyToId, importLineIdToStockCode);
-                            if (err != null) { return err; }
+                            var routes = new List<GrRoute>(request.Routes.Count);
+                            foreach (var routeDto in request.Routes)
+                            {
+                                if (string.IsNullOrWhiteSpace(routeDto.ImportLineClientKey))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
+                                        400);
+                                }
+
+                                if (!importLineKeyToId.TryGetValue(routeDto.ImportLineClientKey, out var importLineId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<long>.ErrorResult(
+                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"),
+                                        400);
+                                }
+
+                                var route = _mapper.Map<GrRoute>(routeDto);
+                                route.ImportLineId = importLineId;
+                                routes.Add(route);
+                            }
+
+                            await _unitOfWork.GrRoutes.AddRangeAsync(routes);
+                            await _unitOfWork.SaveChangesAsync();
                         }
 
+                        // ============================================
+                        // 9. COMMIT TRANSACTION
+                        // ============================================
                         await tx.CommitAsync();
-                        return ApiResponse<long>.SuccessResult(header.Id, _localizationService.GetLocalizedString("GrHeaderCreatedSuccessfully"));
+                        return ApiResponse<long>.SuccessResult(
+                            header.Id,
+                            _localizationService.GetLocalizedString("GrHeaderCreatedSuccessfully"));
                     }
                     catch
                     {
@@ -301,381 +504,12 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"), ex.Message, 500);
-            }
-        }
-
-        private async Task<BulkCreateGrRequestDto> CreateLineAndImportLineAsync(BulkCreateGrRequestDto request)
-        {
-            try
-            {
-                // ERP açık sipariş satırlarını müşteri ve şube koduna göre al
-                var activeErpOrderLines = await _goodReceiptFunctionsService.GetGoodsReceiptLineByCustomerCodeAndBranchCodeAsync(request.Header.BranchCode, request.Header.CustomerCode);
-                if (activeErpOrderLines == null || activeErpOrderLines?.Success == false)
-                {
-                   throw new Exception(_localizationService.GetLocalizedString("GrLineCreationError"));
-                }
-
-                // ERP satırlarını (StockCode, YapKod) bazında grupla ve FIFO için OrderID'ye göre sırala
-                var erpGrouped = (activeErpOrderLines.Data ?? new List<GoodsOpenOrdersLineDto>())
-                    .GroupBy(x => ((x.StockCode ?? string.Empty).Trim(), (x.YapKod ?? string.Empty).Trim()));
-                var erpRemainingByStockYap = erpGrouped
-                    .ToDictionary(g => g.Key, g => g.Sum(x => x.RemainingForImport ?? 0m));
-                var erpInfoByStockYap = erpGrouped
-                    .ToDictionary(g => g.Key, g => g.First());
-                var erpListByStockYap = erpGrouped
-                    .ToDictionary(g => g.Key, g => g.OrderBy(x => x.OrderID).ToList());
-
-                var importByClientKey = (request.ImportLines ?? new List<CreateGrImportLWithLineKeyDto>())
-                    .ToDictionary(i => i.ClientKey, i => i, StringComparer.OrdinalIgnoreCase);
-
-                // Kullanıcıdan gelen import key'lerine bağlı toplam route miktarını (StockCode, YapKod) bazında topla
-                var importlinesRemainingByStockYap = (request.Routes ?? new List<CreateGrRouteWithImportLineKeyDto>())
-                    .Where(r => importByClientKey.ContainsKey(r.ImportLineClientKey))
-                    .Select(r => new { Route = r, Import = importByClientKey[r.ImportLineClientKey] })
-                    .GroupBy(x => ((x.Import.StockCode ?? string.Empty).Trim(), (x.Import.YapKod ?? string.Empty).Trim()))
-                    .ToDictionary(g => g.Key, g => g.Sum(x => x.Route.Quantity));
-
-                foreach (var kvp in importlinesRemainingByStockYap)
-                {
-                    var key = kvp.Key;
-                    var plannedQty = kvp.Value;
-                    if (!erpRemainingByStockYap.TryGetValue(key, out var remainingQty))
-                    {
-                        throw new Exception(_localizationService.GetLocalizedString("ErpRemainingNotFound") + $": StockCode={key.Item1}, YapKod={key.Item2}");
-                    }
-                    if (plannedQty > remainingQty)
-                    {
-                        throw new Exception(_localizationService.GetLocalizedString("GrRouteExceedsErpRemaining") + $": StockCode={key.Item1}, YapKod={key.Item2}, Planned={plannedQty}, RemainingForImport={remainingQty}");
-                    }
-                }
-
-                var importSampleByStockYap = (request.ImportLines ?? new List<CreateGrImportLWithLineKeyDto>())
-                    .GroupBy(x => ((x.StockCode ?? string.Empty).Trim(), (x.YapKod ?? string.Empty).Trim()))
-                    .ToDictionary(g => g.Key, g => g.First());
-
-                // FIFO tahsisi sonrası oluşturulacak geçici istek (lines/importLines/routes)
-                var tempRequest = new BulkCreateGrRequestDto
-                {
-                    Header = request.Header,
-                    Documents = request.Documents,
-                    Lines = new List<CreateGrLineWithKeyDto>(),
-                    ImportLines = new List<CreateGrImportLWithLineKeyDto>(),
-                    SerialLines = request.SerialLines ?? new List<CreateGrImportSerialLineWithImportLineKeyDto>(),
-                    Routes = new List<CreateGrRouteWithImportLineKeyDto>()
-                };
-
-                var originalImportKeyToNewImportKey = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-                var groupedRoutes = (request.Routes ?? new List<CreateGrRouteWithImportLineKeyDto>())
-                    .Where(r => importByClientKey.ContainsKey(r.ImportLineClientKey))
-                    .Select(r => new { Route = r, Import = importByClientKey[r.ImportLineClientKey] })
-                    .GroupBy(x => ((x.Import.StockCode ?? string.Empty).Trim(), (x.Import.YapKod ?? string.Empty).Trim()));
-
-                // Her (StockCode, YapKod) grubu için FIFO tahsisini uygula
-                foreach (var grp in groupedRoutes)
-                {
-                    var key = grp.Key;
-                    var sample = importSampleByStockYap.TryGetValue(key, out var s) ? s : null;
-                    var erpList = erpListByStockYap.TryGetValue(key, out var list) ? list : new List<GoodsOpenOrdersLineDto>();
-                    var routeQueue = new Queue<(CreateGrRouteWithImportLineKeyDto Route, string OriginalImportKey, decimal Qty)>();
-                    foreach (var x in grp)
-                    {
-                        // Route'ları sıraya ekle; her bir route miktarı tahsis edilecek ve gerekirse bölünecek
-                        routeQueue.Enqueue((x.Route, x.Import.ClientKey, x.Route.Quantity));
-                    }
-
-                    foreach (var erp in erpList)
-                    {
-                        var erpRemain = erp.RemainingForImport ?? 0m;
-                        var toAllocate = erpRemain;
-                        if (toAllocate <= 0) { continue; }
-
-                        var lineKey = Guid.NewGuid().ToString("N");
-                        var importKey = Guid.NewGuid().ToString("N");
-
-                        // ERP kalan miktarı kadar yeni GR line oluştur
-                        tempRequest.Lines.Add(new CreateGrLineWithKeyDto
-                        {
-                            ClientKey = lineKey,
-                            StockCode = key.Item1,
-                            Quantity = toAllocate,
-                            Unit = sample?.Unit,
-                            ErpOrderNo = erp.SiparisNo,
-                            ErpOrderId = erp.OrderID.ToString(),
-                            Description = sample?.Description1 ?? erp.StockName
-                        });
-
-                        // Line ile ilişkili yeni import satırı oluştur
-                        tempRequest.ImportLines.Add(new CreateGrImportLWithLineKeyDto
-                        {
-                            LineClientKey = lineKey,
-                            ClientKey = importKey,
-                            StockCode = key.Item1,
-                            YapKod = key.Item2,
-                            Unit = sample?.Unit,
-                            Description1 = sample?.Description1,
-                            Description2 = sample?.Description2
-                        });
-
-                        // Route miktarlarını yeni import key'e FIFO sırayla parçalayarak tahsis et
-                        while (toAllocate > 0 && routeQueue.Count > 0)
-                        {
-                            var (route, originalImportKey, qty) = routeQueue.Peek();
-                            var assign = Math.Min(qty, toAllocate);
-                            tempRequest.Routes.Add(new CreateGrRouteWithImportLineKeyDto
-                            {
-                                ImportLineClientKey = importKey,
-                                ScannedBarcode = route.ScannedBarcode,
-                                Quantity = assign,
-                                StockCode = route.StockCode,
-                                YapKod = route.YapKod,
-                                Description = route.Description,
-                                SerialNo = route.SerialNo,
-                                SerialNo2 = route.SerialNo2,
-                                SerialNo3 = route.SerialNo3,
-                                SerialNo4 = route.SerialNo4,
-                                SourceWarehouse = route.SourceWarehouse,
-                                TargetWarehouse = route.TargetWarehouse,
-                                SourceCellCode = route.SourceCellCode,
-                                TargetCellCode = route.TargetCellCode
-                            });
-
-                            // Orijinal import key'i yeni import key'e bağla (seri satır remap için)
-                            if (!originalImportKeyToNewImportKey.ContainsKey(originalImportKey) && !string.IsNullOrWhiteSpace(originalImportKey))
-                            {
-                                originalImportKeyToNewImportKey[originalImportKey] = importKey;
-                            }
-
-                            qty -= assign;
-                            toAllocate -= assign;
-                            if (qty <= 0)
-                            {
-                                // Bu route tamamen tüketildi
-                                routeQueue.Dequeue();
-                            }
-                            else
-                            {
-                                // Bu route kısmen tüketildi; kalan miktar için sıranın sonuna ekle
-                                routeQueue.Dequeue();
-                                routeQueue.Enqueue((route, originalImportKey, qty));
-                            }
-                        }
-                    }
-                }
-
-                // Seri satırları yeni import key eşlemelerine göre güncelle
-                if (tempRequest.SerialLines != null && tempRequest.SerialLines.Count > 0)
-                {
-                    foreach (var s in tempRequest.SerialLines)
-                    {
-                        if (!string.IsNullOrWhiteSpace(s.ImportLineClientKey) && originalImportKeyToNewImportKey.TryGetValue(s.ImportLineClientKey, out var newKey))
-                        {
-                            s.ImportLineClientKey = newKey;
-                        }
-                    }
-                }
-
-                return tempRequest;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrHeaderCreationError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task<GrHeader> InsertHeaderAsync(CreateGrHeaderDto headerDto)
-        {
-            try
-            {
-                if (headerDto == null)
-                {
-                    throw new Exception(_localizationService.GetLocalizedString("InvalidModelState"));
-                }
-                if (string.IsNullOrWhiteSpace(headerDto.BranchCode) || string.IsNullOrWhiteSpace(headerDto.CustomerCode))
-                {
-                    throw new Exception(_localizationService.GetLocalizedString("InvalidModelState"));
-                }
-                var entity = _mapper.Map<GrHeader>(headerDto);
-                await _unitOfWork.GrHeaders.AddAsync(entity);
-                await _unitOfWork.SaveChangesAsync();
-                return entity;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrHeaderCreationError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task InsertDocumentsAsync(long headerId, List<CreateGrImportDocumentSimpleDto> docs)
-        {
-            try
-            {
-                if (docs == null || docs.Count == 0)
-                {
-                    return;
-                }
-                var entities = new List<GrImportDocument>(docs.Count);
-                foreach (var d in docs)
-                {
-                    if (d == null || d.Base64 == null)
-                    {
-                        throw new Exception(_localizationService.GetLocalizedString("InvalidModelState"));
-                    }
-                    entities.Add(new GrImportDocument { HeaderId = headerId, Base64 = d.Base64 });
-                }
-                await _unitOfWork.GrImportDocuments.AddRangeAsync(entities);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrHeaderCreationError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task<Dictionary<string, long>> InsertLinesAsync(long headerId, List<CreateGrLineWithKeyDto> linesDto)
-        {
-            try
-            {
-                var lines = new List<GrLine>(linesDto.Count);
-                foreach (var l in linesDto)
-                {
-                    var line = _mapper.Map<GrLine>(l);
-                    line.HeaderId = headerId;
-                    lines.Add(line);
-                }
-                await _unitOfWork.GrLines.AddRangeAsync(lines);
-                await _unitOfWork.SaveChangesAsync();
-                var map = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-                for (int i = 0; i < linesDto.Count; i++)
-                {
-                    var key = linesDto[i].ClientKey;
-                    if (!string.IsNullOrWhiteSpace(key)) { map[key] = lines[i].Id; }
-                }
-                return map;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrLineCreateError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task<List<GrLineSerial>> InsertSerialsPreImportAsync(List<CreateGrImportSerialLineWithImportLineKeyDto> serialsDto)
-        {
-            try
-            {
-                var serials = new List<GrLineSerial>(serialsDto.Count);
-                foreach (var s in serialsDto)
-                {
-                    var serial = _mapper.Map<GrLineSerial>(s);
-                    serial.ImportLineId = null;
-                    serial.ClientKey = s.ImportLineClientKey;
-                    serials.Add(serial);
-                }
-                await _unitOfWork.GrLineSerials.AddRangeAsync(serials);
-                await _unitOfWork.SaveChangesAsync();
-                return serials;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrHeaderCreationError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task<(Dictionary<string, long> importLineKeyToId, Dictionary<long, string> importLineIdToStockCode)> InsertImportLinesAsync(
-            long headerId,
-            List<CreateGrImportLWithLineKeyDto> importLinesDto,
-            Dictionary<string, long> lineKeyToId)
-        {
-            try
-            {
-                if (importLinesDto == null || importLinesDto.Count == 0)
-                {
-                    return (new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase), new Dictionary<long, string>());
-                }
-                var importLines = new List<GrImportLine>(importLinesDto.Count);
-                foreach (var iDto in importLinesDto)
-                {
-                    if (string.IsNullOrWhiteSpace(iDto.LineClientKey) || !lineKeyToId.ContainsKey(iDto.LineClientKey))
-                    {
-                        throw new Exception(_localizationService.GetLocalizedString("InvalidModelState"));
-                    }
-                    var lineId = lineKeyToId[iDto.LineClientKey];
-                    var importLine = _mapper.Map<GrImportLine>(iDto);
-                    importLine.HeaderId = headerId;
-                    importLine.LineId = lineId;
-                    importLines.Add(importLine);
-                }
-                await _unitOfWork.GrImportLines.AddRangeAsync(importLines);
-                await _unitOfWork.SaveChangesAsync();
-                var keyMap = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-                var stockMap = new Dictionary<long, string>();
-                for (int i = 0; i < importLinesDto.Count; i++)
-                {
-                    var key = importLinesDto[i].ClientKey;
-                    stockMap[importLines[i].Id] = importLines[i].StockCode;
-                    if (!string.IsNullOrWhiteSpace(key)) { keyMap[key] = importLines[i].Id; }
-                }
-                return (keyMap, stockMap);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(_localizationService.GetLocalizedString("GrHeaderCreationError") + ": " + (ex.Message ?? string.Empty));
-            }
-        }
-
-        private async Task<ApiResponse<long>?> ResolveSerialsImportIdsAsync(List<GrLineSerial> serials, Dictionary<string, long> importLineKeyToId)
-        {
-            try
-            {
-                foreach (var s in serials)
-                {
-                    if (string.IsNullOrWhiteSpace(s.ClientKey))
-                    {
-                        return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("ImportLineClientKeyMissing"), 400);
-                    }
-                    if (!importLineKeyToId.TryGetValue(s.ClientKey, out var impId))
-                    {
-                        return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"), 400);
-                    }
-                    s.ImportLineId = impId;
-                    _unitOfWork.GrLineSerials.Update(s);
-                }
-                await _unitOfWork.SaveChangesAsync();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"), ex.Message ?? string.Empty, 500);
-            }
-        }
-
-        private async Task<ApiResponse<long>?> InsertRoutesAsync(List<CreateGrRouteWithImportLineKeyDto> routesDto, Dictionary<string, long> importLineKeyToId, Dictionary<long, string> importLineIdToStockCode)
-        {
-            try
-            {
-                var routes = new List<GrRoute>(routesDto.Count);
-                foreach (var r in routesDto)
-                {
-                    if (string.IsNullOrWhiteSpace(r.ImportLineClientKey))
-                    {
-                        return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("ImportLineClientKeyMissing"), 400);
-                    }
-                    if (!importLineKeyToId.TryGetValue(r.ImportLineClientKey, out var importLineId))
-                    {
-                        return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("InvalidCorrelationKey"), _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"), 400);
-                    }
-                    var route = _mapper.Map<GrRoute>(r);
-                    route.ImportLineId = importLineId;
-                    routes.Add(route);
-                }
-                await _unitOfWork.GrRoutes.AddRangeAsync(routes);
-                await _unitOfWork.SaveChangesAsync();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<long>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"), ex.Message ?? string.Empty, 500);
+                var inner = ex.InnerException?.Message ?? string.Empty;
+                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : $"{ex.Message} | Inner: {inner}";
+                return ApiResponse<long>.ErrorResult(
+                    _localizationService.GetLocalizedString("GrHeaderCreationError"),
+                    combined,
+                    500);
             }
         }
 
@@ -871,6 +705,14 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<GrHeaderDto>(entity);
+                
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<GrHeaderDto>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dto = enrichedCustomer.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<GrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("GrHeaderApprovalUpdatedSuccessfully"));
             }
             catch (Exception ex)

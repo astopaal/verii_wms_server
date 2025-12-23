@@ -341,155 +341,252 @@ namespace WMS_WEBAPI.Services
             {
                 using (var tx = await _unitOfWork.BeginTransactionAsync())
                 {
-                    var headerEntity = _mapper.Map<PrHeader>(request.Header.Header);
-                    headerEntity.CreatedDate = DateTime.UtcNow;
-                    headerEntity.IsDeleted = false;
-                    await _unitOfWork.PrHeaders.AddAsync(headerEntity);
-                    await _unitOfWork.SaveChangesAsync();
-                    var headerKeyToId = new Dictionary<Guid, long> { { request.Header.HeaderKey, headerEntity.Id } };
-                    var lineKeyToId = new Dictionary<Guid, long>();
-
-                    if (request.Lines != null && request.Lines.Count > 0)
+                    try
                     {
-                        var lines = new List<PrLine>(request.Lines.Count);
-                        var lineKeys = new List<Guid>(request.Lines.Count);
-                        foreach (var l in request.Lines)
+                        // ============================================
+                        // 1. VALIDATION
+                        // ============================================
+                        if (request == null || request.Header == null || request.Header.Header == null)
                         {
-                            if (!headerKeyToId.TryGetValue(l.HeaderKey, out var hdrId))
-                            {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), 400);
-                            }
-                            var line = _mapper.Map<PrLine>(l);
-                            line.HeaderId = hdrId;
-                            lines.Add(line);
-                            lineKeys.Add(l.LineKey);
+                            return ApiResponse<PrHeaderDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("InvalidModelState"),
+                                _localizationService.GetLocalizedString("RequestOrHeaderMissing"),
+                                400);
                         }
-                        await _unitOfWork.PrLines.AddRangeAsync(lines);
+
+                        // ============================================
+                        // 2. CREATE HEADER
+                        // ============================================
+                        var headerEntity = _mapper.Map<PrHeader>(request.Header.Header);
+                        headerEntity.CreatedDate = DateTime.UtcNow;
+                        headerEntity.IsDeleted = false;
+                        await _unitOfWork.PrHeaders.AddAsync(headerEntity);
                         await _unitOfWork.SaveChangesAsync();
-                        for (int i = 0; i < lines.Count; i++)
-                        {
-                            lineKeyToId[lineKeys[i]] = lines[i].Id;
-                        }
-                    }
 
-                    if (request.LineSerials != null && request.LineSerials.Count > 0)
-                    {
-                        var serials = new List<PrLineSerial>(request.LineSerials.Count);
-                        foreach (var s in request.LineSerials)
+                        if (headerEntity?.Id <= 0)
                         {
-                            if (!lineKeyToId.TryGetValue(s.LineKey, out var lid))
-                            {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"), 400);
-                            }
-                            var serial = _mapper.Map<PrLineSerial>(s);
-                            serial.LineId = lid;
-                            serials.Add(serial);
+                            await tx.RollbackAsync();
+                            return ApiResponse<PrHeaderDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("PrHeaderGenerateError"),
+                                _localizationService.GetLocalizedString("HeaderInsertFailed"),
+                                500);
                         }
-                        await _unitOfWork.PrLineSerials.AddRangeAsync(serials);
-                        await _unitOfWork.SaveChangesAsync();
-                    }
 
-                    if (request.HeaderSerials != null && request.HeaderSerials.Count > 0)
-                    {
-                        var headerSerials = new List<PrHeaderSerial>(request.HeaderSerials.Count);
-                        foreach (var hs in request.HeaderSerials)
-                        {
-                            if (!headerKeyToId.TryGetValue(hs.HeaderKey, out var hdrId))
-                            {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), 400);
-                            }
-                            var hSerial = _mapper.Map<PrHeaderSerial>(hs);
-                            hSerial.HeaderId = hdrId;
-                            headerSerials.Add(hSerial);
-                        }
-                        await _unitOfWork.PrHeaderSerials.AddRangeAsync(headerSerials);
-                        await _unitOfWork.SaveChangesAsync();
-                    }
+                        var headerKeyToId = new Dictionary<Guid, long> { { request.Header.HeaderKey, headerEntity.Id } };
 
-                    if (request.TerminalLines != null && request.TerminalLines.Count > 0)
-                    {
-                        var tlines = new List<PrTerminalLine>(request.TerminalLines.Count);
-                        foreach (var t in request.TerminalLines)
+                        // ============================================
+                        // 3. CREATE LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
+                        var lineKeyToId = new Dictionary<Guid, long>();
+                        if (request.Lines != null && request.Lines.Count > 0)
                         {
-                            if (!headerKeyToId.TryGetValue(t.HeaderKey, out var hdrId))
+                            var lines = new List<PrLine>(request.Lines.Count);
+                            var lineKeys = new List<Guid>(request.Lines.Count);
+                            foreach (var lineDto in request.Lines)
                             {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), 400);
-                            }
-                            var tline = _mapper.Map<PrTerminalLine>(t);
-                            tline.HeaderId = hdrId;
-                            tlines.Add(tline);
-                        }
-                        await _unitOfWork.PrTerminalLines.AddRangeAsync(tlines);
-                        await _unitOfWork.SaveChangesAsync();
-                    }
-
-                    var importLineKeyToId = new Dictionary<Guid, long>();
-                    if (request.ImportLines != null && request.ImportLines.Count > 0)
-                    {
-                        var importLines = new List<PrImportLine>(request.ImportLines.Count);
-                        var importKeys = new List<Guid>(request.ImportLines.Count);
-                        foreach (var il in request.ImportLines)
-                        {
-                            if (!headerKeyToId.TryGetValue(il.HeaderKey, out var hdrId))
-                            {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), 400);
-                            }
-                            long? linkedLineId = null;
-                            if (il.LineKey.HasValue)
-                            {
-                                if (!lineKeyToId.TryGetValue(il.LineKey.Value, out var lId))
+                                if (!headerKeyToId.TryGetValue(lineDto.HeaderKey, out var hdrId))
                                 {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"), 400);
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
                                 }
-                                linkedLineId = lId;
+                                var line = _mapper.Map<PrLine>(lineDto);
+                                line.HeaderId = hdrId;
+                                lines.Add(line);
+                                lineKeys.Add(lineDto.LineKey);
                             }
-                            var importLine = _mapper.Map<PrImportLine>(il);
-                            importLine.HeaderId = hdrId;
-                            importLine.LineId = linkedLineId;
-                            importLines.Add(importLine);
-                            importKeys.Add(il.ImportLineKey);
-                        }
-                        await _unitOfWork.PrImportLines.AddRangeAsync(importLines);
-                        await _unitOfWork.SaveChangesAsync();
-                        for (int i = 0; i < importLines.Count; i++)
-                        {
-                            importLineKeyToId[importKeys[i]] = importLines[i].Id;
-                        }
-                    }
 
-                    if (request.Routes != null && request.Routes.Count > 0)
-                    {
-                        var routes = new List<PrRoute>(request.Routes.Count);
-                        foreach (var r in request.Routes)
-                        {
-                            if (!importLineKeyToId.TryGetValue(r.ImportLineKey, out var ilId))
-                    {
-                        await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"), 400);
+                            await _unitOfWork.PrLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            // Build LineKey -> Id mapping
+                            for (int i = 0; i < lines.Count; i++)
+                            {
+                                lineKeyToId[lineKeys[i]] = lines[i].Id;
                             }
-                            var route = _mapper.Map<PrRoute>(r);
-                            route.ImportLineId = ilId;
-                            routes.Add(route);
                         }
-                        await _unitOfWork.PrRoutes.AddRangeAsync(routes);
-                        await _unitOfWork.SaveChangesAsync();
-                    }
 
-                    await _unitOfWork.CommitTransactionAsync();
-                    var dto = _mapper.Map<PrHeaderDto>(headerEntity);
-                    return ApiResponse<PrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PrHeaderGenerateCompletedSuccessfully"));
+                        // ============================================
+                        // 4. CREATE LINE SERIALS
+                        // ============================================
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<PrLineSerial>(request.LineSerials.Count);
+                            foreach (var serialDto in request.LineSerials)
+                            {
+                                if (!lineKeyToId.TryGetValue(serialDto.LineKey, out var lineId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"),
+                                        400);
+                                }
+
+                                var serial = _mapper.Map<PrLineSerial>(serialDto);
+                                serial.LineId = lineId;
+                                serials.Add(serial);
+                            }
+
+                            await _unitOfWork.PrLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        // ============================================
+                        // 5. CREATE HEADER SERIALS
+                        // ============================================
+                        if (request.HeaderSerials != null && request.HeaderSerials.Count > 0)
+                        {
+                            var headerSerials = new List<PrHeaderSerial>(request.HeaderSerials.Count);
+                            foreach (var headerSerialDto in request.HeaderSerials)
+                            {
+                                if (!headerKeyToId.TryGetValue(headerSerialDto.HeaderKey, out var hdrId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
+                                }
+
+                                var hSerial = _mapper.Map<PrHeaderSerial>(headerSerialDto);
+                                hSerial.HeaderId = hdrId;
+                                headerSerials.Add(hSerial);
+                            }
+
+                            await _unitOfWork.PrHeaderSerials.AddRangeAsync(headerSerials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        // ============================================
+                        // 6. CREATE TERMINAL LINES
+                        // ============================================
+                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                        {
+                            var tlines = new List<PrTerminalLine>(request.TerminalLines.Count);
+                            foreach (var terminalLineDto in request.TerminalLines)
+                            {
+                                if (!headerKeyToId.TryGetValue(terminalLineDto.HeaderKey, out var hdrId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
+                                }
+
+                                var tline = _mapper.Map<PrTerminalLine>(terminalLineDto);
+                                tline.HeaderId = hdrId;
+                                tlines.Add(tline);
+                            }
+
+                            await _unitOfWork.PrTerminalLines.AddRangeAsync(tlines);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        // ============================================
+                        // 7. CREATE IMPORT LINES & BUILD KEY-TO-ID MAPPING
+                        // ============================================
+                        var importLineKeyToId = new Dictionary<Guid, long>();
+                        if (request.ImportLines != null && request.ImportLines.Count > 0)
+                        {
+                            var importLines = new List<PrImportLine>(request.ImportLines.Count);
+                            var importKeys = new List<Guid>(request.ImportLines.Count);
+                            foreach (var importDto in request.ImportLines)
+                            {
+                                if (!headerKeyToId.TryGetValue(importDto.HeaderKey, out var hdrId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("HeaderKeyNotFound"),
+                                        400);
+                                }
+
+                                // LineKey is optional - if provided, validate and link to Line
+                                long? linkedLineId = null;
+                                if (importDto.LineKey.HasValue)
+                                {
+                                    if (!lineKeyToId.TryGetValue(importDto.LineKey.Value, out var foundLineId))
+                                    {
+                                        await tx.RollbackAsync();
+                                        return ApiResponse<PrHeaderDto>.ErrorResult(
+                                            _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                            _localizationService.GetLocalizedString("PrHeaderLineClientKeyNotFound"),
+                                            400);
+                                    }
+                                    linkedLineId = foundLineId;
+                                }
+
+                                var importLine = _mapper.Map<PrImportLine>(importDto);
+                                importLine.HeaderId = hdrId;
+                                importLine.LineId = linkedLineId;
+                                importLines.Add(importLine);
+                                importKeys.Add(importDto.ImportLineKey);
+                            }
+
+                            await _unitOfWork.PrImportLines.AddRangeAsync(importLines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            // Build ImportLineKey -> Id mapping
+                            for (int i = 0; i < importLines.Count; i++)
+                            {
+                                importLineKeyToId[importKeys[i]] = importLines[i].Id;
+                            }
+                        }
+
+                        // ============================================
+                        // 8. CREATE ROUTES
+                        // ============================================
+                        if (request.Routes != null && request.Routes.Count > 0)
+                        {
+                            var routes = new List<PrRoute>(request.Routes.Count);
+                            foreach (var routeDto in request.Routes)
+                            {
+                                if (!importLineKeyToId.TryGetValue(routeDto.ImportLineKey, out var importLineId))
+                                {
+                                    await tx.RollbackAsync();
+                                    return ApiResponse<PrHeaderDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("PrHeaderInvalidCorrelationKey"),
+                                        _localizationService.GetLocalizedString("ImportLineKeyNotFound"),
+                                        400);
+                                }
+
+                                var route = _mapper.Map<PrRoute>(routeDto);
+                                route.ImportLineId = importLineId;
+                                routes.Add(route);
+                            }
+
+                            await _unitOfWork.PrRoutes.AddRangeAsync(routes);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        // ============================================
+                        // 9. COMMIT TRANSACTION
+                        // ============================================
+                        await tx.CommitAsync();
+                        var dto = _mapper.Map<PrHeaderDto>(headerEntity);
+                        return ApiResponse<PrHeaderDto>.SuccessResult(
+                            dto,
+                            _localizationService.GetLocalizedString("PrHeaderGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await tx.RollbackAsync();
+                        throw;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync();
-                return ApiResponse<PrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("PrHeaderGenerateError"), ex.Message ?? string.Empty, 500);
+                var inner = ex.InnerException?.Message ?? string.Empty;
+                var combined = string.IsNullOrWhiteSpace(inner) ? ex.Message : $"{ex.Message} | Inner: {inner}";
+                return ApiResponse<PrHeaderDto>.ErrorResult(
+                    _localizationService.GetLocalizedString("PrHeaderGenerateError"),
+                    combined,
+                    500);
             }
         }
 

@@ -231,6 +231,21 @@
   <data name="ValidationError" xml:space="preserve">
     <value>Validation error occurred</value>
   </data>
+  <data name="ImportLineClientKeyMissing" xml:space="preserve">
+    <value>Import line client key is missing</value>
+  </data>
+  <data name="ImportLineClientKeyNotFound" xml:space="preserve">
+    <value>Import line client key not found</value>
+  </data>
+  <data name="ImportLineReferenceMissing" xml:space="preserve">
+    <value>Import line reference is missing</value>
+  </data>
+  <data name="LineClientKeyNotFound" xml:space="preserve">
+    <value>Line client key not found</value>
+  </data>
+  <data name="LineReferenceMissing" xml:space="preserve">
+    <value>Line reference is missing</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
