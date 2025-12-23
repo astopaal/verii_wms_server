@@ -58,331 +58,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  
+  <!-- #region AuthService -->
+  <!-- #endregion AuthService -->
 
-  <!-- #region WI.Header -->
-  <data name="WiHeaderNotFound" xml:space="preserve">
-    <value>En-tête d'entrée d'entrepôt introuvable</value>
-  </data>
-  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres d'entrée d'entrepôt assignés récupérés avec succès</value>
-  </data>
-  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres d'entrée d'entrepôt assignés</value>
-  </data>
-  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres d'entrée d'entrepôt assignées récupérées avec succès</value>
-  </data>
-  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres d'entrée d'entrepôt assignées</value>
-  </data>
-  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres d'entrée d'entrepôt terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres d'entrée d'entrepôt terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre d'entrée d'entrepôt mise à jour avec succès</value>
-  </data>
-  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre d'entrée d'entrepôt</value>
-  </data>
-  <!-- #endregion WI.Header -->
-  <!-- #region WO.Header -->
-  <data name="WoHeaderNotFound" xml:space="preserve">
-    <value>En-tête de sortie d'entrepôt introuvable</value>
-  </data>
-  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sortie d'entrepôt assignés récupérés avec succès</value>
-  </data>
-  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sortie d'entrepôt assignés</value>
-  </data>
-  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de sortie d'entrepôt assignées récupérées avec succès</value>
-  </data>
-  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sortie d'entrepôt assignées</value>
-  </data>
-  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sortie d'entrepôt terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sortie d'entrepôt terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de sortie d'entrepôt mise à jour avec succès</value>
-  </data>
-  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sortie d'entrepôt</value>
-  </data>
-  <!-- #endregion WO.Header -->
-  <!-- #region Shipping.Header -->
-  <data name="ShHeaderNotFound" xml:space="preserve">
-    <value>En-tête d'expédition introuvable</value>
-  </data>
-  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres d'expédition assignés récupérés avec succès</value>
-  </data>
-  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres d'expédition assignés</value>
-  </data>
-  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres d'expédition assignées récupérées avec succès</value>
-  </data>
-  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres d'expédition assignées</value>
-  </data>
-  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres d'expédition terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres d'expédition terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="ShHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre d'expédition mise à jour avec succès</value>
-  </data>
-  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre d'expédition</value>
-  </data>
-  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
-    <value>Ordre d'expédition créé avec succès</value>
-  </data>
-  <data name="ShHeaderGenerateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la création de l'ordre d'expédition</value>
-  </data>
-  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
-    <value>Création en masse d'expéditions terminée avec succès</value>
-  </data>
-  <data name="ShHeaderBulkCreateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la création en masse d'expéditions</value>
-  </data>
-  <!-- #endregion Shipping.Header -->
-  <!-- #region SIT.Header -->
-  <data name="SitHeaderNotFound" xml:space="preserve">
-    <value>En-tête de sous-traitance sortie introuvable</value>
-  </data>
-  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sous-traitance sortie assignés récupérés avec succès</value>
-  </data>
-  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance sortie assignés</value>
-  </data>
-  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de sous-traitance sortie assignées récupérées avec succès</value>
-  </data>
-  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sous-traitance sortie assignées</value>
-  </data>
-  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sous-traitance sortie terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance sortie terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de sous-traitance sortie mise à jour avec succès</value>
-  </data>
-  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sous-traitance sortie</value>
-  </data>
-  <!-- #endregion SIT.Header -->
-  <!-- #region SRT.Header -->
-  <data name="SrtHeaderNotFound" xml:space="preserve">
-    <value>En-tête de sous-traitance réception introuvable</value>
-  </data>
-  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sous-traitance réception assignés récupérés avec succès</value>
-  </data>
-  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance réception assignés</value>
-  </data>
-  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de sous-traitance réception assignées récupérées avec succès</value>
-  </data>
-  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sous-traitance réception assignées</value>
-  </data>
-  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de sous-traitance réception terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance réception terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de sous-traitance réception mise à jour avec succès</value>
-  </data>
-  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sous-traitance réception</value>
-  </data>
-  <!-- #endregion SRT.Header -->
-  <!-- #region PT.Header -->
-  <data name="PtHeaderNotFound" xml:space="preserve">
-    <value>En-tête de transfert de production introuvable</value>
-  </data>
-  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de transfert de production assignés récupérés avec succès</value>
-  </data>
-  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production assignés</value>
-  </data>
-  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de transfert de production assignées récupérées avec succès</value>
-  </data>
-  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de transfert de production assignées</value>
-  </data>
-  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de transfert de production terminés en attente d'approbation ERP récupérés avec succès</value>
-  </data>
-  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de transfert de production mise à jour avec succès</value>
-  </data>
-  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de transfert de production</value>
-  </data>
-  <!-- #endregion PT.Header -->
+  <!-- #region Common -->
+  <!-- #endregion Common -->
 
-  <!-- #region WI.ImportLine -->
-  <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation d'entrée d'entrepôt créée avec succès</value>
-  </data>
-  <!-- #endregion WI.ImportLine -->
-  <!-- #region WO.ImportLine -->
-  <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation de sortie d'entrepôt créée avec succès</value>
-  </data>
-  <!-- #endregion WO.ImportLine -->
-  <!-- #region Shipping.ImportLine -->
-  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation d'expédition créée avec succès</value>
-  </data>
-  <!-- #endregion Shipping.ImportLine -->
-  <!-- #region SIT.ImportLine -->
-  <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation de sous-traitance sortie créée avec succès</value>
-  </data>
-  <!-- #endregion SIT.ImportLine -->
-  <!-- #region SRT.ImportLine -->
-  <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation de sous-traitance réception créée avec succès</value>
-  </data>
-  <!-- #endregion SRT.ImportLine -->
-  <!-- #region PT.ImportLine -->
-  <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Ligne d'importation de transfert de production créée avec succès</value>
-  </data>
+  <!-- #region ErpService -->
+  <!-- #endregion ErpService -->
 
-  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
-  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
-  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
-  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
-  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
-  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
-  </data>
+  <!-- #region GrFunction -->
+  <!-- #endregion GrFunction -->
 
-  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <!-- #region GrHeader -->
+  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de réception de marchandises</value>
   </data>
-  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de réception de marchandises mise à jour avec succès</value>
   </data>
-  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de réception de marchandises assignées</value>
   </data>
-  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de réception de marchandises assignées récupérées avec succès</value>
   </data>
-  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de réception de marchandises assignés</value>
   </data>
-  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
-    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de réception de marchandises assignés récupérés avec succès</value>
   </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de réception de marchandises terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de réception de marchandises terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <!-- #endregion GrHeader -->
 
-  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
-  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
-  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
-  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
-  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
-  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Enregistrement en double trouvé</value>
-  </data>
+  <!-- #region GrImportDocument -->
+  <!-- #endregion GrImportDocument -->
 
-  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
-  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
-  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
-  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
-  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
-  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
-    <value>La quantité doit être supérieure à 0</value>
-  </data>
+  <!-- #region GrImportLine -->
+  <!-- #endregion GrImportLine -->
 
-  <data name="WiImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <!-- #region GrLine -->
+  <!-- #endregion GrLine -->
+
+  <!-- #region GrLineSerial -->
+  <!-- #endregion GrLineSerial -->
+
+  <!-- #region GrRoute -->
+  <!-- #endregion GrRoute -->
+
+  <!-- #region GrTerminalLine -->
+  <!-- #endregion GrTerminalLine -->
+
+  <!-- #region IcHeader -->
+  <!-- #endregion IcHeader -->
+
+  <!-- #region IcImportLine -->
+  <!-- #endregion IcImportLine -->
+
+  <!-- #region IcRoute -->
+  <!-- #endregion IcRoute -->
+
+  <!-- #region IcTerminalLine -->
+  <!-- #endregion IcTerminalLine -->
+
+  <!-- #region JwtService -->
+  <!-- #endregion JwtService -->
+
+  <!-- #region NotificationService -->
+  <!-- #endregion NotificationService -->
+
+  <!-- #region PrFunction -->
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de l'en-tête de l'ordre de production</value>
   </data>
-  <data name="WoImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations sur l'en-tête de l'ordre de production récupérées avec succès</value>
   </data>
-  <data name="ShImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes de l'ordre de production</value>
   </data>
-  <data name="SitImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes de l'ordre de production récupérées avec succès</value>
   </data>
-  <data name="SrtImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <!-- #endregion PrFunction -->
+
+  <!-- #region PrHeader -->
+  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de production</value>
   </data>
-  <data name="PtImportLineErrorOccurred" xml:space="preserve">
-    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de production mise à jour avec succès</value>
   </data>
-  <!-- #endregion PT.ImportLine -->
-  <!-- Production / PrHeader -->
-  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
-    <value>Clé de corrélation invalide fournie</value>
+  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de production assignées</value>
   </data>
-  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
-    <value>GUID du groupe de lignes introuvable</value>
+  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de production assignées récupérées avec succès</value>
   </data>
-  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
-    <value>Clé client de ligne introuvable</value>
+  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de production assignés</value>
   </data>
-  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
-    <value>Référence de ligne (clé client ou GUID de groupe) manquante</value>
+  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de production assignés récupérés avec succès</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de production terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de production terminés en attente d'approbation ERP récupérés avec succès</value>
   </data>
   <data name="PrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
     <value>Ordre de production créé avec succès</value>
@@ -390,39 +180,26 @@
   <data name="PrHeaderGenerateError" xml:space="preserve">
     <value>Une erreur s'est produite lors de la création de l'ordre de production</value>
   </data>
-  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de production assignés récupérés avec succès</value>
+  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Clé de corrélation invalide fournie</value>
   </data>
-  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de production assignés</value>
+  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Clé client de ligne introuvable</value>
   </data>
-  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de production assignées récupérées avec succès</value>
+  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID du groupe de lignes introuvable</value>
   </data>
-  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de production assignées</value>
+  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Référence de ligne (clé client ou GUID de groupe) manquante</value>
   </data>
-  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de production terminés en attente d'approbation ERP récupérés avec succès</value>
+  <!-- #endregion PrHeader -->
+
+  <!-- #region PrHeaderSerial -->
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Série de l'en-tête de production créée avec succès</value>
   </data>
-  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de production terminés en attente d'approbation ERP</value>
-  </data>
-  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de production mise à jour avec succès</value>
-  </data>
-  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de production</value>
-  </data>
-  <data name="PrHeaderBulkPrGenerateCompletedSuccessfully" xml:space="preserve">
-    <value>Création en masse d'ordres de production terminée avec succès</value>
-  </data>
-  <data name="PrHeaderBulkPrGenerateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la création en masse d'ordres de production</value>
-  </data>
-  <!-- Production / PrHeaderSerial -->
-  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
-    <value>Informations sur la série de l'en-tête de production récupérées avec succès</value>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Série de l'en-tête de production supprimée avec succès</value>
   </data>
   <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
     <value>Une erreur s'est produite lors de l'opération sur la série de l'en-tête de production</value>
@@ -430,52 +207,444 @@
   <data name="PrHeaderSerialNotFound" xml:space="preserve">
     <value>Série de l'en-tête de production introuvable</value>
   </data>
-  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
-    <value>Série de l'en-tête de production créée avec succès</value>
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations sur la série de l'en-tête de production récupérées avec succès</value>
   </data>
   <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
     <value>Série de l'en-tête de production mise à jour avec succès</value>
   </data>
-  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
-    <value>Série de l'en-tête de production supprimée avec succès</value>
+  <!-- #endregion PrHeaderSerial -->
+
+  <!-- #region PrImportLine -->
+  <!-- #endregion PrImportLine -->
+
+  <!-- #region PrLine -->
+  <!-- #endregion PrLine -->
+
+  <!-- #region PrLineSerial -->
+  <!-- #endregion PrLineSerial -->
+
+  <!-- #region PrRoute -->
+  <!-- #endregion PrRoute -->
+
+  <!-- #region PrTerminalLine -->
+  <!-- #endregion PrTerminalLine -->
+
+  <!-- #region PtHeader -->
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de transfert de production</value>
   </data>
-  <!-- Production / Functions -->
-  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
-    <value>Informations sur l'en-tête de l'ordre de production récupérées avec succès</value>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de transfert de production mise à jour avec succès</value>
   </data>
-  <data name="ProductHeaderRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des informations de l'en-tête de l'ordre de production</value>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de transfert de production assignées</value>
   </data>
-  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes de l'ordre de production récupérées avec succès</value>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de transfert de production assignées récupérées avec succès</value>
   </data>
-  <data name="ProductLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes de l'ordre de production</value>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production assignés</value>
   </data>
-  <!-- #region GR.Header -->
-  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de réception de marchandises assignés récupérés avec succès</value>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de transfert de production assignés récupérés avec succès</value>
   </data>
-  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de réception de marchandises assignés</value>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de transfert de production terminés en attente d'approbation ERP</value>
   </data>
-  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Lignes d'ordres de réception de marchandises assignées récupérées avec succès</value>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de transfert de production terminés en attente d'approbation ERP récupérés avec succès</value>
   </data>
-  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de réception de marchandises assignées</value>
+  <data name="PtHeaderNotFound" xml:space="preserve">
+    <value>En-tête de transfert de production introuvable</value>
   </data>
-  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Ordres de réception de marchandises terminés en attente d'approbation ERP récupérés avec succès</value>
+  <!-- #endregion PtHeader -->
+
+  <!-- #region PtImportLine -->
+  <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de transfert de production créée avec succès</value>
   </data>
-  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la récupération des ordres de réception de marchandises terminés en attente d'approbation ERP</value>
+  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
   </data>
-  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Approbation de l'ordre de réception de marchandises mise à jour avec succès</value>
+  <data name="PtImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
   </data>
-  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de réception de marchandises</value>
+  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
   </data>
-  <!-- #endregion GR.Header -->
+  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion PtImportLine -->
+
+  <!-- #region PtLine -->
+  <!-- #endregion PtLine -->
+
+  <!-- #region PtLineSerial -->
+  <!-- #endregion PtLineSerial -->
+
+  <!-- #region PtRoute -->
+  <!-- #endregion PtRoute -->
+
+  <!-- #region ShFunction -->
+  <!-- #endregion ShFunction -->
+
+  <!-- #region ShHeader -->
+  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre d'expédition</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres d'expédition assignées</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres d'expédition assignées récupérées avec succès</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres d'expédition assignés</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres d'expédition assignés récupérés avec succès</value>
+  </data>
+  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
+    <value>Création en masse d'expéditions terminée avec succès</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création en masse d'expéditions</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres d'expédition terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres d'expédition terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordre d'expédition créé avec succès</value>
+  </data>
+  <data name="ShHeaderGenerateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de l'ordre d'expédition</value>
+  </data>
+  <data name="ShHeaderNotFound" xml:space="preserve">
+    <value>En-tête d'expédition introuvable</value>
+  </data>
+  <!-- #endregion ShHeader -->
+
+  <!-- #region ShImportLine -->
+  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation d'expédition créée avec succès</value>
+  </data>
+  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="ShImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion ShImportLine -->
+
+  <!-- #region ShLine -->
+  <!-- #endregion ShLine -->
+
+  <!-- #region ShLineSerial -->
+  <!-- #endregion ShLineSerial -->
+
+  <!-- #region ShRoute -->
+  <!-- #endregion ShRoute -->
+
+  <!-- #region ShTerminalLine -->
+  <!-- #endregion ShTerminalLine -->
+
+  <!-- #region Sidebar -->
+  <!-- #endregion Sidebar -->
+
+  <!-- #region SitHeader -->
+  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sous-traitance sortie</value>
+  </data>
+  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de sous-traitance sortie mise à jour avec succès</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sous-traitance sortie assignées</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de sous-traitance sortie assignées récupérées avec succès</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance sortie assignés</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sous-traitance sortie assignés récupérés avec succès</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance sortie terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sous-traitance sortie terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="SitHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sous-traitance sortie introuvable</value>
+  </data>
+  <!-- #endregion SitHeader -->
+
+  <!-- #region SitImportLine -->
+  <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sous-traitance sortie créée avec succès</value>
+  </data>
+  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="SitImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion SitImportLine -->
+
+  <!-- #region SitLine -->
+  <!-- #endregion SitLine -->
+
+  <!-- #region SitLineSerial -->
+  <!-- #endregion SitLineSerial -->
+
+  <!-- #region SitRoute -->
+  <!-- #endregion SitRoute -->
+
+  <!-- #region SitTerminalLine -->
+  <!-- #endregion SitTerminalLine -->
+
+  <!-- #region SrtHeader -->
+  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sous-traitance réception</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de sous-traitance réception mise à jour avec succès</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sous-traitance réception assignées</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de sous-traitance réception assignées récupérées avec succès</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance réception assignés</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sous-traitance réception assignés récupérés avec succès</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sous-traitance réception terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sous-traitance réception terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="SrtHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sous-traitance réception introuvable</value>
+  </data>
+  <!-- #endregion SrtHeader -->
+
+  <!-- #region SrtImportLine -->
+  <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sous-traitance réception créée avec succès</value>
+  </data>
+  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="SrtImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion SrtImportLine -->
+
+  <!-- #region SrtLine -->
+  <!-- #endregion SrtLine -->
+
+  <!-- #region SrtLineSerial -->
+  <!-- #endregion SrtLineSerial -->
+
+  <!-- #region SrtRoute -->
+  <!-- #endregion SrtRoute -->
+
+  <!-- #region SrtTerminalLine -->
+  <!-- #endregion SrtTerminalLine -->
+
+  <!-- #region WiFunction -->
+  <!-- #endregion WiFunction -->
+
+  <!-- #region WiHeader -->
+  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre d'entrée d'entrepôt</value>
+  </data>
+  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre d'entrée d'entrepôt mise à jour avec succès</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres d'entrée d'entrepôt assignées</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres d'entrée d'entrepôt assignées récupérées avec succès</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres d'entrée d'entrepôt assignés</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres d'entrée d'entrepôt assignés récupérés avec succès</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres d'entrée d'entrepôt terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres d'entrée d'entrepôt terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="WiHeaderNotFound" xml:space="preserve">
+    <value>En-tête d'entrée d'entrepôt introuvable</value>
+  </data>
+  <!-- #endregion WiHeader -->
+
+  <!-- #region WiImportLine -->
+  <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation d'entrée d'entrepôt créée avec succès</value>
+  </data>
+  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="WiImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion WiImportLine -->
+
+  <!-- #region WiLine -->
+  <!-- #endregion WiLine -->
+
+  <!-- #region WiLineSerial -->
+  <!-- #endregion WiLineSerial -->
+
+  <!-- #region WiRoute -->
+  <!-- #endregion WiRoute -->
+
+  <!-- #region WiTerminalLine -->
+  <!-- #endregion WiTerminalLine -->
+
+  <!-- #region WoFunction -->
+  <!-- #endregion WoFunction -->
+
+  <!-- #region WoHeader -->
+  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'approbation de l'ordre de sortie d'entrepôt</value>
+  </data>
+  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Approbation de l'ordre de sortie d'entrepôt mise à jour avec succès</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes d'ordres de sortie d'entrepôt assignées</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lignes d'ordres de sortie d'entrepôt assignées récupérées avec succès</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sortie d'entrepôt assignés</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sortie d'entrepôt assignés récupérés avec succès</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des ordres de sortie d'entrepôt terminés en attente d'approbation ERP</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Ordres de sortie d'entrepôt terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="WoHeaderNotFound" xml:space="preserve">
+    <value>En-tête de sortie d'entrepôt introuvable</value>
+  </data>
+  <!-- #endregion WoHeader -->
+
+  <!-- #region WoImportLine -->
+  <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Ligne d'importation de sortie d'entrepôt créée avec succès</value>
+  </data>
+  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Enregistrement en double trouvé</value>
+  </data>
+  <data name="WoImportLineErrorOccurred" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la ligne d'importation</value>
+  </data>
+  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
+    <value>La quantité doit être supérieure à 0</value>
+  </data>
+  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
+    <value>Le numéro de série ne correspond pas aux enregistrements de série de la ligne</value>
+  </data>
+  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Le code article et YapKod ne correspondent pas aux lignes d'import existantes</value>
+  </data>
+  <!-- #endregion WoImportLine -->
+
+  <!-- #region WoLine -->
+  <!-- #endregion WoLine -->
+
+  <!-- #region WoLineSerial -->
+  <!-- #endregion WoLineSerial -->
+
+  <!-- #region WoRoute -->
+  <!-- #endregion WoRoute -->
+
+  <!-- #region WoTerminalLine -->
+  <!-- #endregion WoTerminalLine -->
+
+  <!-- #region WtFunction -->
+  <!-- #endregion WtFunction -->
+
+  <!-- #region WtHeader -->
+  <!-- #endregion WtHeader -->
+
+  <!-- #region WtImportLine -->
+  <!-- #endregion WtImportLine -->
+
+  <!-- #region WtLine -->
+  <!-- #endregion WtLine -->
+
+  <!-- #region WtLineSerial -->
+  <!-- #endregion WtLineSerial -->
+
+  <!-- #region WtRoute -->
+  <!-- #endregion WtRoute -->
+
+  <!-- #region WtTerminalLine -->
+  <!-- #endregion WtTerminalLine -->
+
 </root>

@@ -58,331 +58,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  
+  <!-- #region AuthService -->
+  <!-- #endregion AuthService -->
 
-  <!-- #region WI.Header -->
-  <data name="WiHeaderNotFound" xml:space="preserve">
-    <value>Wareneingang Kopf nicht gefunden</value>
-  </data>
-  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Wareneingang-Aufträge erfolgreich abgerufen</value>
-  </data>
-  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Aufträge</value>
-  </data>
-  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Wareneingang-Auftragszeilen erfolgreich abgerufen</value>
-  </data>
-  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Auftragszeilen</value>
-  </data>
-  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Wareneingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
-  </data>
-  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Wareneingang-Aufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Wareneingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
+  <!-- #region Common -->
+  <!-- #endregion Common -->
+
+  <!-- #region ErpService -->
+  <!-- #endregion ErpService -->
+
+  <!-- #region GrFunction -->
+  <!-- #endregion GrFunction -->
+
+  <!-- #region GrHeader -->
+  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
     <value>Fehler beim Aktualisieren der Wareneingang-Auftragsgenehmigung</value>
   </data>
-  <!-- #endregion WI.Header -->
-  <!-- #region WO.Header -->
-  <data name="WoHeaderNotFound" xml:space="preserve">
-    <value>Warenausgang Kopf nicht gefunden</value>
+  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
   </data>
-  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Warenausgang-Aufträge erfolgreich abgerufen</value>
+  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Auftragszeilen</value>
   </data>
-  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Warenausgang-Aufträge</value>
+  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Wareneingang-Auftragszeilen erfolgreich abgerufen</value>
   </data>
-  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Warenausgang-Auftragszeilen erfolgreich abgerufen</value>
+  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Aufträge</value>
   </data>
-  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Warenausgang-Auftragszeilen</value>
+  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Wareneingang-Aufträge erfolgreich abgerufen</value>
   </data>
-  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Warenausgang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Wareneingang-Aufträge, die auf ERP-Genehmigung warten</value>
   </data>
-  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Warenausgang-Aufträge, die auf ERP-Genehmigung warten</value>
+  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Wareneingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
   </data>
-  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Warenausgang-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Warenausgang-Auftragsgenehmigung</value>
-  </data>
-  <!-- #endregion WO.Header -->
-  <!-- #region Shipping.Header -->
-  <data name="ShHeaderNotFound" xml:space="preserve">
-    <value>Versand Kopf nicht gefunden</value>
-  </data>
-  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Versand-Aufträge erfolgreich abgerufen</value>
-  </data>
-  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Versand-Aufträge</value>
-  </data>
-  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Versand-Auftragszeilen erfolgreich abgerufen</value>
-  </data>
-  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Versand-Auftragszeilen</value>
-  </data>
-  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Versand-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
-  </data>
-  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Versand-Aufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="ShHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Versand-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Versand-Auftragsgenehmigung</value>
-  </data>
-  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
-    <value>Versand-Auftrag erfolgreich erstellt</value>
-  </data>
-  <data name="ShHeaderGenerateError" xml:space="preserve">
-    <value>Fehler beim Erstellen des Versand-Auftrags</value>
-  </data>
-  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
-    <value>Massenversand erfolgreich erstellt</value>
-  </data>
-  <data name="ShHeaderBulkCreateError" xml:space="preserve">
-    <value>Fehler beim Erstellen des Massenversands</value>
-  </data>
-  <!-- #endregion Shipping.Header -->
-  <!-- #region SIT.Header -->
-  <data name="SitHeaderNotFound" xml:space="preserve">
-    <value>Untervergabe Ausgabe Kopf nicht gefunden</value>
-  </data>
-  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Untervergabe Ausgabe-Aufträge erfolgreich abgerufen</value>
-  </data>
-  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Ausgabe-Aufträge</value>
-  </data>
-  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Untervergabe Ausgabe-Auftragszeilen erfolgreich abgerufen</value>
-  </data>
-  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Ausgabe-Auftragszeilen</value>
-  </data>
-  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Untervergabe Ausgabe-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
-  </data>
-  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Untervergabe Ausgabe-Aufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Untervergabe Ausgabe-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Untervergabe Ausgabe-Auftragsgenehmigung</value>
-  </data>
-  <!-- #endregion SIT.Header -->
-  <!-- #region SRT.Header -->
-  <data name="SrtHeaderNotFound" xml:space="preserve">
-    <value>Untervergabe Eingang Kopf nicht gefunden</value>
-  </data>
-  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Untervergabe Eingang-Aufträge erfolgreich abgerufen</value>
-  </data>
-  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Eingang-Aufträge</value>
-  </data>
-  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Untervergabe Eingang-Auftragszeilen erfolgreich abgerufen</value>
-  </data>
-  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Eingang-Auftragszeilen</value>
-  </data>
-  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Untervergabe Eingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
-  </data>
-  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Untervergabe Eingang-Aufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Untervergabe Eingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Untervergabe Eingang-Auftragsgenehmigung</value>
-  </data>
-  <!-- #endregion SRT.Header -->
-  <!-- #region PT.Header -->
-  <data name="PtHeaderNotFound" xml:space="preserve">
-    <value>Produktionsübertrag Kopf nicht gefunden</value>
-  </data>
-  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Produktionsübertrag-Aufträge erfolgreich abgerufen</value>
-  </data>
-  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Aufträge</value>
-  </data>
-  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Produktionsübertrag-Auftragszeilen erfolgreich abgerufen</value>
-  </data>
-  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Auftragszeilen</value>
-  </data>
-  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
-  </data>
-  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Produktionsübertrag-Auftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Produktionsübertrag-Auftragsgenehmigung</value>
-  </data>
-  <!-- #endregion PT.Header -->
+  <!-- #endregion GrHeader -->
 
-  <!-- #region WI.ImportLine -->
-  <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Wareneingang Importzeile erfolgreich erstellt</value>
-  </data>
-  <!-- #endregion WI.ImportLine -->
-  <!-- #region WO.ImportLine -->
-  <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Warenausgang Importzeile erfolgreich erstellt</value>
-  </data>
-  <!-- #endregion WO.ImportLine -->
-  <!-- #region Shipping.ImportLine -->
-  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Versand Importzeile erfolgreich erstellt</value>
-  </data>
-  <!-- #endregion Shipping.ImportLine -->
-  <!-- #region SIT.ImportLine -->
-  <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Untervergabe Ausgabe Importzeile erfolgreich erstellt</value>
-  </data>
-  <!-- #endregion SIT.ImportLine -->
-  <!-- #region SRT.ImportLine -->
-  <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Untervergabe Eingang Importzeile erfolgreich erstellt</value>
-  </data>
-  <!-- #endregion SRT.ImportLine -->
-  <!-- #region PT.ImportLine -->
-  <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
-    <value>Produktionsübertrag Importzeile erfolgreich erstellt</value>
-  </data>
+  <!-- #region GrImportDocument -->
+  <!-- #endregion GrImportDocument -->
 
-  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
-  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
-    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
-  </data>
+  <!-- #region GrImportLine -->
+  <!-- #endregion GrImportLine -->
 
-  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
-  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
-    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
-  </data>
+  <!-- #region GrLine -->
+  <!-- #endregion GrLine -->
 
-  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
-  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
-    <value>Doppelter Datensatz gefunden</value>
-  </data>
+  <!-- #region GrLineSerial -->
+  <!-- #endregion GrLineSerial -->
 
-  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
-  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
-    <value>Menge muss größer als 0 sein</value>
-  </data>
+  <!-- #region GrRoute -->
+  <!-- #endregion GrRoute -->
 
-  <data name="WiImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <!-- #region GrTerminalLine -->
+  <!-- #endregion GrTerminalLine -->
+
+  <!-- #region IcHeader -->
+  <!-- #endregion IcHeader -->
+
+  <!-- #region IcImportLine -->
+  <!-- #endregion IcImportLine -->
+
+  <!-- #region IcRoute -->
+  <!-- #endregion IcRoute -->
+
+  <!-- #region IcTerminalLine -->
+  <!-- #endregion IcTerminalLine -->
+
+  <!-- #region JwtService -->
+  <!-- #endregion JwtService -->
+
+  <!-- #region NotificationService -->
+  <!-- #endregion NotificationService -->
+
+  <!-- #region PrFunction -->
+  <data name="ProductHeaderRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Produktionsauftragskopf-Informationen</value>
   </data>
-  <data name="WoImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionsauftragskopf-Informationen erfolgreich abgerufen</value>
   </data>
-  <data name="ShImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <data name="ProductLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Produktionsauftragszeilen</value>
   </data>
-  <data name="SitImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionsauftragszeilen erfolgreich abgerufen</value>
   </data>
-  <data name="SrtImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <!-- #endregion PrFunction -->
+
+  <!-- #region PrHeader -->
+  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Produktionsauftragsgenehmigung</value>
   </data>
-  <data name="PtImportLineErrorOccurred" xml:space="preserve">
-    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Produktionsauftragsgenehmigung erfolgreich aktualisiert</value>
   </data>
-  <!-- #endregion PT.ImportLine -->
-  <!-- Production / PrHeader -->
-  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
-    <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
+  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsauftragszeilen</value>
   </data>
-  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
-    <value>Zeilengruppen-GUID nicht gefunden</value>
+  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsauftragszeilen erfolgreich abgerufen</value>
   </data>
-  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
-    <value>Zeilen-Client-Schlüssel nicht gefunden</value>
+  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsaufträge</value>
   </data>
-  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
-    <value>Zeilenreferenz (Client-Schlüssel oder Gruppen-GUID) fehlt</value>
+  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsaufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Produktionsaufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Produktionsaufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
   </data>
   <data name="PrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
     <value>Produktionsauftrag erfolgreich erstellt</value>
@@ -390,39 +180,26 @@
   <data name="PrHeaderGenerateError" xml:space="preserve">
     <value>Fehler beim Erstellen des Produktionsauftrags</value>
   </data>
-  <data name="PrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Produktionsaufträge erfolgreich abgerufen</value>
+  <data name="PrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
   </data>
-  <data name="PrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Produktionsaufträge</value>
+  <data name="PrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Zeilen-Client-Schlüssel nicht gefunden</value>
   </data>
-  <data name="PrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Produktionsauftragszeilen erfolgreich abgerufen</value>
+  <data name="PrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Zeilengruppen-GUID nicht gefunden</value>
   </data>
-  <data name="PrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Produktionsauftragszeilen</value>
+  <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Zeilenreferenz (Client-Schlüssel oder Gruppen-GUID) fehlt</value>
   </data>
-  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Produktionsaufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  <!-- #endregion PrHeader -->
+
+  <!-- #region PrHeaderSerial -->
+  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer erfolgreich erstellt</value>
   </data>
-  <data name="PrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Produktionsaufträge, die auf ERP-Genehmigung warten</value>
-  </data>
-  <data name="PrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Produktionsauftragsgenehmigung erfolgreich aktualisiert</value>
-  </data>
-  <data name="PrHeaderApprovalUpdateError" xml:space="preserve">
-    <value>Fehler beim Aktualisieren der Produktionsauftragsgenehmigung</value>
-  </data>
-  <data name="PrHeaderBulkPrGenerateCompletedSuccessfully" xml:space="preserve">
-    <value>Massenproduktionsauftrag erfolgreich erstellt</value>
-  </data>
-  <data name="PrHeaderBulkPrGenerateError" xml:space="preserve">
-    <value>Fehler beim Erstellen des Massenproduktionsauftrags</value>
-  </data>
-  <!-- Production / PrHeaderSerial -->
-  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
-    <value>Produktionskopfseriennummer-Informationen erfolgreich abgerufen</value>
+  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer erfolgreich gelöscht</value>
   </data>
   <data name="PrHeaderSerialErrorOccurred" xml:space="preserve">
     <value>Fehler beim Vorgang mit der Produktionskopfseriennummer</value>
@@ -430,52 +207,444 @@
   <data name="PrHeaderSerialNotFound" xml:space="preserve">
     <value>Produktionskopfseriennummer nicht gefunden</value>
   </data>
-  <data name="PrHeaderSerialCreatedSuccessfully" xml:space="preserve">
-    <value>Produktionskopfseriennummer erfolgreich erstellt</value>
+  <data name="PrHeaderSerialRetrievedSuccessfully" xml:space="preserve">
+    <value>Produktionskopfseriennummer-Informationen erfolgreich abgerufen</value>
   </data>
   <data name="PrHeaderSerialUpdatedSuccessfully" xml:space="preserve">
     <value>Produktionskopfseriennummer erfolgreich aktualisiert</value>
   </data>
-  <data name="PrHeaderSerialDeletedSuccessfully" xml:space="preserve">
-    <value>Produktionskopfseriennummer erfolgreich gelöscht</value>
+  <!-- #endregion PrHeaderSerial -->
+
+  <!-- #region PrImportLine -->
+  <!-- #endregion PrImportLine -->
+
+  <!-- #region PrLine -->
+  <!-- #endregion PrLine -->
+
+  <!-- #region PrLineSerial -->
+  <!-- #endregion PrLineSerial -->
+
+  <!-- #region PrRoute -->
+  <!-- #endregion PrRoute -->
+
+  <!-- #region PrTerminalLine -->
+  <!-- #endregion PrTerminalLine -->
+
+  <!-- #region PtHeader -->
+  <data name="PtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Produktionsübertrag-Auftragsgenehmigung</value>
   </data>
-  <!-- Production / Functions -->
-  <data name="ProductHeaderRetrievedSuccessfully" xml:space="preserve">
-    <value>Produktionsauftragskopf-Informationen erfolgreich abgerufen</value>
+  <data name="PtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Produktionsübertrag-Auftragsgenehmigung erfolgreich aktualisiert</value>
   </data>
-  <data name="ProductHeaderRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der Produktionsauftragskopf-Informationen</value>
+  <data name="PtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Auftragszeilen</value>
   </data>
-  <data name="ProductLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Produktionsauftragszeilen erfolgreich abgerufen</value>
+  <data name="PtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsübertrag-Auftragszeilen erfolgreich abgerufen</value>
   </data>
-  <data name="ProductLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der Produktionsauftragszeilen</value>
+  <data name="PtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Produktionsübertrag-Aufträge</value>
   </data>
-  <!-- #region GR.Header -->
-  <data name="GrHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Wareneingang-Aufträge erfolgreich abgerufen</value>
+  <data name="PtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Produktionsübertrag-Aufträge erfolgreich abgerufen</value>
   </data>
-  <data name="GrHeaderAssignedOrdersRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Aufträge</value>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten</value>
   </data>
-  <data name="GrHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
-    <value>Zugewiesene Wareneingang-Auftragszeilen erfolgreich abgerufen</value>
+  <data name="PtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Produktionsübertrag-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
   </data>
-  <data name="GrHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Auftragszeilen</value>
+  <data name="PtHeaderNotFound" xml:space="preserve">
+    <value>Produktionsübertrag Kopf nicht gefunden</value>
   </data>
-  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
-    <value>Abgeschlossene Wareneingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  <!-- #endregion PtHeader -->
+
+  <!-- #region PtImportLine -->
+  <data name="PtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Produktionsübertrag Importzeile erfolgreich erstellt</value>
   </data>
-  <data name="GrHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
-    <value>Fehler beim Abrufen der abgeschlossenen Wareneingang-Aufträge, die auf ERP-Genehmigung warten</value>
+  <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
   </data>
-  <data name="GrHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
-    <value>Wareneingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  <data name="PtImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
   </data>
-  <data name="GrHeaderApprovalUpdateError" xml:space="preserve">
+  <data name="PtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="PtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="PtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion PtImportLine -->
+
+  <!-- #region PtLine -->
+  <!-- #endregion PtLine -->
+
+  <!-- #region PtLineSerial -->
+  <!-- #endregion PtLineSerial -->
+
+  <!-- #region PtRoute -->
+  <!-- #endregion PtRoute -->
+
+  <!-- #region ShFunction -->
+  <!-- #endregion ShFunction -->
+
+  <!-- #region ShHeader -->
+  <data name="ShHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Versand-Auftragsgenehmigung</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Versand-Auftragszeilen</value>
+  </data>
+  <data name="ShHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Versand-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Versand-Aufträge</value>
+  </data>
+  <data name="ShHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Versand-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="ShHeaderBulkCreateCompletedSuccessfully" xml:space="preserve">
+    <value>Massenversand erfolgreich erstellt</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Fehler beim Erstellen des Massenversands</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Versand-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="ShHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Versand-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="ShHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Versand-Auftrag erfolgreich erstellt</value>
+  </data>
+  <data name="ShHeaderGenerateError" xml:space="preserve">
+    <value>Fehler beim Erstellen des Versand-Auftrags</value>
+  </data>
+  <data name="ShHeaderNotFound" xml:space="preserve">
+    <value>Versand Kopf nicht gefunden</value>
+  </data>
+  <!-- #endregion ShHeader -->
+
+  <!-- #region ShImportLine -->
+  <data name="ShImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Versand Importzeile erfolgreich erstellt</value>
+  </data>
+  <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
+  </data>
+  <data name="ShImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="ShImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="ShImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="ShImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion ShImportLine -->
+
+  <!-- #region ShLine -->
+  <!-- #endregion ShLine -->
+
+  <!-- #region ShLineSerial -->
+  <!-- #endregion ShLineSerial -->
+
+  <!-- #region ShRoute -->
+  <!-- #endregion ShRoute -->
+
+  <!-- #region ShTerminalLine -->
+  <!-- #endregion ShTerminalLine -->
+
+  <!-- #region Sidebar -->
+  <!-- #endregion Sidebar -->
+
+  <!-- #region SitHeader -->
+  <data name="SitHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Untervergabe Ausgabe-Auftragsgenehmigung</value>
+  </data>
+  <data name="SitHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Untervergabe Ausgabe-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Ausgabe-Auftragszeilen</value>
+  </data>
+  <data name="SitHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Untervergabe Ausgabe-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Ausgabe-Aufträge</value>
+  </data>
+  <data name="SitHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Untervergabe Ausgabe-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Untervergabe Ausgabe-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="SitHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Untervergabe Ausgabe-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="SitHeaderNotFound" xml:space="preserve">
+    <value>Untervergabe Ausgabe Kopf nicht gefunden</value>
+  </data>
+  <!-- #endregion SitHeader -->
+
+  <!-- #region SitImportLine -->
+  <data name="SitImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Untervergabe Ausgabe Importzeile erfolgreich erstellt</value>
+  </data>
+  <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
+  </data>
+  <data name="SitImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="SitImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="SitImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="SitImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion SitImportLine -->
+
+  <!-- #region SitLine -->
+  <!-- #endregion SitLine -->
+
+  <!-- #region SitLineSerial -->
+  <!-- #endregion SitLineSerial -->
+
+  <!-- #region SitRoute -->
+  <!-- #endregion SitRoute -->
+
+  <!-- #region SitTerminalLine -->
+  <!-- #endregion SitTerminalLine -->
+
+  <!-- #region SrtHeader -->
+  <data name="SrtHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Untervergabe Eingang-Auftragsgenehmigung</value>
+  </data>
+  <data name="SrtHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Untervergabe Eingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Eingang-Auftragszeilen</value>
+  </data>
+  <data name="SrtHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Untervergabe Eingang-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Untervergabe Eingang-Aufträge</value>
+  </data>
+  <data name="SrtHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Untervergabe Eingang-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Untervergabe Eingang-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="SrtHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Untervergabe Eingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="SrtHeaderNotFound" xml:space="preserve">
+    <value>Untervergabe Eingang Kopf nicht gefunden</value>
+  </data>
+  <!-- #endregion SrtHeader -->
+
+  <!-- #region SrtImportLine -->
+  <data name="SrtImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Untervergabe Eingang Importzeile erfolgreich erstellt</value>
+  </data>
+  <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
+  </data>
+  <data name="SrtImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="SrtImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="SrtImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="SrtImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion SrtImportLine -->
+
+  <!-- #region SrtLine -->
+  <!-- #endregion SrtLine -->
+
+  <!-- #region SrtLineSerial -->
+  <!-- #endregion SrtLineSerial -->
+
+  <!-- #region SrtRoute -->
+  <!-- #endregion SrtRoute -->
+
+  <!-- #region SrtTerminalLine -->
+  <!-- #endregion SrtTerminalLine -->
+
+  <!-- #region WiFunction -->
+  <!-- #endregion WiFunction -->
+
+  <!-- #region WiHeader -->
+  <data name="WiHeaderApprovalUpdateError" xml:space="preserve">
     <value>Fehler beim Aktualisieren der Wareneingang-Auftragsgenehmigung</value>
   </data>
-  <!-- #endregion GR.Header -->
+  <data name="WiHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Auftragszeilen</value>
+  </data>
+  <data name="WiHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Wareneingang-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Wareneingang-Aufträge</value>
+  </data>
+  <data name="WiHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Wareneingang-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Wareneingang-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="WiHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Wareneingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="WiHeaderNotFound" xml:space="preserve">
+    <value>Wareneingang Kopf nicht gefunden</value>
+  </data>
+  <!-- #endregion WiHeader -->
+
+  <!-- #region WiImportLine -->
+  <data name="WiImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Wareneingang Importzeile erfolgreich erstellt</value>
+  </data>
+  <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
+  </data>
+  <data name="WiImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="WiImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="WiImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="WiImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion WiImportLine -->
+
+  <!-- #region WiLine -->
+  <!-- #endregion WiLine -->
+
+  <!-- #region WiLineSerial -->
+  <!-- #endregion WiLineSerial -->
+
+  <!-- #region WiRoute -->
+  <!-- #endregion WiRoute -->
+
+  <!-- #region WiTerminalLine -->
+  <!-- #endregion WiTerminalLine -->
+
+  <!-- #region WoFunction -->
+  <!-- #endregion WoFunction -->
+
+  <!-- #region WoHeader -->
+  <data name="WoHeaderApprovalUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Warenausgang-Auftragsgenehmigung</value>
+  </data>
+  <data name="WoHeaderApprovalUpdatedSuccessfully" xml:space="preserve">
+    <value>Warenausgang-Auftragsgenehmigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Warenausgang-Auftragszeilen</value>
+  </data>
+  <data name="WoHeaderAssignedOrderLinesRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Warenausgang-Auftragszeilen erfolgreich abgerufen</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der zugewiesenen Warenausgang-Aufträge</value>
+  </data>
+  <data name="WoHeaderAssignedOrdersRetrievedSuccessfully" xml:space="preserve">
+    <value>Zugewiesene Warenausgang-Aufträge erfolgreich abgerufen</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der abgeschlossenen Warenausgang-Aufträge, die auf ERP-Genehmigung warten</value>
+  </data>
+  <data name="WoHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
+    <value>Abgeschlossene Warenausgang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="WoHeaderNotFound" xml:space="preserve">
+    <value>Warenausgang Kopf nicht gefunden</value>
+  </data>
+  <!-- #endregion WoHeader -->
+
+  <!-- #region WoImportLine -->
+  <data name="WoImportLineCreatedSuccessfully" xml:space="preserve">
+    <value>Warenausgang Importzeile erfolgreich erstellt</value>
+  </data>
+  <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
+    <value>Doppelter Datensatz gefunden</value>
+  </data>
+  <data name="WoImportLineErrorOccurred" xml:space="preserve">
+    <value>Beim Verarbeiten der Importzeile ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="WoImportLineQuantityInvalid" xml:space="preserve">
+    <value>Menge muss größer als 0 sein</value>
+  </data>
+  <data name="WoImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seriennummer stimmt nicht mit den Zeilensereinträgen überein</value>
+  </data>
+  <data name="WoImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Artikelnummer und YapKod stimmen nicht mit bestehenden Importzeilen überein</value>
+  </data>
+  <!-- #endregion WoImportLine -->
+
+  <!-- #region WoLine -->
+  <!-- #endregion WoLine -->
+
+  <!-- #region WoLineSerial -->
+  <!-- #endregion WoLineSerial -->
+
+  <!-- #region WoRoute -->
+  <!-- #endregion WoRoute -->
+
+  <!-- #region WoTerminalLine -->
+  <!-- #endregion WoTerminalLine -->
+
+  <!-- #region WtFunction -->
+  <!-- #endregion WtFunction -->
+
+  <!-- #region WtHeader -->
+  <!-- #endregion WtHeader -->
+
+  <!-- #region WtImportLine -->
+  <!-- #endregion WtImportLine -->
+
+  <!-- #region WtLine -->
+  <!-- #endregion WtLine -->
+
+  <!-- #region WtLineSerial -->
+  <!-- #endregion WtLineSerial -->
+
+  <!-- #region WtRoute -->
+  <!-- #endregion WtRoute -->
+
+  <!-- #region WtTerminalLine -->
+  <!-- #endregion WtTerminalLine -->
+
 </root>
