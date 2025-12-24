@@ -679,9 +679,21 @@ namespace WMS_WEBAPI.Services
                         }
 
                         // ============================================
+                        // 1.1. CHECK ERP APPROVAL REQUIREMENT
+                        // ============================================
+                        var srtParameter = await _unitOfWork.SrtParameters
+                            .AsQueryable()
+                            .Where(p => !p.IsDeleted)
+                            .FirstOrDefaultAsync();
+
+                        // ============================================
                         // 2. CREATE HEADER
                         // ============================================
                         var header = _mapper.Map<SrtHeader>(request.Header);
+                        
+                        // Set IsPendingApproval: true if parameter exists and requires approval, otherwise false
+                        header.IsPendingApproval = srtParameter != null && srtParameter.RequireApprovalBeforeErp;
+
                         await _unitOfWork.SrtHeaders.AddAsync(header);
                         await _unitOfWork.SaveChangesAsync();
 

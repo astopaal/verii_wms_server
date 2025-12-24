@@ -536,6 +536,7 @@ namespace WMS_WEBAPI.Services
                 {
                     try
                     {
+                        
                         // ============================================
                         // 1. VALIDATION
                         // ============================================
@@ -548,13 +549,34 @@ namespace WMS_WEBAPI.Services
                         }
 
                         // ============================================
+                        // 1.1. CHECK ERP APPROVAL REQUIREMENT
+                        // ============================================
+                        var wtParameter = await _unitOfWork.WtParameters
+                            .AsQueryable()
+                            .Where(p => !p.IsDeleted)
+                            .FirstOrDefaultAsync();
+
+                        // ============================================
                         // 2. CREATE HEADER
                         // ============================================
                         var headerEntity = _mapper.Map<WtHeader>(request.Header.Header);
+                        
+                        // Set IsPendingApproval: true if parameter exists and requires approval, otherwise false
+                        headerEntity.IsPendingApproval = wtParameter != null && wtParameter.RequireApprovalBeforeErp;
+
                         await _unitOfWork.WtHeaders.AddAsync(headerEntity);
                         await _unitOfWork.SaveChangesAsync();
 
-                        if (headerEntity?.Id <= 0)
+                        if (headerEntity == null || headerEntity.Id <= 0)
+                        {
+                            await tx.RollbackAsync();
+                            return ApiResponse<WtHeaderDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("WtHeaderGenerateError"),
+                                _localizationService.GetLocalizedString("HeaderInsertFailed"),
+                                500);
+                        }
+
+                        if (request?.Header?.HeaderKey == null)
                         {
                             await tx.RollbackAsync();
                             return ApiResponse<WtHeaderDto>.ErrorResult(
@@ -706,6 +728,8 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.SaveChangesAsync();
                         }
 
+
+
                         // ============================================
                         // 7. COMMIT TRANSACTION
                         // ============================================
@@ -732,6 +756,26 @@ namespace WMS_WEBAPI.Services
                     500);
             }
         }
-    
+
+        /// <summary>
+        /// Gets the active WtParameter (first non-deleted parameter)
+        /// </summary>
+        private async Task<WtParameter?> GetWtParameterAsync()
+        {
+            return await _unitOfWork.WtParameters
+                .AsQueryable()
+                .Where(p => !p.IsDeleted)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Checks if approval is required before ERP integration based on WtParameter settings
+        /// </summary>
+        private async Task<bool> IsApprovalRequiredBeforeErpAsync()
+        {
+            var parameter = await GetWtParameterAsync();
+            return parameter?.RequireApprovalBeforeErp ?? false;
+        }
+
     }
 }
