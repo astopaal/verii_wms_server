@@ -110,8 +110,18 @@ namespace WMS_WEBAPI.UnitOfWork
         // Notification repositories
         IGenericRepository<Notification> Notifications { get; }
 
-
-
+        // Parameter repositories
+        IGenericRepository<GrParameter> GrParameters { get; }
+        IGenericRepository<WtParameter> WtParameters { get; }
+        IGenericRepository<WoParameter> WoParameters { get; }
+        IGenericRepository<WiParameter> WiParameters { get; }
+        IGenericRepository<ShParameter> ShParameters { get; }
+        IGenericRepository<SrtParameter> SrtParameters { get; }
+        IGenericRepository<SitParameter> SitParameters { get; }
+        IGenericRepository<PtParameter> PtParameters { get; }
+        IGenericRepository<PrParameter> PrParameters { get; }
+        IGenericRepository<IcParameter> IcParameters { get; }
+        IGenericRepository<PParameter> PParameters { get; }
 
         // Methods
         Task<long> SaveChangesAsync();

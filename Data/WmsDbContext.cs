@@ -99,6 +99,19 @@ namespace WMS_WEBAPI.Data
         public DbSet<IcTerminalLine> IcTerminalLines { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        // Parameter DbSets
+        public DbSet<GrParameter> GrParameters { get; set; }
+        public DbSet<WtParameter> WtParameters { get; set; }
+        public DbSet<WoParameter> WoParameters { get; set; }
+        public DbSet<WiParameter> WiParameters { get; set; }
+        public DbSet<ShParameter> ShParameters { get; set; }
+        public DbSet<SrtParameter> SrtParameters { get; set; }
+        public DbSet<SitParameter> SitParameters { get; set; }
+        public DbSet<PtParameter> PtParameters { get; set; }
+        public DbSet<PrParameter> PrParameters { get; set; }
+        public DbSet<IcParameter> IcParameters { get; set; }
+        public DbSet<PParameter> PParameters { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -181,6 +194,19 @@ namespace WMS_WEBAPI.Data
             modelBuilder.ApplyConfiguration(new ShLineSerialConfiguration());
 
             modelBuilder.ApplyConfiguration(new NotificationConfiguration());
+
+            // Parameter configurations
+            modelBuilder.ApplyConfiguration(new GrParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new WtParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new WoParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new WiParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new ShParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new SrtParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new SitParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new PtParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new PrParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new IcParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new PParameterConfiguration());
 
             // InventoryCount configurations temporarily disabled
                         

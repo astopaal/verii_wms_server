@@ -176,6 +176,19 @@ builder.Services.AddScoped<IShRouteService, ShRouteService>();
 builder.Services.AddScoped<IShTerminalLineService, ShTerminalLineService>();
 builder.Services.AddScoped<IShLineSerialService, ShLineSerialService>();
 
+// Register Parameter Services
+builder.Services.AddScoped<IGrParameterService, GrParameterService>();
+builder.Services.AddScoped<IWtParameterService, WtParameterService>();
+builder.Services.AddScoped<IWoParameterService, WoParameterService>();
+builder.Services.AddScoped<IWiParameterService, WiParameterService>();
+builder.Services.AddScoped<IShParameterService, ShParameterService>();
+builder.Services.AddScoped<ISrtParameterService, SrtParameterService>();
+builder.Services.AddScoped<ISitParameterService, SitParameterService>();
+builder.Services.AddScoped<IPtParameterService, PtParameterService>();
+builder.Services.AddScoped<IPrParameterService, PrParameterService>();
+builder.Services.AddScoped<IIcParameterService, IcParameterService>();
+builder.Services.AddScoped<IPParameterService, PParameterService>();
+
 
 // Register Function Services
 builder.Services.AddScoped<IGoodReciptFunctionsService, GoodReciptFunctionsService>();

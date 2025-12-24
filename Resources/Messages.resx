@@ -2495,4 +2495,22 @@
   </data>
   <!-- #endregion WtTerminalLine -->
 
+  <!-- #region Parameter -->
+  <data name="ParameterRetrievedSuccessfully" xml:space="preserve">
+    <value>Parameter retrieved successfully</value>
+  </data>
+  <data name="ParameterCreatedSuccessfully" xml:space="preserve">
+    <value>Parameter created successfully</value>
+  </data>
+  <data name="ParameterUpdatedSuccessfully" xml:space="preserve">
+    <value>Parameter updated successfully</value>
+  </data>
+  <data name="ParameterDeletedSuccessfully" xml:space="preserve">
+    <value>Parameter deleted successfully</value>
+  </data>
+  <data name="ParameterNotFound" xml:space="preserve">
+    <value>Parameter not found</value>
+  </data>
+  <!-- #endregion Parameter -->
+
 </root>

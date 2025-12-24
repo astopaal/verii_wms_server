@@ -109,6 +109,19 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<IcTerminalLine>? _icTerminalLines;
         private IGenericRepository<Notification>? _notifications;
 
+        // Parameter repository instances
+        private IGenericRepository<GrParameter>? _grParameters;
+        private IGenericRepository<WtParameter>? _wtParameters;
+        private IGenericRepository<WoParameter>? _woParameters;
+        private IGenericRepository<WiParameter>? _wiParameters;
+        private IGenericRepository<ShParameter>? _shParameters;
+        private IGenericRepository<SrtParameter>? _srtParameters;
+        private IGenericRepository<SitParameter>? _sitParameters;
+        private IGenericRepository<PtParameter>? _ptParameters;
+        private IGenericRepository<PrParameter>? _prParameters;
+        private IGenericRepository<IcParameter>? _icParameters;
+        private IGenericRepository<PParameter>? _pParameters;
+
         public UnitOfWork(WmsDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
@@ -349,6 +362,39 @@ namespace WMS_WEBAPI.UnitOfWork
         public IGenericRepository<Notification> Notifications =>
             _notifications ??= new GenericRepository<Notification>(_context, _httpContextAccessor);
 
+        // Parameter repository properties
+        public IGenericRepository<GrParameter> GrParameters =>
+            _grParameters ??= new GenericRepository<GrParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<WtParameter> WtParameters =>
+            _wtParameters ??= new GenericRepository<WtParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<WoParameter> WoParameters =>
+            _woParameters ??= new GenericRepository<WoParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<WiParameter> WiParameters =>
+            _wiParameters ??= new GenericRepository<WiParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<ShParameter> ShParameters =>
+            _shParameters ??= new GenericRepository<ShParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<SrtParameter> SrtParameters =>
+            _srtParameters ??= new GenericRepository<SrtParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<SitParameter> SitParameters =>
+            _sitParameters ??= new GenericRepository<SitParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PtParameter> PtParameters =>
+            _ptParameters ??= new GenericRepository<PtParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PrParameter> PrParameters =>
+            _prParameters ??= new GenericRepository<PrParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<IcParameter> IcParameters =>
+            _icParameters ??= new GenericRepository<IcParameter>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PParameter> PParameters =>
+            _pParameters ??= new GenericRepository<PParameter>(_context, _httpContextAccessor);
 
         public async Task<long> SaveChangesAsync()
         {
