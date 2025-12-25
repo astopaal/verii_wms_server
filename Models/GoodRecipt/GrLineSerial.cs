@@ -8,13 +8,8 @@ namespace WMS_WEBAPI.Models
     [Table("RII_GR_LINE_SERIAL")]
     public class GrLineSerial : BaseLineSerialEntity
     {
-        public long? ImportLineId { get; set; }
-        [ForeignKey(nameof(ImportLineId))]
-        public virtual GrImportLine? ImportLine { get; set; }
-
-        [MaxLength(100)]
-        public string? ClientKey { get; set; }
-
-
+        public long? LineId { get; set; }
+        [ForeignKey(nameof(LineId))]
+        public virtual GrLine? Line { get; set; }
     }
 }

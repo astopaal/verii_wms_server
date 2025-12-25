@@ -366,11 +366,7 @@ namespace WMS_WEBAPI.Services
                                         400);
                                 }
 
-                                // Note: ImportLineId will be set after ImportLines are created
-                                // Store ImportLineClientKey in ClientKey for later mapping
                                 var serial = _mapper.Map<GrLineSerial>(serialDto);
-                                serial.ImportLineId = null;
-                                serial.ClientKey = serialDto.ImportLineClientKey;
                                 serials.Add(serial);
                             }
 
@@ -432,37 +428,6 @@ namespace WMS_WEBAPI.Services
                             }
                         }
 
-                        // ============================================
-                        // 7. UPDATE SERIALS WITH IMPORT LINE IDs
-                        // ============================================
-                        if (insertedSerials.Count > 0)
-                        {
-                            foreach (var serial in insertedSerials)
-                            {
-                                if (string.IsNullOrWhiteSpace(serial.ClientKey))
-                                {
-                                    await tx.RollbackAsync();
-                                    return ApiResponse<long>.ErrorResult(
-                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ImportLineClientKeyMissing"),
-                                        400);
-                                }
-
-                                if (!importLineKeyToId.TryGetValue(serial.ClientKey, out var importLineId))
-                                {
-                                    await tx.RollbackAsync();
-                                    return ApiResponse<long>.ErrorResult(
-                                        _localizationService.GetLocalizedString("InvalidCorrelationKey"),
-                                        _localizationService.GetLocalizedString("ImportLineClientKeyNotFound"),
-                                        400);
-                                }
-
-                                serial.ImportLineId = importLineId;
-                                _unitOfWork.GrLineSerials.Update(serial);
-                            }
-
-                            await _unitOfWork.SaveChangesAsync();
-                        }
 
                         // ============================================
                         // 8. CREATE ROUTES
@@ -536,9 +501,145 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
 
+                // ============================================
+                // CHECK ERP APPROVAL REQUIREMENT
+                // ============================================
+                var grParameter = await _unitOfWork.GrParameters
+                    .AsQueryable()
+                    .Where(p => !p.IsDeleted)
+                    .FirstOrDefaultAsync();
+
+                // ============================================
+                // VALIDATE LINE SERIAL VS ROUTE QUANTITIES
+                // ============================================
+                // Skip validation only if both AllowLessQuantityBasedOnOrder and AllowMoreQuantityBasedOnOrder are true
+                // Normalize null values to false
+                bool skipValidation = (grParameter?.AllowLessQuantityBasedOnOrder ?? false) 
+                    && (grParameter?.AllowMoreQuantityBasedOnOrder ?? false);
+
+                // Normalize RequireAllOrderItemsCollected
+                bool requireAllOrderItemsCollected = grParameter?.RequireAllOrderItemsCollected ?? false;
+
+                if (!skipValidation)
+                {
+                    var lines = await _unitOfWork.GrLines
+                        .AsQueryable()
+                        .Where(l => l.HeaderId == id && !l.IsDeleted)
+                        .ToListAsync();
+
+                    foreach (var line in lines)
+                    {
+                        // Get total quantity of LineSerials for this Line
+                        var totalLineSerialQuantity = await _unitOfWork.GrLineSerials
+                            .AsQueryable()
+                            .Where(ls => !ls.IsDeleted && ls.LineId == line.Id)
+                            .SumAsync(ls => ls.Quantity);
+
+                        // Get total quantity of Routes for ImportLines linked to this Line
+                        var totalRouteQuantity = await _unitOfWork.GrRoutes
+                            .AsQueryable()
+                            .Where(r => !r.IsDeleted 
+                                && r.ImportLine.LineId == line.Id 
+                                && !r.ImportLine.IsDeleted)
+                            .SumAsync(r => r.Quantity);
+
+                        // ============================================
+                        // CHECK IF ALL ORDER ITEMS MUST BE COLLECTED
+                        // ============================================
+                        if (requireAllOrderItemsCollected)
+                        {
+                            // If RequireAllOrderItemsCollected is true, every line must have routes (totalRouteQuantity > 0)
+                            if (totalRouteQuantity <= 0.000001m)
+                            {
+                                var msg = _localizationService.GetLocalizedString("GrHeaderAllOrderItemsMustBeCollected", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty);
+                                return ApiResponse<bool>.ErrorResult(msg, 
+                                    $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): All order items must be collected. Route quantity is 0.", 
+                                    400);
+                            }
+                        }
+                        else
+                        {
+                            // If RequireAllOrderItemsCollected is false, skip validation for lines with no routes
+                            if (totalRouteQuantity <= 0.000001m)
+                            {
+                                continue; // Skip this line, no routes means it's optional
+                            }
+                        }
+
+                        // Determine validation logic based on parameters
+                        // Normalize null values to false
+                        bool allowLess = grParameter?.AllowLessQuantityBasedOnOrder ?? false;
+                        bool allowMore = grParameter?.AllowMoreQuantityBasedOnOrder ?? false;
+                        
+                        bool quantityMismatch = false;
+                        string localizedMessage = string.Empty;
+                        string exceptionMessage = string.Empty;
+
+                        if (!allowLess && !allowMore)
+                        {
+                            // Both false: Exact match required (==)
+                            if (Math.Abs(totalLineSerialQuantity - totalRouteQuantity) > 0.000001m)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("GrHeaderQuantityExactMatchRequired", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): LineSerial total ({totalLineSerialQuantity}) must exactly match Route total ({totalRouteQuantity})";
+                            }
+                        }
+                        else if (allowLess && !allowMore)
+                        {
+                            // AllowLessQuantityBasedOnOrder: true, AllowMoreQuantityBasedOnOrder: false
+                            // Route <= LineSerial (Route can be less or equal to LineSerial)
+                            // Error if Route > LineSerial
+                            if (totalRouteQuantity > totalLineSerialQuantity + 0.000001m)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("GrHeaderQuantityCannotBeGreater", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): Route total ({totalRouteQuantity}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
+                            }
+                        }
+                        else if (!allowLess && allowMore)
+                        {
+                            // AllowLessQuantityBasedOnOrder: false, AllowMoreQuantityBasedOnOrder: true
+                            // Route >= LineSerial (Route can be more or equal to LineSerial)
+                            // Error if Route < LineSerial
+                            if (totalRouteQuantity + 0.000001m < totalLineSerialQuantity)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("GrHeaderQuantityCannotBeLess", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): Route total ({totalRouteQuantity}) cannot be less than LineSerial total ({totalLineSerialQuantity})";
+                            }
+                        }
+
+                        if (quantityMismatch)
+                        {
+                            return ApiResponse<bool>.ErrorResult(localizedMessage, exceptionMessage, 400);
+                        }
+                    }
+                }
+
                 entity.IsCompleted = true;
                 entity.CompletionDate = DateTime.UtcNow;
-                entity.IsPendingApproval = false;
+                
+                // Set IsPendingApproval based on parameter requirement
+                entity.IsPendingApproval = grParameter != null && grParameter.RequireApprovalBeforeErp;
 
                 _unitOfWork.GrHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
@@ -602,11 +703,12 @@ namespace WMS_WEBAPI.Services
 
                 var importLineIds = importLines.Select(il => il.Id).ToList();
 
+                var lineIds = importLines.Where(il => il.LineId.HasValue).Select(il => il.LineId!.Value).Distinct().ToList();
                 IEnumerable<GrLineSerial> lineSerials = Array.Empty<GrLineSerial>();
-                if (importLineIds.Count > 0)
+                if (lineIds.Count > 0)
                 {
                     lineSerials = await _unitOfWork.GrLineSerials
-                        .FindAsync(x => x.ImportLineId.HasValue && importLineIds.Contains(x.ImportLineId.Value) && !x.IsDeleted);
+                        .FindAsync(x => x.LineId.HasValue && lineIds.Contains(x.LineId.Value) && !x.IsDeleted);
                 }
 
                 IEnumerable<GrRoute> routes = Array.Empty<GrRoute>();

@@ -197,10 +197,7 @@ namespace WMS_WEBAPI.Services
 
                 var hasActiveLineSerials = await _unitOfWork.GrLineSerials
                     .AsQueryable()
-                    .AnyAsync(ls => !ls.IsDeleted
-                                   && _unitOfWork.GrImportLines
-                                       .AsQueryable()
-                                       .Any(il => !il.IsDeleted && il.LineId == id && il.Id == ls.ImportLineId));
+                    .AnyAsync(ls => !ls.IsDeleted && ls.LineId == id);
                 if (hasActiveLineSerials)
                 {
                     var msg = _localizationService.GetLocalizedString("GrLineLineSerialsExist");

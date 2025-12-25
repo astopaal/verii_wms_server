@@ -33,10 +33,10 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("by-import-line/{importLineId}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GrLineSerialDto>>>> GetByImportLineId(long importLineId)
+        [HttpGet("by-line/{lineId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<GrLineSerialDto>>>> GetByLineId(long lineId)
         {
-            var result = await _grLineSerialService.GetByImportLineIdAsync(importLineId);
+            var result = await _grLineSerialService.GetByLineIdAsync(lineId);
             return StatusCode(result.StatusCode, result);
         }
 

@@ -11,7 +11,7 @@ namespace WMS_WEBAPI.Mappings
             // GrImportSerialLine mappings
             CreateMap<GrLineSerial, GrLineSerialDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
+                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -26,7 +26,7 @@ namespace WMS_WEBAPI.Mappings
                 .ApplyFullUserNames<GrLineSerial, GrLineSerialDto>();
 
             CreateMap<CreateGrLineSerialDto, GrLineSerial>()
-                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
+                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -45,10 +45,10 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedByUser, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLine, opt => opt.Ignore());
+                .ForMember(dest => dest.Line, opt => opt.Ignore());
 
             CreateMap<UpdateGrLineSerialDto, GrLineSerial>()
-                .ForMember(dest => dest.ImportLineId, opt => opt.MapFrom(src => src.ImportLineId))
+                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -67,11 +67,11 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedByUser, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLine, opt => opt.Ignore());
+                .ForMember(dest => dest.Line, opt => opt.Ignore());
 
             // CreateGrImportSerialLineWithImportLineKeyDto to GrLineSerial (for BulkCreateAsync)
             CreateMap<CreateGrImportSerialLineWithImportLineKeyDto, GrLineSerial>()
-                .ForMember(dest => dest.ImportLineId, opt => opt.Ignore())
+                .ForMember(dest => dest.LineId, opt => opt.Ignore())
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.SerialNo, opt => opt.MapFrom(src => src.SerialNo))
                 .ForMember(dest => dest.SerialNo2, opt => opt.MapFrom(src => src.SerialNo2))
@@ -90,7 +90,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedByUser, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedByUser, opt => opt.Ignore())
-                .ForMember(dest => dest.ImportLine, opt => opt.Ignore());
+                .ForMember(dest => dest.Line, opt => opt.Ignore());
         }
     }
 }

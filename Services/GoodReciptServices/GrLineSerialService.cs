@@ -79,17 +79,17 @@ namespace WMS_WEBAPI.Services
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<GrLineSerialDto>>> GetByImportLineIdAsync(long importLineId)
+        public async Task<ApiResponse<IEnumerable<GrLineSerialDto>>> GetByLineIdAsync(long lineId)
         {
             try
             {
-                var serialLines = await _unitOfWork.GrLineSerials.FindAsync(x => x.ImportLineId == importLineId);
+                var serialLines = await _unitOfWork.GrLineSerials.FindAsync(x => x.LineId == lineId);
                 var serialLineDtos = _mapper.Map<IEnumerable<GrLineSerialDto>>(serialLines);
                 return ApiResponse<IEnumerable<GrLineSerialDto>>.SuccessResult(serialLineDtos, _localizationService.GetLocalizedString("GrImportSerialLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrLineSerialDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportSerialLineGetByImportLineIdError"), ex.Message, 500);
+                return ApiResponse<IEnumerable<GrLineSerialDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportSerialLineGetByLineIdError"), ex.Message, 500);
             }
         }
 
@@ -97,11 +97,14 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var importLineExists = await _unitOfWork.GrImportLines.ExistsAsync(createDto.ImportLineId);
-                if (!importLineExists)
+                if (createDto.LineId.HasValue)
                 {
-                    var nf = _localizationService.GetLocalizedString("GrImportLineNotFound");
-                    return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 400);
+                    var lineExists = await _unitOfWork.GrLines.ExistsAsync(createDto.LineId.Value);
+                    if (!lineExists)
+                    {
+                        var nf = _localizationService.GetLocalizedString("GrLineNotFound");
+                        return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 400);
+                    }
                 }
                 var serialLine = _mapper.Map<GrLineSerial>(createDto);
                 await _unitOfWork.GrLineSerials.AddAsync(serialLine);
@@ -125,15 +128,15 @@ namespace WMS_WEBAPI.Services
                     var nf = _localizationService.GetLocalizedString("GrImportSerialLineNotFound");
                     return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 404);
                 }
-                if (updateDto.ImportLineId.HasValue)
+                if (updateDto.LineId.HasValue)
                 {
-                    var importLineExists = await _unitOfWork.GrImportLines.ExistsAsync(updateDto.ImportLineId.Value);
-                    if (!importLineExists)
+                    var lineExists = await _unitOfWork.GrLines.ExistsAsync(updateDto.LineId.Value);
+                    if (!lineExists)
                     {
-                        var nf = _localizationService.GetLocalizedString("GrImportLineNotFound");
+                        var nf = _localizationService.GetLocalizedString("GrLineNotFound");
                         return ApiResponse<GrLineSerialDto>.ErrorResult(nf, nf, 400);
                     }
-                    serialLine.ImportLineId = updateDto.ImportLineId.Value;
+                    serialLine.LineId = updateDto.LineId.Value;
                 }
                 _mapper.Map(updateDto, serialLine);
                 _unitOfWork.GrLineSerials.Update(serialLine);
