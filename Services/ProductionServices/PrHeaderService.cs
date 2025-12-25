@@ -205,10 +205,150 @@ namespace WMS_WEBAPI.Services
                     var notFound = _localizationService.GetLocalizedString("PrHeaderNotFound");
                     return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
+
+                // ============================================
+                // CHECK ERP APPROVAL REQUIREMENT
+                // ============================================
+                var prParameter = await _unitOfWork.PrParameters
+                    .AsQueryable()
+                    .Where(p => !p.IsDeleted)
+                    .FirstOrDefaultAsync();
+
+                // ============================================
+                // VALIDATE LINE SERIAL VS ROUTE QUANTITIES
+                // ============================================
+                // Skip validation only if both AllowLessQuantityBasedOnOrder and AllowMoreQuantityBasedOnOrder are true
+                // Normalize null values to false
+                bool skipValidation = (prParameter?.AllowLessQuantityBasedOnOrder ?? false) 
+                    && (prParameter?.AllowMoreQuantityBasedOnOrder ?? false);
+
+                // Normalize RequireAllOrderItemsCollected
+                bool requireAllOrderItemsCollected = prParameter?.RequireAllOrderItemsCollected ?? false;
+
+                if (!skipValidation)
+                {
+                    var lines = await _unitOfWork.PrLines
+                        .AsQueryable()
+                        .Where(l => l.HeaderId == id && !l.IsDeleted)
+                        .ToListAsync();
+
+                    foreach (var line in lines)
+                    {
+                        // Get total quantity of LineSerials for this Line
+                        var totalLineSerialQuantity = await _unitOfWork.PrLineSerials
+                            .AsQueryable()
+                            .Where(ls => !ls.IsDeleted && ls.LineId == line.Id)
+                            .SumAsync(ls => ls.Quantity);
+
+                        // Get total quantity of Routes for ImportLines linked to this Line
+                        var totalRouteQuantity = await _unitOfWork.PrRoutes
+                            .AsQueryable()
+                            .Where(r => !r.IsDeleted 
+                                && r.ImportLine.LineId == line.Id 
+                                && !r.ImportLine.IsDeleted)
+                            .SumAsync(r => r.Quantity);
+
+                        // ============================================
+                        // CHECK IF ALL ORDER ITEMS MUST BE COLLECTED
+                        // ============================================
+                        if (requireAllOrderItemsCollected)
+                        {
+                            // If RequireAllOrderItemsCollected is true, every line must have routes (totalRouteQuantity > 0)
+                            if (totalRouteQuantity <= 0.000001m)
+                            {
+                                var msg = _localizationService.GetLocalizedString("PrHeaderAllOrderItemsMustBeCollected", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty);
+                                return ApiResponse<bool>.ErrorResult(msg, 
+                                    $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): All order items must be collected. Route quantity is 0.", 
+                                    400);
+                            }
+                        }
+                        else
+                        {
+                            // If RequireAllOrderItemsCollected is false, skip validation for lines with no routes
+                            if (totalRouteQuantity <= 0.000001m)
+                            {
+                                continue; // Skip this line, no routes means it's optional
+                            }
+                        }
+
+                        // Determine validation logic based on parameters
+                        // Normalize null values to false
+                        bool allowLess = prParameter?.AllowLessQuantityBasedOnOrder ?? false;
+                        bool allowMore = prParameter?.AllowMoreQuantityBasedOnOrder ?? false;
+                        
+                        bool quantityMismatch = false;
+                        string localizedMessage = string.Empty;
+                        string exceptionMessage = string.Empty;
+
+                        if (!allowLess && !allowMore)
+                        {
+                            // Both false: Exact match required (==)
+                            if (Math.Abs(totalLineSerialQuantity - totalRouteQuantity) > 0.000001m)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("PrHeaderQuantityExactMatchRequired", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): LineSerial total ({totalLineSerialQuantity}) must exactly match Route total ({totalRouteQuantity})";
+                            }
+                        }
+                        else if (allowLess && !allowMore)
+                        {
+                            // AllowLessQuantityBasedOnOrder: true, AllowMoreQuantityBasedOnOrder: false
+                            // Route <= LineSerial (Route can be less or equal to LineSerial)
+                            // Error if Route > LineSerial
+                            if (totalRouteQuantity > totalLineSerialQuantity + 0.000001m)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("PrHeaderQuantityCannotBeGreater", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): Route total ({totalRouteQuantity}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
+                            }
+                        }
+                        else if (!allowLess && allowMore)
+                        {
+                            // AllowLessQuantityBasedOnOrder: false, AllowMoreQuantityBasedOnOrder: true
+                            // Route >= LineSerial (Route can be more or equal to LineSerial)
+                            // Error if Route < LineSerial
+                            if (totalRouteQuantity + 0.000001m < totalLineSerialQuantity)
+                            {
+                                quantityMismatch = true;
+                                localizedMessage = _localizationService.GetLocalizedString("PrHeaderQuantityCannotBeLess", 
+                                    line.Id, 
+                                    line.StockCode ?? string.Empty, 
+                                    line.YapKod ?? string.Empty, 
+                                    totalLineSerialQuantity, 
+                                    totalRouteQuantity);
+                                exceptionMessage = $"Line {line.Id} (StockCode: {line.StockCode}, YapKod: {line.YapKod ?? "N/A"}): Route total ({totalRouteQuantity}) cannot be less than LineSerial total ({totalLineSerialQuantity})";
+                            }
+                        }
+
+                        if (quantityMismatch)
+                        {
+                            return ApiResponse<bool>.ErrorResult(localizedMessage, exceptionMessage, 400);
+                        }
+                    }
+                }
+
                 entity.IsCompleted = true;
                 entity.CompletionDate = DateTime.UtcNow;
+                
+                // Set IsPendingApproval based on parameter requirement
+                entity.IsPendingApproval = prParameter != null && prParameter.RequireApprovalBeforeErp;
+
                 _unitOfWork.PrHeaders.Update(entity);
                 await _unitOfWork.SaveChangesAsync();
+
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("PrHeaderCompletedSuccessfully"));
             }
             catch (Exception ex)
