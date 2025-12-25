@@ -266,117 +266,247 @@ namespace WMS_WEBAPI.Services
                 {
                     try
                     {
-                        // 1) Header kontrolü: İstekle gelen header aktif ve silinmemiş olmalı
+                        // ============================================
+                        // 1) MİKTAR DOĞRULAMA: Negatif/0 miktara izin verilmez
+                        // ============================================
+                        if (request.Quantity <= 0)
+                        {
+                            await _unitOfWork.RollbackTransactionAsync();
+                            return ApiResponse<SitImportLineDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("SitImportLineQuantityInvalid"), 
+                                _localizationService.GetLocalizedString("SitImportLineQuantityInvalid"), 
+                                400);
+                        }
+
+                        // ============================================
+                        // 2) HEADER KONTROLÜ: İstekle gelen header aktif ve silinmemiş olmalı
+                        // ============================================
                         var header = await _unitOfWork.SitHeaders.GetByIdAsync(request.HeaderId);
                         if (header == null || header.IsDeleted)
                         {
                             await _unitOfWork.RollbackTransactionAsync();
-                            return ApiResponse<SitImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("SitHeaderNotFound"), _localizationService.GetLocalizedString("SitHeaderNotFound"), 404);
+                            return ApiResponse<SitImportLineDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("SitHeaderNotFound"), 
+                                _localizationService.GetLocalizedString("SitHeaderNotFound"), 
+                                404);
                         }
 
-                        // 2) Line uyumluluğu: Aynı header altında stok kodu + yapılandırma kodu ile importLine eşleşme kontrolü
-                        var lineControl = await _unitOfWork.SitLines.FindAsync(x => x.HeaderId == request.HeaderId && !x.IsDeleted);
-
-                        if (lineControl != null && lineControl.Any())
-                        {
-                            var reqStock = (request.StockCode ?? "").Trim();
-                            var reqYap = (request.YapKod ?? "").Trim();
-                            var lineCounter = lineControl.Count(x =>
-                                ((x.StockCode ?? "").Trim() == reqStock) && ((x.YapKod ?? "").Trim() == reqYap)
-                            );
-                            if (lineCounter == 0)
-                            {
-                                await _unitOfWork.RollbackTransactionAsync();
-                                return ApiResponse<SitImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("SitImportLineStokCodeAndYapCodeNotMatch"), _localizationService.GetLocalizedString("SitImportLineStokCodeAndYapCodeNotMatch"), 404);
-                            }
-                        }
-
-                        // 3) Seri eşleşme kontrolü: Header'a bağlı LineSerial kayıtları varsa, gelen seriyle eşleşmeli
-                        var lineSerialControl = await _unitOfWork.SitLineSerials.FindAsync(x => !x.IsDeleted && x.Line.HeaderId == request.HeaderId);
-                        if (lineSerialControl != null && lineSerialControl.Any())
-                        {
-                            var s1 = (request.SerialNo ?? "").Trim();
-                            var s2 = (request.SerialNo2 ?? "").Trim();
-                            var s3 = (request.SerialNo3 ?? "").Trim();
-                            var s4 = (request.SerialNo4 ?? "").Trim();
-                            var anyReqSerial = !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2) || !string.IsNullOrWhiteSpace(s3) || !string.IsNullOrWhiteSpace(s4);
-                            if (anyReqSerial)
-                            {
-                                var lineSerialCounter = lineSerialControl.Count(x =>
-                                    (!string.IsNullOrWhiteSpace(s1) && ((x.SerialNo ?? "").Trim() == s1)) ||
-                                    (!string.IsNullOrWhiteSpace(s2) && ((x.SerialNo2 ?? "").Trim() == s2)) ||
-                                    (!string.IsNullOrWhiteSpace(s3) && ((x.SerialNo3 ?? "").Trim() == s3)) ||
-                                    (!string.IsNullOrWhiteSpace(s4) && ((x.SerialNo4 ?? "").Trim() == s4))
-                                );
-                                if (lineSerialCounter == 0)
-                                {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    return ApiResponse<SitImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("SitImportLineSerialNotMatch"), _localizationService.GetLocalizedString("SitImportLineSerialNotMatch"), 404);
-                                }
-                            }
-                        }
-
-                        // 4) Mükerrer seri kontrolü: Aynı header + stok + yapkod + seri için daha önce route eklenmiş mi
-                        {
-                            var s1 = (request.SerialNo ?? "").Trim();
-                            var s2 = (request.SerialNo2 ?? "").Trim();
-                            var s3 = (request.SerialNo3 ?? "").Trim();
-                            var s4 = (request.SerialNo4 ?? "").Trim();
-                            var anyReqSerial = !string.IsNullOrWhiteSpace(s1) || !string.IsNullOrWhiteSpace(s2) || !string.IsNullOrWhiteSpace(s3) || !string.IsNullOrWhiteSpace(s4);
-                            if (anyReqSerial)
-                            {
-                                var duplicateExists = await _unitOfWork.SitRoutes
-                                                                    .AsQueryable()
-                                                                    .AnyAsync(r => !r.IsDeleted
-                                                                    && r.ImportLine.HeaderId == request.HeaderId
-                                                                    && ((r.ImportLine.StockCode ?? "").Trim() == (request.StockCode ?? "").Trim())
-                                                                    && ((r.ImportLine.YapKod ?? "").Trim() == (request.YapKod ?? "").Trim())
-                                                                    && (
-                                                                        (!string.IsNullOrWhiteSpace(s1) && ((r.SerialNo ?? "").Trim() == s1)) ||
-                                                                        (!string.IsNullOrWhiteSpace(s2) && ((r.SerialNo2 ?? "").Trim() == s2)) ||
-                                                                        (!string.IsNullOrWhiteSpace(s3) && ((r.SerialNo3 ?? "").Trim() == s3)) ||
-                                                                        (!string.IsNullOrWhiteSpace(s4) && ((r.SerialNo4 ?? "").Trim() == s4))
-                                                                    )
-                                                                    );
-                                if (duplicateExists)
-                                {
-                                    await _unitOfWork.RollbackTransactionAsync();
-                                    var msg = _localizationService.GetLocalizedString("SitImportLineDuplicateSerialFound");
-                                    return ApiResponse<SitImportLineDto>.ErrorResult(msg, msg, 409);
-                                }
-                            }
-                        }
-
-                        // 5) Miktar doğrulama: Negatif/0 miktara izin verilmez
-                        if (request.Quantity <= 0)
+                        // ============================================
+                        // 3) LINE UYUMLULUĞU: StokKodu ve YapKod eşleşmesi ile header'a ait silinmemiş Line'ları bul
+                        // ============================================
+                        var reqStock = (request.StockCode ?? "").Trim();
+                        var reqYap = (request.YapKod ?? "").Trim();
+                        
+                        var matchingLines = await _unitOfWork.SitLines
+                            .AsQueryable()
+                            .Where(l => l.HeaderId == request.HeaderId 
+                                && !l.IsDeleted
+                                && ((l.StockCode ?? "").Trim() == reqStock)
+                                && ((l.YapKod ?? "").Trim() == reqYap))
+                            .ToListAsync();
+                        
+                        if (!matchingLines.Any())
                         {
                             await _unitOfWork.RollbackTransactionAsync();
-                            return ApiResponse<SitImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("SitImportLineQuantityInvalid"), _localizationService.GetLocalizedString("SitImportLineQuantityInvalid"), 400);
+                            return ApiResponse<SitImportLineDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("SitImportLineStokCodeAndYapCodeNotMatch"), 
+                                _localizationService.GetLocalizedString("SitImportLineStokCodeAndYapCodeNotMatch"), 
+                                404);
                         }
 
-                        // 6) ImportLine bul/oluştur: Header + Stok + YapKod'a göre mevcut importLine var mı, yoksa yeni oluşturulur
-                        SitImportLine? importLine = null;
-                        if (request.LineId.HasValue)
+                        // ============================================
+                        // 4) SERİ KONTROLÜ VE MİKTAR VALİDASYONU
+                        // ============================================
+                        var serialNo = (request.SerialNo ?? "").Trim();
+                        var hasRequestSerial = !string.IsNullOrWhiteSpace(serialNo);
+
+                        // Eşleşen Line'ların (StockCode + YapKod ile eşleşen) LineSerial'larını kontrol et
+                        var lineIds = matchingLines.Select(l => l.Id).ToList();
+                        var lineSerials = await _unitOfWork.SitLineSerials
+                            .AsQueryable()
+                            .Where(ls => !ls.IsDeleted && lineIds.Contains(ls.LineId))
+                            .ToListAsync();
+
+                        // Eşleşen Line'ların LineSerial'larında SerialNo var mı kontrol et
+                        var hasSerialInLineSerials = lineSerials.Any(ls =>
+                            !string.IsNullOrWhiteSpace(ls.SerialNo));
+
+                        // Get SitParameter for validation rules
+                        var sitParameter = await _unitOfWork.SitParameters
+                            .AsQueryable()
+                            .Where(p => !p.IsDeleted)
+                            .FirstOrDefaultAsync();
+
                         {
-                            importLine = await _unitOfWork.SitImportLines.GetByIdAsync(request.LineId.Value);
+                            // ============================================
+                            // DURUM 1: Her ikisinde de SerialNo var → Seri eşleşmesi + Seri bazlı miktar kontrolü
+                            // ============================================
+                            if (hasSerialInLineSerials && hasRequestSerial)
+                            {
+                                var matchingLineSerials = lineSerials.Where(ls =>
+                                    ((ls.SerialNo ?? "").Trim() == serialNo)
+                                ).ToList();
+
+                                if (!matchingLineSerials.Any())
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<SitImportLineDto>.ErrorResult(
+                                        _localizationService.GetLocalizedString("SitImportLineSerialNotMatch"), 
+                                        _localizationService.GetLocalizedString("SitImportLineSerialNotMatch"), 
+                                        404);
+                                }
+
+                                // Seri bazlı miktar kontrolü
+                                var totalLineSerialQuantity = matchingLineSerials.Sum(ls => ls.Quantity);
+                                
+                                var totalRouteQuantity = await _unitOfWork.SitRoutes
+                                    .AsQueryable()
+                                    .Where(r => !r.IsDeleted
+                                        && lineIds.Contains(r.ImportLine.LineId ?? 0)
+                                        && !r.ImportLine.IsDeleted
+                                        && ((r.SerialNo ?? "").Trim() == serialNo))
+                                    .SumAsync(r => r.Quantity);
+
+                                // Miktar validasyonu: Sadece fazla alım kontrolü
+                                var totalRouteQuantityAfterAdd = totalRouteQuantity + request.Quantity;
+                                bool allowMore = sitParameter?.AllowMoreQuantityBasedOnOrder ?? false;
+
+                                // Eğer fazla alım izni yoksa ve Route miktarı LineSerial miktarını aşıyorsa hata
+                                if (!allowMore && totalRouteQuantityAfterAdd > totalLineSerialQuantity + 0.000001m)
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    var localizedMessage = _localizationService.GetLocalizedString("SitHeaderQuantityCannotBeGreater", 
+                                        matchingLines.First().Id, 
+                                        matchingLines.First().StockCode ?? string.Empty, 
+                                        matchingLines.First().YapKod ?? string.Empty, 
+                                        totalLineSerialQuantity, 
+                                        totalRouteQuantityAfterAdd);
+                                    var exceptionMessage = $"Serial {serialNo} (StockCode: {reqStock}, YapKod: {reqYap}): Route total after add ({totalRouteQuantityAfterAdd}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
+                                    return ApiResponse<SitImportLineDto>.ErrorResult(localizedMessage, exceptionMessage, 400);
+                                }
+                            }
+                            // ============================================
+                            // DURUM 2: LineSerial'da SerialNo yok VEYA Request'te SerialNo yok → Toplam miktar kontrolü (seri bazlı değil)
+                            // ============================================
+                            else
+                            {
+                                // Tüm LineSerial'ların toplam miktarı
+                                var totalLineSerialQuantity = lineSerials.Sum(ls => ls.Quantity);
+
+                                // Tüm Route'ların toplam miktarı (eşleşen Line'lar için)
+                                var totalRouteQuantity = await _unitOfWork.SitRoutes
+                                    .AsQueryable()
+                                    .Where(r => !r.IsDeleted
+                                        && lineIds.Contains(r.ImportLine.LineId ?? 0)
+                                        && !r.ImportLine.IsDeleted)
+                                    .SumAsync(r => r.Quantity);
+
+                                // Miktar validasyonu: Sadece fazla alım kontrolü
+                                var totalRouteQuantityAfterAdd = totalRouteQuantity + request.Quantity;
+                                bool allowMore = sitParameter?.AllowMoreQuantityBasedOnOrder ?? false;
+
+                                // Eğer fazla alım izni yoksa ve Route miktarı LineSerial miktarını aşıyorsa hata
+                                if (!allowMore && totalRouteQuantityAfterAdd > totalLineSerialQuantity + 0.000001m)
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    var localizedMessage = _localizationService.GetLocalizedString("SitHeaderQuantityCannotBeGreater", 
+                                        matchingLines.First().Id, 
+                                        matchingLines.First().StockCode ?? string.Empty, 
+                                        matchingLines.First().YapKod ?? string.Empty, 
+                                        totalLineSerialQuantity, 
+                                        totalRouteQuantityAfterAdd);
+                                    var exceptionMessage = $"StockCode: {reqStock}, YapKod: {reqYap}: Route total after add ({totalRouteQuantityAfterAdd}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
+                                    return ApiResponse<SitImportLineDto>.ErrorResult(localizedMessage, exceptionMessage, 400);
+                                }
+                            }
                         }
-                        else
+
+                        // ============================================
+                        // 5) IMPORTLINE BUL/OLUŞTUR: En uygun Line'ı seç ve ImportLine bul/oluştur
+                        // ============================================
+                        long? selectedLineId = null;
+
+                        // Eğer seri varsa ve sadece bir Line'da o seri varsa → O Line'ı seç
+                        if (hasSerialInLineSerials && hasRequestSerial)
                         {
-                            importLine = (await _unitOfWork.SitImportLines
-                                .FindAsync(x => x.HeaderId == request.HeaderId 
-                                                && ((x.StockCode ?? "").Trim() == (request.StockCode ?? "").Trim())
-                                                && ((x.YapKod ?? "").Trim() == (request.YapKod ?? "").Trim())
-                                                && !x.IsDeleted))
+                            var linesWithSerial = lineSerials
+                                .Where(ls => ((ls.SerialNo ?? "").Trim() == serialNo))
+                                .Select(ls => ls.LineId)
+                                .Distinct()
+                                .ToList();
+
+                            if (linesWithSerial.Count == 1)
+                            {
+                                // Sadece bir Line'da bu seri var → O Line'ı seç
+                                selectedLineId = linesWithSerial.First();
+                            }
+                            // Eğer birden fazla Line'da aynı seri varsa → Seri mantığı geçersiz, toplam miktar mantığına geç
+                        }
+
+                        // Eğer Line seçilmediyse (seri yok veya birden fazla Line'da seri var) → En fazla eksik olan Line'ı seç
+                        if (!selectedLineId.HasValue)
+                        {
+                            var lineQuantities = new List<(long LineId, decimal LineSerialTotal, decimal RouteTotal, decimal Remaining)>();
+
+                            foreach (var line in matchingLines)
+                            {
+                                // LineSerial toplam miktarı
+                                var lineSerialTotal = lineSerials
+                                    .Where(ls => ls.LineId == line.Id)
+                                    .Sum(ls => ls.Quantity);
+
+                                // Route toplam miktarı (bu Line'a bağlı ImportLine'ların Route'ları)
+                                var routeTotal = await _unitOfWork.SitRoutes
+                                    .AsQueryable()
+                                    .Where(r => !r.IsDeleted
+                                        && r.ImportLine.LineId == line.Id
+                                        && !r.ImportLine.IsDeleted)
+                                    .SumAsync(r => r.Quantity);
+
+                                var remaining = lineSerialTotal - routeTotal;
+                                lineQuantities.Add((line.Id, lineSerialTotal, routeTotal, remaining));
+                            }
+
+                            // En fazla eksik olan Line'ı seç (remaining en yüksek olan)
+                            var bestLine = lineQuantities
+                                .OrderByDescending(x => x.Remaining)
                                 .FirstOrDefault();
+
+                            if (bestLine != default && bestLine.LineId > 0)
+                            {
+                                selectedLineId = bestLine.LineId;
+                            }
+                            else
+                            {
+                                // Fallback: İlk eşleşen Line'ı seç
+                                selectedLineId = matchingLines.First().Id;
+                            }
                         }
 
-                        // Kayıt yoksa yeni importLine oluşturulur
+                        // Seçilen Line için ImportLine bul veya oluştur
+                        if (!selectedLineId.HasValue)
+                        {
+                            await _unitOfWork.RollbackTransactionAsync();
+                            return ApiResponse<SitImportLineDto>.ErrorResult(
+                                _localizationService.GetLocalizedString("SitImportLineNoMatchingLine"), 
+                                _localizationService.GetLocalizedString("SitImportLineNoMatchingLine"), 
+                                400);
+                        }
+
+                        SitImportLine? importLine = await _unitOfWork.SitImportLines
+                            .AsQueryable()
+                            .FirstOrDefaultAsync(il => il.HeaderId == request.HeaderId
+                                && il.LineId == selectedLineId.Value
+                                && ((il.StockCode ?? "").Trim() == reqStock)
+                                && ((il.YapKod ?? "").Trim() == reqYap)
+                                && !il.IsDeleted);
+
                         if (importLine == null)
                         {
                             var createImportLineDto = new CreateSitImportLineDto
                             {
                                 HeaderId = request.HeaderId,
-                                LineId = request.LineId.HasValue ? request.LineId.Value : 0,
+                                LineId = selectedLineId.Value,
                                 StockCode = request.StockCode,
                                 YapKod = request.YapKod
                             };
@@ -385,7 +515,9 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.SaveChangesAsync();
                         }
 
-                        // 7) Route kaydı: Barkod, miktar, seri ve lokasyon bilgileri ile importLine'a bağlı route eklenir
+                        // ============================================
+                        // 6) ROUTE KAYDI: Barkod, miktar, seri ve lokasyon bilgileri ile importLine'a bağlı route eklenir
+                        // ============================================
                         var createRouteDto = new CreateSitRouteDto
                         {
                             ImportLineId = importLine.Id,
@@ -403,7 +535,9 @@ namespace WMS_WEBAPI.Services
                         await _unitOfWork.SitRoutes.AddAsync(route);
                         await _unitOfWork.SaveChangesAsync();
 
-                        // 8) Sonuç: importLine DTO döndürülür ve işlem tamamlanır
+                        // ============================================
+                        // 7) SONUÇ: importLine DTO döndürülür ve işlem tamamlanır
+                        // ============================================
                         await _unitOfWork.CommitTransactionAsync();
                         var dto = _mapper.Map<SitImportLineDto>(importLine);
                         return ApiResponse<SitImportLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SitImportLineCreatedSuccessfully"));
