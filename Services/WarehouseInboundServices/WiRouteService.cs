@@ -94,48 +94,28 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var importLineId = route.ImportLineId;
-                var importLine = await _unitOfWork.WiImportLines.GetByIdAsync(importLineId);
-                var remainingRoutesUnderImport = await _unitOfWork.WiRoutes
+
+                // Bu ImportLine'a bağlı, silinmemiş ve bu route dışında başka route var mı kontrol et
+                var remainingRoutesCount = await _unitOfWork.WiRoutes
                     .AsQueryable()
                     .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
-                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
 
-                long headerIdToCheck = importLine?.HeaderId ?? 0L;
-                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
-                    ? await _unitOfWork.WiImportLines
-                        .AsQueryable()
-                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
-                    : false;
-                var hasOtherLinesUnderHeader = headerIdToCheck != 0
-                    ? await _unitOfWork.WiLines
-                        .AsQueryable()
-                        .AnyAsync(l => !l.IsDeleted && l.HeaderId == headerIdToCheck)
-                    : false;
-
-                var canDeleteImportLine = true;
-                if (willDeleteImportLine && importLine != null && importLine.LineId.HasValue)
-                {
-                    var hasActiveLineSerials = await _unitOfWork.WiLineSerials
-                        .AsQueryable()
-                        .AnyAsync(ls => !ls.IsDeleted && ls.LineId == importLine.LineId.Value);
-                    if (hasActiveLineSerials)
-                    {
-                        canDeleteImportLine = false;
-                    }
-                }
+                // Eğer başka route yoksa (count == 0), bu son route demektir, ImportLine'ı da silmeliyiz
+                var shouldDeleteImportLine = remainingRoutesCount == 0;
 
                 using var tx = await _unitOfWork.BeginTransactionAsync();
                 try
                 {
+                    // Route'u sil
                     await _unitOfWork.WiRoutes.SoftDelete(id);
 
-                    if (willDeleteImportLine && canDeleteImportLine)
+                    // Eğer bu son route ise, ImportLine'ı da sil
+                    if (shouldDeleteImportLine)
                     {
-                        await _unitOfWork.WiImportLines.SoftDelete(importLineId);
-
-                        if (!hasOtherLinesUnderHeader && !hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        var importLine = await _unitOfWork.WiImportLines.GetByIdAsync(importLineId);
+                        if (importLine != null && !importLine.IsDeleted)
                         {
-                            await _unitOfWork.WiHeaders.SoftDelete(headerIdToCheck);
+                            await _unitOfWork.WiImportLines.SoftDelete(importLineId);
                         }
                     }
 

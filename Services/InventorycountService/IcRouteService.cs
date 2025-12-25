@@ -118,30 +118,28 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var importLineId = route.ImportLineId;
-                var importLine = await _unitOfWork.IcImportLines.GetByIdAsync(importLineId);
-                var remainingRoutesUnderImport = await _unitOfWork.IcRoutes
+
+                // Bu ImportLine'a bağlı, silinmemiş ve bu route dışında başka route var mı kontrol et
+                var remainingRoutesCount = await _unitOfWork.IcRoutes
                     .AsQueryable()
                     .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
-                var willDeleteImportLine = remainingRoutesUnderImport == 0 && importLine != null && !importLine.IsDeleted;
 
-                long headerIdToCheck = importLine?.HeaderId ?? 0L;
-                var hasOtherImportLinesUnderHeader = headerIdToCheck != 0
-                    ? await _unitOfWork.IcImportLines
-                        .AsQueryable()
-                        .AnyAsync(il => !il.IsDeleted && il.HeaderId == headerIdToCheck && il.Id != importLineId)
-                    : false;
+                // Eğer başka route yoksa (count == 0), bu son route demektir, ImportLine'ı da silmeliyiz
+                var shouldDeleteImportLine = remainingRoutesCount == 0;
 
                 using var tx = await _unitOfWork.BeginTransactionAsync();
                 try
                 {
+                    // Route'u sil
                     await _unitOfWork.IcRoutes.SoftDelete(id);
 
-                    if (willDeleteImportLine)
+                    // Eğer bu son route ise, ImportLine'ı da sil
+                    if (shouldDeleteImportLine)
                     {
-                        await _unitOfWork.IcImportLines.SoftDelete(importLineId);
-                        if (!hasOtherImportLinesUnderHeader && headerIdToCheck != 0)
+                        var importLine = await _unitOfWork.IcImportLines.GetByIdAsync(importLineId);
+                        if (importLine != null && !importLine.IsDeleted)
                         {
-                            await _unitOfWork.ICHeaders.SoftDelete(headerIdToCheck);
+                            await _unitOfWork.IcImportLines.SoftDelete(importLineId);
                         }
                     }
 
