@@ -22,6 +22,11 @@ namespace WMS_WEBAPI.Data.Configuration
                 .IsRequired()
                 .HasDefaultValue(false)
                 .HasColumnName("RequireApprovalBeforeErp");
+
+            builder.Property(p => p.RequireAllOrderItemsCollected)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("RequireAllOrderItemsCollected");
         }
     }
 }

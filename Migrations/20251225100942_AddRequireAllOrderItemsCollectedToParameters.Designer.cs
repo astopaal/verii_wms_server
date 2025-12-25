@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS_WEBAPI.Data;
 
@@ -11,9 +12,11 @@ using WMS_WEBAPI.Data;
 namespace WMS_WEBAPI.Migrations
 {
     [DbContext(typeof(WmsDbContext))]
-    partial class WmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251225100942_AddRequireAllOrderItemsCollectedToParameters")]
+    partial class AddRequireAllOrderItemsCollectedToParameters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1292,6 +1295,11 @@ namespace WMS_WEBAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("ClientKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("ClientKey");
+
                     b.Property<long?>("CreatedBy")
                         .HasColumnType("bigint");
 
@@ -1306,14 +1314,20 @@ namespace WMS_WEBAPI.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("GrImportLineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("GrLineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ImportLineId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ImportLineId");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<long?>("LineId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("LineId");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,6)");
@@ -1354,11 +1368,15 @@ namespace WMS_WEBAPI.Migrations
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("GrImportLineId");
+
+                    b.HasIndex("GrLineId");
+
+                    b.HasIndex("ImportLineId")
+                        .HasDatabaseName("IX_GrLineSerial_ImportLineId");
+
                     b.HasIndex("IsDeleted")
                         .HasDatabaseName("IX_GrLineSerial_IsDeleted");
-
-                    b.HasIndex("LineId")
-                        .HasDatabaseName("IX_GrLineSerial_LineId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -8968,11 +8986,19 @@ namespace WMS_WEBAPI.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("WMS_WEBAPI.Models.GrLine", "Line")
+                    b.HasOne("WMS_WEBAPI.Models.GrImportLine", null)
                         .WithMany("SerialLines")
-                        .HasForeignKey("LineId")
+                        .HasForeignKey("GrImportLineId");
+
+                    b.HasOne("WMS_WEBAPI.Models.GrLine", null)
+                        .WithMany("SerialLines")
+                        .HasForeignKey("GrLineId");
+
+                    b.HasOne("WMS_WEBAPI.Models.GrImportLine", "ImportLine")
+                        .WithMany()
+                        .HasForeignKey("ImportLineId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("FK_GrLineSerial_GrLine");
+                        .HasConstraintName("FK_GrLineSerial_GrImportLine");
 
                     b.HasOne("WMS_WEBAPI.Models.User", "UpdatedByUser")
                         .WithMany()
@@ -8983,7 +9009,7 @@ namespace WMS_WEBAPI.Migrations
 
                     b.Navigation("DeletedByUser");
 
-                    b.Navigation("Line");
+                    b.Navigation("ImportLine");
 
                     b.Navigation("UpdatedByUser");
                 });
@@ -11492,6 +11518,8 @@ namespace WMS_WEBAPI.Migrations
             modelBuilder.Entity("WMS_WEBAPI.Models.GrImportLine", b =>
                 {
                     b.Navigation("Routes");
+
+                    b.Navigation("SerialLines");
                 });
 
             modelBuilder.Entity("WMS_WEBAPI.Models.GrLine", b =>

@@ -21,6 +21,11 @@ namespace WMS_WEBAPI.Models
         /// Require approval before ERP integration (ERP öncesi onay gerekli mi)
         /// </summary>
         public bool RequireApprovalBeforeErp { get; set; } = false;
+
+        /// <summary>
+        /// Require all order items to be collected (Emirdeki tüm kalemlere toplama yapılmış olmalı)
+        /// </summary>
+        public bool RequireAllOrderItemsCollected { get; set; } = false;
     }
 }
 
