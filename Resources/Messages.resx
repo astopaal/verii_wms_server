@@ -339,6 +339,18 @@
   <data name="GrHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Goods Receipt Header</value>
   </data>
+  <data name="GrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="GrHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Header created successfully</value>
   </data>
@@ -443,6 +455,21 @@
   </data>
   <data name="GrImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Import Line information retrieved successfully</value>
+  </data>
+  <data name="GrImportLineQuantityInvalid" xml:space="preserve">
+    <value>Quantity must be greater than 0</value>
+  </data>
+  <data name="GrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stock code and YapKod do not match existing import lines</value>
+  </data>
+  <data name="GrImportLineSerialNotMatch" xml:space="preserve">
+    <value>Serial number does not match line serial records</value>
+  </data>
+  <data name="GrImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
+  </data>
+  <data name="GrImportLineErrorOccurred" xml:space="preserve">
+    <value>Error occurred while processing Goods Receipt Import Line</value>
   </data>
   <data name="GrImportLineUpdateError" xml:space="preserve">
     <value>Error occurred while updating Goods Receipt Import Line</value>
@@ -747,6 +774,18 @@
   <data name="PrHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Production Header</value>
   </data>
+  <data name="PrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="PrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="PrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="PrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="PrHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Production Header created successfully</value>
   </data>
@@ -827,6 +866,9 @@
   </data>
   <data name="PrImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="PrImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="PrImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Production Import Line</value>
@@ -1002,6 +1044,18 @@
   <data name="PtHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Production Transfer Header</value>
   </data>
+  <data name="PtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="PtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="PtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="PtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="PtHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Production Transfer Header created successfully</value>
   </data>
@@ -1061,6 +1115,9 @@
   </data>
   <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="PtImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="PtImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Production Transfer import line</value>
@@ -1212,6 +1269,18 @@
   <data name="ShHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Shipping Header</value>
   </data>
+  <data name="ShHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="ShHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="ShHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="ShHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="ShHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Shipping Header created successfully</value>
   </data>
@@ -1274,6 +1343,9 @@
   </data>
   <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="ShImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="ShImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Shipping Import Line</value>
@@ -1617,6 +1689,18 @@
   <data name="SitHeaderErrorOccurred" xml:space="preserve">
     <value>Error occurred in Subcontracting Issue Header operation</value>
   </data>
+  <data name="SitHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="SitHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="SitHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="SitHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="SitHeaderImportLinesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
@@ -1643,6 +1727,9 @@
   </data>
   <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="SitImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="SitImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred in Subcontracting Issue Import Line operation</value>
@@ -1779,6 +1866,18 @@
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Subcontracting Receipt Transfer header</value>
   </data>
+  <data name="SrtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="SrtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="SrtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="SrtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="SrtHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer header created successfully</value>
   </data>
@@ -1820,6 +1919,9 @@
   </data>
   <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="SrtImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="SrtImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Subcontracting Receipt Transfer import line</value>
@@ -1989,6 +2091,18 @@
   <data name="WiHeaderErrorOccurred" xml:space="preserve">
     <value>Error occurred in Warehouse Inbound Header operation</value>
   </data>
+  <data name="WiHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="WiHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="WiHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="WiHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="WiHeaderImportLinesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
@@ -2012,6 +2126,9 @@
   </data>
   <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="WiImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="WiImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing warehouse import line</value>
@@ -2121,6 +2238,18 @@
   <data name="WoHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Warehouse Outbound Header</value>
   </data>
+  <data name="WoHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="WoHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="WoHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="WoHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <data name="WoHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Header created successfully</value>
   </data>
@@ -2162,6 +2291,9 @@
   </data>
   <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="WoImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="WoImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Outbound Import Line</value>
@@ -2382,6 +2514,18 @@
   <data name="WtHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Warehouse Transfer Header updated successfully</value>
   </data>
+  <data name="WtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
+  </data>
+  <data name="WtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be greater than Route total ({4})</value>
+  </data>
+  <data name="WtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) cannot be less than Route total ({4})</value>
+  </data>
+  <data name="WtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
   <!-- #endregion WtHeader -->
 
   <!-- #region WtImportLine -->
@@ -2393,6 +2537,9 @@
   </data>
   <data name="WtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Duplicate record found</value>
+  </data>
+  <data name="WtImportLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found for the given criteria</value>
   </data>
   <data name="WtImportLineErrorOccurred" xml:space="preserve">
     <value>Error occurred while processing Warehouse Transfer Import Line</value>

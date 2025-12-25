@@ -339,6 +339,18 @@
   <data name="GrLineGetByHeaderIdError" xml:space="preserve">
     <value>Başlık ID ile Mal Kabul Satırları getirilirken hata oluştu</value>
   </data>
+  <data name="GrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion GrHeader -->
 
   <!-- #region GrImportDocument -->
@@ -401,6 +413,21 @@
   </data>
   <data name="GrImportLineRetrievedSuccessfully" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı bilgisi başarıyla getirildi</value>
+  </data>
+  <data name="GrImportLineQuantityInvalid" xml:space="preserve">
+    <value>Miktar 0'dan büyük olmalıdır</value>
+  </data>
+  <data name="GrImportLineStokCodeAndYapCodeNotMatch" xml:space="preserve">
+    <value>Stok kodu ve YapKod mevcut import satırları ile uyumsuz</value>
+  </data>
+  <data name="GrImportLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası ilgili satır kayıtları ile uyumsuz</value>
+  </data>
+  <data name="GrImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
+  </data>
+  <data name="GrImportLineErrorOccurred" xml:space="preserve">
+    <value>Mal Kabul İthalat Satırı işlemi sırasında hata oluştu</value>
   </data>
   <data name="GrImportLineUpdateError" xml:space="preserve">
     <value>Mal Kabul İthalat Satırı güncellenirken hata oluştu</value>
@@ -732,6 +759,18 @@
   <data name="PrHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Üretim başlık başarıyla güncellendi</value>
   </data>
+  <data name="PrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="PrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="PrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="PrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -761,6 +800,9 @@
   </data>
   <data name="PrImportLineDeletedSuccessfully" xml:space="preserve">
     <value>Üretim ithalat satırı başarıyla silindi</value>
+  </data>
+  <data name="PrImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="PrImportLineErrorOccurred" xml:space="preserve">
     <value>Üretim ithalat satırı işlenirken hata oluştu</value>
@@ -951,6 +993,18 @@
   <data name="PtHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Üretim transfer başlık başarıyla güncellendi</value>
   </data>
+  <data name="PtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="PtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="PtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="PtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion PtHeader -->
 
   <!-- #region PtImportLine -->
@@ -962,6 +1016,9 @@
   </data>
   <data name="PtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="PtImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="PtImportLineErrorOccurred" xml:space="preserve">
     <value>Üretim transfer ithalat satırı işlenirken hata oluştu</value>
@@ -1164,6 +1221,18 @@
   <data name="ShHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Başlık başarıyla güncellendi</value>
   </data>
+  <data name="ShHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="ShHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="ShHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="ShHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -1175,6 +1244,9 @@
   </data>
   <data name="ShImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="ShImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="ShImportLineErrorOccurred" xml:space="preserve">
     <value>Sevkiyat İthalat Satır işleminde hata oluştu</value>
@@ -1533,6 +1605,18 @@
   <data name="SitHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık başarıyla güncellendi</value>
   </data>
+  <data name="SitHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="SitHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="SitHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="SitHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -1544,6 +1628,9 @@
   </data>
   <data name="SitImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="SitImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="SitImportLineErrorOccurred" xml:space="preserve">
     <value>Alt yüklenici çıkış ithalat satır işleminde hata oluştu</value>
@@ -1710,6 +1797,18 @@
   <data name="SrtHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık başarıyla güncellendi</value>
   </data>
+  <data name="SrtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="SrtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="SrtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="SrtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion SrtHeader -->
 
   <!-- #region SrtImportLine -->
@@ -1721,6 +1820,9 @@
   </data>
   <data name="SrtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="SrtImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="SrtImportLineErrorOccurred" xml:space="preserve">
     <value>Alt yüklenici kabul ithalat satırı işlenirken hata oluştu</value>
@@ -1890,6 +1992,18 @@
   <data name="WiHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Depo Giriş Başlık başarıyla güncellendi</value>
   </data>
+  <data name="WiHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="WiHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="WiHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="WiHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -1901,6 +2015,9 @@
   </data>
   <data name="WiImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="WiImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="WiImportLineErrorOccurred" xml:space="preserve">
     <value>Depo giriş ithalat satırı işlenirken hata oluştu</value>
@@ -2004,6 +2121,18 @@
   <data name="WoHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Depo çıkış başlık başarıyla güncellendi</value>
   </data>
+  <data name="WoHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="WoHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="WoHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="WoHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion WoHeader -->
 
   <!-- #region WoImportLine -->
@@ -2015,6 +2144,9 @@
   </data>
   <data name="WoImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="WoImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="WoImportLineErrorOccurred" xml:space="preserve">
     <value>Depo çıkış import satır işlemi sırasında hata oluştu</value>
@@ -2235,6 +2367,18 @@
   <data name="WtHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Depolar arası transfer başlık başarıyla güncellendi</value>
   </data>
+  <data name="WtHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamı ({4}) ile tam olarak eşleşmelidir</value>
+  </data>
+  <data name="WtHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha büyük olamaz</value>
+  </data>
+  <data name="WtHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): LineSerial toplamı ({3}) Route toplamından ({4}) daha küçük olamaz</value>
+  </data>
+  <data name="WtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
   <!-- #endregion WtHeader -->
 
   <!-- #region WtImportLine -->
@@ -2246,6 +2390,9 @@
   </data>
   <data name="WtImportLineDuplicateSerialFound" xml:space="preserve">
     <value>Eklenmiş kayıt bulunmuştur</value>
+  </data>
+  <data name="WtImportLineNoMatchingLine" xml:space="preserve">
+    <value>Verilen kriterlere uygun satır bulunamadı</value>
   </data>
   <data name="WtImportLineErrorOccurred" xml:space="preserve">
     <value>Depolar arası transfer import satır işlemi sırasında hata oluştu</value>
