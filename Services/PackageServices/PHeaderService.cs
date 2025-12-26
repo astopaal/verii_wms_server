@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WMS_WEBAPI.DTOs;
@@ -12,12 +13,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public PHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public PHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<PHeaderDto>>> GetAllAsync()
@@ -26,6 +29,14 @@ namespace WMS_WEBAPI.Services
             {
                 var headers = await _unitOfWork.PHeaders.GetAllAsync();
                 var dtos = _mapper.Map<IEnumerable<PHeaderDto>>(headers);
+                
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<PHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+                
                 return ApiResponse<IEnumerable<PHeaderDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -51,6 +62,13 @@ namespace WMS_WEBAPI.Services
                 var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
 
                 var dtos = _mapper.Map<List<PHeaderDto>>(items);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<PHeaderDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
+                
                 var result = new PagedResponse<PHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
 
                 return ApiResponse<PagedResponse<PHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("PHeaderRetrievedSuccessfully"));
@@ -73,6 +91,13 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var dto = _mapper.Map<PHeaderDto>(header);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PHeaderDto?>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PHeaderDto?>.SuccessResult(dto, _localizationService.GetLocalizedString("PHeaderRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -95,6 +120,13 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<PHeaderDto>(header);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PHeaderDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PHeaderCreatedSuccessfully"));
             }
             catch (Exception ex)
@@ -119,6 +151,13 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<PHeaderDto>(header);
+                var enriched = await _erpService.PopulateCustomerNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PHeaderDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PHeaderUpdatedSuccessfully"));
             }
             catch (Exception ex)

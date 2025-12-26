@@ -21,6 +21,9 @@ namespace WMS_WEBAPI.DTOs
         [MaxLength(50)]
         public string? CustomerCode { get; set; }
 
+        [MaxLength(200)]
+        public string? CustomerName { get; set; }
+
         [MaxLength(255)]
         public string? CustomerAddress { get; set; }
 
