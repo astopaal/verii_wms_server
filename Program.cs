@@ -200,6 +200,11 @@ builder.Services.AddScoped<BackgroundJobService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IResetPasswordEmailJob, WMS_WEBAPI.Services.Jobs.ResetPasswordEmailJob>();
 
+// Register Package Services
+builder.Services.AddScoped<IPHeaderService, PHeaderService>();
+builder.Services.AddScoped<IPPackageService, PPackageService>();
+builder.Services.AddScoped<IPLineService, PLineService>();
+
 // Add HttpContextAccessor for accessing HTTP context in services
 builder.Services.AddHttpContextAccessor();
 
@@ -243,7 +248,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "https://localhost:5173",
                 "http://127.0.0.1:5173",
-                "https://127.0.0.1:5173"
+                "https://127.0.0.1:5173",
+                "https://wms.v3rii.com"
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
