@@ -109,6 +109,11 @@ namespace WMS_WEBAPI.UnitOfWork
         private IGenericRepository<IcTerminalLine>? _icTerminalLines;
         private IGenericRepository<Notification>? _notifications;
 
+        // Package repository instances
+        private IGenericRepository<PHeader>? _pHeaders;
+        private IGenericRepository<PPackage>? _pPackages;
+        private IGenericRepository<PLine>? _pLines;
+
         // Parameter repository instances
         private IGenericRepository<GrParameter>? _grParameters;
         private IGenericRepository<WtParameter>? _wtParameters;
@@ -361,6 +366,16 @@ namespace WMS_WEBAPI.UnitOfWork
 
         public IGenericRepository<Notification> Notifications =>
             _notifications ??= new GenericRepository<Notification>(_context, _httpContextAccessor);
+
+        // Package repository properties
+        public IGenericRepository<PHeader> PHeaders =>
+            _pHeaders ??= new GenericRepository<PHeader>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PPackage> PPackages =>
+            _pPackages ??= new GenericRepository<PPackage>(_context, _httpContextAccessor);
+
+        public IGenericRepository<PLine> PLines =>
+            _pLines ??= new GenericRepository<PLine>(_context, _httpContextAccessor);
 
         // Parameter repository properties
         public IGenericRepository<GrParameter> GrParameters =>

@@ -110,6 +110,11 @@ namespace WMS_WEBAPI.UnitOfWork
         // Notification repositories
         IGenericRepository<Notification> Notifications { get; }
 
+        // Package repositories
+        IGenericRepository<PHeader> PHeaders { get; }
+        IGenericRepository<PPackage> PPackages { get; }
+        IGenericRepository<PLine> PLines { get; }
+
         // Parameter repositories
         IGenericRepository<GrParameter> GrParameters { get; }
         IGenericRepository<WtParameter> WtParameters { get; }
