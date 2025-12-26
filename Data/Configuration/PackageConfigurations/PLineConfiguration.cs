@@ -10,49 +10,72 @@ namespace WMS_WEBAPI.Data.Configuration
         {
             builder.ToTable("RII_P_LINE");
 
-            builder.Property(x => x.PackageCode)
+            builder.Property(x => x.PackingHeaderId)
+                .IsRequired()
+                .HasColumnName("PackingHeaderId");
+
+            builder.HasOne(x => x.PackingHeader)
+                .WithMany()
+                .HasForeignKey(x => x.PackingHeaderId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_PLine_PHeader");
+
+            builder.Property(x => x.PackageId)
+                .IsRequired()
+                .HasColumnName("PackageId");
+
+            builder.HasOne(x => x.Package)
+                .WithMany(x => x.Lines)
+                .HasForeignKey(x => x.PackageId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_PLine_PPackage");
+
+            builder.Property(x => x.Barcode)
+                .HasMaxLength(50)
+                .HasColumnName("Barcode");
+
+            builder.Property(x => x.StockCode)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasColumnName("PackageCode");
+                .HasColumnName("StockCode");
 
-            builder.Property(x => x.PackageType)
+            builder.Property(x => x.YapKod)
                 .IsRequired()
-                .HasMaxLength(20)
-                .HasColumnName("PackageType");
+                .HasMaxLength(50)
+                .HasColumnName("YapKod");
 
-            builder.Property(x => x.SourceType)
-                .HasMaxLength(30)
-                .HasColumnName("SourceType");
-
-            builder.Property(x => x.SourceId)
-                .HasColumnName("SourceId");
-
-            builder.Property(x => x.WarehouseCode)
-                .HasMaxLength(20)
-                .HasColumnName("WarehouseCode");
-
-            builder.Property(x => x.LocationCode)
-                .HasMaxLength(20)
-                .HasColumnName("LocationCode");
-
-            builder.Property(x => x.GrossWeight)
+            builder.Property(x => x.Quantity)
+                .IsRequired()
                 .HasColumnType("decimal(18,6)")
-                .HasColumnName("GrossWeight");
+                .HasColumnName("Quantity");
 
-            builder.Property(x => x.NetWeight)
-                .HasColumnType("decimal(18,6)")
-                .HasColumnName("NetWeight");
+            builder.Property(x => x.SerialNo)
+                .HasMaxLength(50)
+                .HasColumnName("SerialNo");
 
-            builder.Property(x => x.Volume)
-                .HasColumnType("decimal(18,6)")
-                .HasColumnName("Volume");
+            builder.Property(x => x.SerialNo2)
+                .HasMaxLength(50)
+                .HasColumnName("SerialNo2");
 
-            builder.Property(x => x.Description)
-                .HasMaxLength(100)
-                .HasColumnName("Description");
+            builder.Property(x => x.SerialNo3)
+                .HasMaxLength(50)
+                .HasColumnName("SerialNo3");
 
-            builder.HasIndex(x => x.PackageCode)
-                .HasDatabaseName("IX_PLine_PackageCode");
+            builder.Property(x => x.SerialNo4)
+                .HasMaxLength(50)
+                .HasColumnName("SerialNo4");
+
+            builder.Property(x => x.SourceRouteId)
+                .HasColumnName("SourceRouteId");
+
+            builder.HasIndex(x => x.PackingHeaderId)
+                .HasDatabaseName("IX_PLine_PackingHeaderId");
+
+            builder.HasIndex(x => x.PackageId)
+                .HasDatabaseName("IX_PLine_PackageId");
+
+            builder.HasIndex(x => x.StockCode)
+                .HasDatabaseName("IX_PLine_StockCode");
 
             builder.HasIndex(x => x.IsDeleted)
                 .HasDatabaseName("IX_PLine_IsDeleted");
