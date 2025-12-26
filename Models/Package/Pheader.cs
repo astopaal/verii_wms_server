@@ -9,41 +9,53 @@ namespace WMS_WEBAPI.Models
     public class PHeader : BaseEntity
     {
 
-    // Paket barkodu (kutu, koli, palet)
-    [Required, MaxLength(50)]
-    public string PackageCode { get; set; } = null!;
+        public string? WarehouseCode { get; set; }
 
-    // Paket tipi: BOX, CARTON, PALLET, BAG...
-    [Required, MaxLength(20)]
-    public string PackageType { get; set; } = "BOX";
+        // Paket numarası (PKG-2025-000123 formatında)
+        [Required, MaxLength(50)]
+        public string PackingNo { get; set; } = null!;
 
-    // Kaynak tipi: ORDER, PRODUCTION, COUNTING, TRANSFER vb.
-    [MaxLength(30)]
-    public string? SourceType { get; set; }
+        // Paketleme tarihi
+        public DateTime? PackingDate { get; set; }
 
-    // Kaynak ID (siparişId / üretimId / sayımId / transferId)
-    public long? SourceId { get; set; }
+        // Kaynak tipi: SalesOrder / Transfer / Production / Return
+        [MaxLength(30)]
+        public string? SourceType { get; set; }
 
-    // Depo ve raf bilgisi
-    [MaxLength(20)]
-    public string? WarehouseCode { get; set; }
-    [MaxLength(20)]
-    public string? LocationCode { get; set; }
+        // Kaynak Header ID (İlgili belgenin header Id'si)
+        public long? SourceHeaderId { get; set; }
 
-    // Ağırlık, ölçü, hacim
-    [Column(TypeName = "decimal(18,6)")]
-    public decimal? GrossWeight { get; set; }
-    [Column(TypeName = "decimal(18,6)")]
-    public decimal? NetWeight { get; set; }
-    [Column(TypeName = "decimal(18,6)")]
-    public decimal? Volume { get; set; }
+        // Müşteri bilgileri
+        [MaxLength(50)]
+        public string? CustomerCode { get; set; }
+        [MaxLength(255)]
+        public string? CustomerAddress { get; set; }
 
-    // Koli açıklamaları
-    [MaxLength(100)]
-    public string? Description { get; set; }
+        // Durum: Draft / Packing / Packed / Shipped / Cancelled
+        [Required, MaxLength(20)]
+        public string Status { get; set; } = PHeaderStatus.Draft;
 
-    // Navigasyon özellikleri
-    public virtual ICollection<PLine> Lines { get; set; } = new List<PLine>();
-        
+        // Toplam bilgileri
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? TotalPackageCount { get; set; }
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? TotalQuantity { get; set; }
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? TotalNetWeight { get; set; }
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? TotalGrossWeight { get; set; }
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? TotalVolume { get; set; }
+
+        // Kargo bilgileri
+        public long? CarrierId { get; set; }
+        [MaxLength(20)]
+        public string? CarrierServiceType { get; set; }
+        [MaxLength(100)]
+        public string? TrackingNo { get; set; }
+
+        // Navigasyon özellikleri
+        public virtual ICollection<PPackage> Packages { get; set; } = new List<PPackage>();
     }
 }
+
