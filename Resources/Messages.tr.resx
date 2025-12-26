@@ -2495,4 +2495,91 @@
   </data>
   <!-- #endregion WtTerminalLine -->
 
+  <!-- #region Package -->
+  <data name="PHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Paket başlık bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PHeaderRetrievalError" xml:space="preserve">
+    <value>Paket başlık bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Paket başlık başarıyla oluşturuldu</value>
+  </data>
+  <data name="PHeaderCreationError" xml:space="preserve">
+    <value>Paket başlık oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Paket başlık başarıyla güncellendi</value>
+  </data>
+  <data name="PHeaderUpdateError" xml:space="preserve">
+    <value>Paket başlık güncellenirken hata oluştu</value>
+  </data>
+  <data name="PHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Paket başlık başarıyla silindi</value>
+  </data>
+  <data name="PHeaderSoftDeletionError" xml:space="preserve">
+    <value>Paket başlık silinirken hata oluştu</value>
+  </data>
+  <data name="PHeaderNotFound" xml:space="preserve">
+    <value>Paket başlık bulunamadı</value>
+  </data>
+  <data name="PPackageRetrievedSuccessfully" xml:space="preserve">
+    <value>Paket bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PPackageRetrievalError" xml:space="preserve">
+    <value>Paket bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PPackageCreatedSuccessfully" xml:space="preserve">
+    <value>Paket başarıyla oluşturuldu</value>
+  </data>
+  <data name="PPackageCreationError" xml:space="preserve">
+    <value>Paket oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PPackageUpdatedSuccessfully" xml:space="preserve">
+    <value>Paket başarıyla güncellendi</value>
+  </data>
+  <data name="PPackageUpdateError" xml:space="preserve">
+    <value>Paket güncellenirken hata oluştu</value>
+  </data>
+  <data name="PPackageDeletedSuccessfully" xml:space="preserve">
+    <value>Paket başarıyla silindi</value>
+  </data>
+  <data name="PPackageSoftDeletionError" xml:space="preserve">
+    <value>Paket silinirken hata oluştu</value>
+  </data>
+  <data name="PPackageNotFound" xml:space="preserve">
+    <value>Paket bulunamadı</value>
+  </data>
+  <data name="PPackageNotBelongToPHeader" xml:space="preserve">
+    <value>Paket belirtilen paketleme başlığına ait değil</value>
+  </data>
+  <data name="PLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Paket satır bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="PLineRetrievalError" xml:space="preserve">
+    <value>Paket satır bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="PLineCreatedSuccessfully" xml:space="preserve">
+    <value>Paket satır başarıyla oluşturuldu</value>
+  </data>
+  <data name="PLineCreationError" xml:space="preserve">
+    <value>Paket satır oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Paket satır başarıyla güncellendi</value>
+  </data>
+  <data name="PLineUpdateError" xml:space="preserve">
+    <value>Paket satır güncellenirken hata oluştu</value>
+  </data>
+  <data name="PLineDeletedSuccessfully" xml:space="preserve">
+    <value>Paket satır başarıyla silindi</value>
+  </data>
+  <data name="PLineSoftDeletionError" xml:space="preserve">
+    <value>Paket satır silinirken hata oluştu</value>
+  </data>
+  <data name="PLineNotFound" xml:space="preserve">
+    <value>Paket satır bulunamadı</value>
+  </data>
+  <!-- #endregion Package -->
+
 </root>

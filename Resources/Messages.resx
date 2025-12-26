@@ -2660,4 +2660,91 @@
   </data>
   <!-- #endregion Parameter -->
 
+  <!-- #region Package -->
+  <data name="PHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Package Header information retrieved successfully</value>
+  </data>
+  <data name="PHeaderRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Package Header information</value>
+  </data>
+  <data name="PHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Package Header created successfully</value>
+  </data>
+  <data name="PHeaderCreationError" xml:space="preserve">
+    <value>Error occurred while creating Package Header</value>
+  </data>
+  <data name="PHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Package Header updated successfully</value>
+  </data>
+  <data name="PHeaderUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Package Header</value>
+  </data>
+  <data name="PHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Package Header deleted successfully</value>
+  </data>
+  <data name="PHeaderSoftDeletionError" xml:space="preserve">
+    <value>Error occurred while soft deleting Package Header</value>
+  </data>
+  <data name="PHeaderNotFound" xml:space="preserve">
+    <value>Package Header not found</value>
+  </data>
+  <data name="PPackageRetrievedSuccessfully" xml:space="preserve">
+    <value>Package information retrieved successfully</value>
+  </data>
+  <data name="PPackageRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Package information</value>
+  </data>
+  <data name="PPackageCreatedSuccessfully" xml:space="preserve">
+    <value>Package created successfully</value>
+  </data>
+  <data name="PPackageCreationError" xml:space="preserve">
+    <value>Error occurred while creating Package</value>
+  </data>
+  <data name="PPackageUpdatedSuccessfully" xml:space="preserve">
+    <value>Package updated successfully</value>
+  </data>
+  <data name="PPackageUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Package</value>
+  </data>
+  <data name="PPackageDeletedSuccessfully" xml:space="preserve">
+    <value>Package deleted successfully</value>
+  </data>
+  <data name="PPackageSoftDeletionError" xml:space="preserve">
+    <value>Error occurred while soft deleting Package</value>
+  </data>
+  <data name="PPackageNotFound" xml:space="preserve">
+    <value>Package not found</value>
+  </data>
+  <data name="PPackageNotBelongToPHeader" xml:space="preserve">
+    <value>Package does not belong to the specified Packing Header</value>
+  </data>
+  <data name="PLineRetrievedSuccessfully" xml:space="preserve">
+    <value>Package Line information retrieved successfully</value>
+  </data>
+  <data name="PLineRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving Package Line information</value>
+  </data>
+  <data name="PLineCreatedSuccessfully" xml:space="preserve">
+    <value>Package Line created successfully</value>
+  </data>
+  <data name="PLineCreationError" xml:space="preserve">
+    <value>Error occurred while creating Package Line</value>
+  </data>
+  <data name="PLineUpdatedSuccessfully" xml:space="preserve">
+    <value>Package Line updated successfully</value>
+  </data>
+  <data name="PLineUpdateError" xml:space="preserve">
+    <value>Error occurred while updating Package Line</value>
+  </data>
+  <data name="PLineDeletedSuccessfully" xml:space="preserve">
+    <value>Package Line deleted successfully</value>
+  </data>
+  <data name="PLineSoftDeletionError" xml:space="preserve">
+    <value>Error occurred while soft deleting Package Line</value>
+  </data>
+  <data name="PLineNotFound" xml:space="preserve">
+    <value>Package Line not found</value>
+  </data>
+  <!-- #endregion Package -->
+
 </root>
