@@ -99,6 +99,11 @@ namespace WMS_WEBAPI.Data
         public DbSet<IcTerminalLine> IcTerminalLines { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        // Package DbSets
+        public DbSet<PHeader> PHeaders { get; set; }
+        public DbSet<PPackage> PPackages { get; set; }
+        public DbSet<PLine> PLines { get; set; }
+
         // Parameter DbSets
         public DbSet<GrParameter> GrParameters { get; set; }
         public DbSet<WtParameter> WtParameters { get; set; }
@@ -194,6 +199,11 @@ namespace WMS_WEBAPI.Data
             modelBuilder.ApplyConfiguration(new ShLineSerialConfiguration());
 
             modelBuilder.ApplyConfiguration(new NotificationConfiguration());
+
+            // Package configurations
+            modelBuilder.ApplyConfiguration(new PHeaderConfiguration());
+            modelBuilder.ApplyConfiguration(new PPackageConfiguration());
+            modelBuilder.ApplyConfiguration(new PLineConfiguration());
 
             // Parameter configurations
             modelBuilder.ApplyConfiguration(new GrParameterConfiguration());
