@@ -14,8 +14,14 @@ namespace WMS_WEBAPI.DTOs
         [Required, MaxLength(50)]
         public string StockCode { get; set; } = null!;
 
+        [MaxLength(200)]
+        public string? StockName { get; set; }
+
         [Required, MaxLength(50)]
         public string YapKod { get; set; } = null!;
+
+        [MaxLength(200)]
+        public string? YapAcik { get; set; }
 
         [Required]
         public decimal Quantity { get; set; }

@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WMS_WEBAPI.DTOs;
@@ -12,12 +13,14 @@ namespace WMS_WEBAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILocalizationService _localizationService;
+        private readonly IErpService _erpService;
 
-        public PLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService)
+        public PLineService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IErpService erpService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
+            _erpService = erpService;
         }
 
         public async Task<ApiResponse<IEnumerable<PLineDto>>> GetAllAsync()
@@ -26,6 +29,14 @@ namespace WMS_WEBAPI.Services
             {
                 var lines = await _unitOfWork.PLines.GetAllAsync();
                 var dtos = _mapper.Map<IEnumerable<PLineDto>>(lines);
+                
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<PLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+                
                 return ApiResponse<IEnumerable<PLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -51,6 +62,13 @@ namespace WMS_WEBAPI.Services
                 var items = await query.ApplyPagination(request.PageNumber, request.PageSize).ToListAsync();
 
                 var dtos = _mapper.Map<List<PLineDto>>(items);
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PagedResponse<PLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data?.ToList() ?? dtos;
+                
                 var result = new PagedResponse<PLineDto>(dtos, totalCount, request.PageNumber, request.PageSize);
 
                 return ApiResponse<PagedResponse<PLineDto>>.SuccessResult(result, _localizationService.GetLocalizedString("PLineRetrievedSuccessfully"));
@@ -73,6 +91,13 @@ namespace WMS_WEBAPI.Services
                 }
 
                 var dto = _mapper.Map<PLineDto>(line);
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PLineDto?>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PLineDto?>.SuccessResult(dto, _localizationService.GetLocalizedString("PLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -87,6 +112,14 @@ namespace WMS_WEBAPI.Services
             {
                 var lines = await _unitOfWork.PLines.FindAsync(x => x.PackageId == packageId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<PLineDto>>(lines);
+                
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<PLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+                
                 return ApiResponse<IEnumerable<PLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -101,6 +134,14 @@ namespace WMS_WEBAPI.Services
             {
                 var lines = await _unitOfWork.PLines.FindAsync(x => x.PackingHeaderId == packingHeaderId && !x.IsDeleted);
                 var dtos = _mapper.Map<IEnumerable<PLineDto>>(lines);
+                
+                var enriched = await _erpService.PopulateStockNamesAsync(dtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<PLineDto>>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dtos = enriched.Data ?? dtos;
+                
                 return ApiResponse<IEnumerable<PLineDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("PLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
@@ -141,6 +182,13 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<PLineDto>(line);
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PLineCreatedSuccessfully"));
             }
             catch (Exception ex)
@@ -165,6 +213,13 @@ namespace WMS_WEBAPI.Services
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<PLineDto>(line);
+                var enriched = await _erpService.PopulateStockNamesAsync(new[] { dto });
+                if (!enriched.Success)
+                {
+                    return ApiResponse<PLineDto>.ErrorResult(enriched.Message, enriched.ExceptionMessage, enriched.StatusCode);
+                }
+                dto = enriched.Data?.FirstOrDefault() ?? dto;
+                
                 return ApiResponse<PLineDto>.SuccessResult(dto, _localizationService.GetLocalizedString("PLineUpdatedSuccessfully"));
             }
             catch (Exception ex)
