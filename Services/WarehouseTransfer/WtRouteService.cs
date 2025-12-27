@@ -126,10 +126,33 @@ namespace WMS_WEBAPI.Services
 
                 var importLineId = route.ImportLineId;
 
+
+                var headerId = await _unitOfWork.WtImportLines.AsQueryable()
+                    .Where(il => il.Id == importLineId && !il.IsDeleted)
+                    .Select(il => il.HeaderId)
+                    .FirstOrDefaultAsync();
+
                 // Bu ImportLine'a bağlı, silinmemiş ve bu route dışında başka route var mı kontrol et
                 var remainingRoutesCount = await _unitOfWork.WtRoutes
                     .AsQueryable()
                     .CountAsync(r => !r.IsDeleted && r.ImportLineId == importLineId && r.Id != id);
+
+                    var packageInfoList = await (
+                        from pl in _unitOfWork.PLines.AsQueryable()
+                        join p in _unitOfWork.PPackages.AsQueryable() on pl.PackageId equals p.Id
+                        join ph in _unitOfWork.PHeaders.AsQueryable() on p.PackingHeaderId equals ph.Id
+                        where !pl.IsDeleted
+                              && !p.IsDeleted
+                              && !ph.IsDeleted
+                              && pl.SourceRouteId.HasValue
+                              && pl.SourceRouteId == id
+                              && ph.SourceHeaderId == headerId
+                              && ph.SourceType == "WT"
+                        select new
+                        {
+                            PackageLineId = pl.Id
+                        }
+                    ).ToListAsync();
 
                 // Eğer başka route yoksa (count == 0), bu son route demektir, ImportLine'ı da silmeliyiz
                 var shouldDeleteImportLine = remainingRoutesCount == 0;
@@ -137,6 +160,11 @@ namespace WMS_WEBAPI.Services
                 using var tx = await _unitOfWork.BeginTransactionAsync();
                 try
                 {
+
+                    // Package'ları sil
+                    var packageLineId = packageInfoList.FirstOrDefault()?.PackageLineId ?? 0;
+                    await _unitOfWork.PLines.SoftDelete(packageLineId);
+
                     // Route'u sil
                     await _unitOfWork.WtRoutes.SoftDelete(id);
 
