@@ -646,8 +646,12 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entity = await _unitOfWork.SrtHeaders.GetByIdAsync(id);
-                if (entity == null || entity.IsDeleted)
+                // Tracking ile yükle (navigation property'ler yüklenmeyecek)
+                var entity = await _unitOfWork.SrtHeaders
+                    .AsQueryable()
+                    .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+                    
+                if (entity == null)
                 {
                     var nf = _localizationService.GetLocalizedString("SrtHeaderNotFound");
                     return ApiResponse<SrtHeaderDto>.ErrorResult(nf, nf, 404);

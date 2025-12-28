@@ -652,8 +652,12 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entity = await _unitOfWork.SitHeaders.GetByIdAsync(id);
-                if (entity == null || entity.IsDeleted)
+                // Tracking ile yükle (navigation property'ler yüklenmeyecek)
+                var entity = await _unitOfWork.SitHeaders
+                    .AsQueryable()
+                    .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+                    
+                if (entity == null)
                 {
                     var nf = _localizationService.GetLocalizedString("SitHeaderNotFound");
                     return ApiResponse<SitHeaderDto>.ErrorResult(nf, nf, 404);
