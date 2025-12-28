@@ -495,7 +495,8 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var query = _unitOfWork.WtHeaders.AsQueryable()
-                    .Where(x => !x.IsDeleted && x.IsCompleted && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
+                    .Where(x => !x.IsDeleted && x.IsCompleted 
+                    && x.IsPendingApproval && !x.IsERPIntegrated && x.ApprovalStatus == null);
 
                 query = query.ApplyFilters(request.Filters);
                 bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
@@ -525,8 +526,12 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var entity = await _unitOfWork.WtHeaders.GetByIdAsync(id);
-                if (entity == null || entity.IsDeleted)
+                // Tracking ile yükle (navigation property'ler yüklenmeyecek)
+                var entity = await _unitOfWork.WtHeaders
+                    .AsQueryable()
+                    .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+                    
+                if (entity == null)
                 {
                     var nf = _localizationService.GetLocalizedString("WtHeaderNotFound");
                     return ApiResponse<WtHeaderDto>.ErrorResult(nf, nf, 404);
