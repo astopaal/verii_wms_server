@@ -55,6 +55,52 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<PagedResponse<ShHeaderDto>>> GetPagedAsync(PagedRequest request)
+        {
+            try
+            {
+                if (request.PageNumber < 0) request.PageNumber = 0;
+                if (request.PageSize < 1) request.PageSize = 20;
+
+                var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
+                var query = _unitOfWork.ShHeaders.AsQueryable()
+                    .Where(x => !x.IsDeleted && x.BranchCode == branchCode);
+
+                query = query.ApplyFilters(request.Filters);
+                bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                query = query.ApplySorting(request.SortBy ?? "Id", desc);
+
+                var totalCount = await query.CountAsync();
+                var items = await query
+                    .ApplyPagination(request.PageNumber, request.PageSize)
+                    .ToListAsync();
+
+                var dtos = _mapper.Map<List<ShHeaderDto>>(items);
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<PagedResponse<ShHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
+
+                var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
+                if (!enrichedCustomer.Success)
+                {
+                    return ApiResponse<PagedResponse<ShHeaderDto>>.ErrorResult(enrichedCustomer.Message, enrichedCustomer.ExceptionMessage, enrichedCustomer.StatusCode);
+                }
+                dtos = enrichedCustomer.Data?.ToList() ?? dtos;
+
+                var result = new PagedResponse<ShHeaderDto>(dtos, totalCount, request.PageNumber, request.PageSize);
+
+                return ApiResponse<PagedResponse<ShHeaderDto>>.SuccessResult(result, _localizationService.GetLocalizedString("ShHeaderRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<PagedResponse<ShHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("ShHeaderErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
         public async Task<ApiResponse<ShHeaderDto>> GetByIdAsync(long id)
         {
             try
