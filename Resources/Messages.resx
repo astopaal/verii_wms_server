@@ -2688,6 +2688,18 @@
   <data name="PHeaderNotFound" xml:space="preserve">
     <value>Package Header not found</value>
   </data>
+  <data name="PHeaderPackingNoAlreadyExists" xml:space="preserve">
+    <value>Packing number already exists. Please use a different packing number</value>
+  </data>
+  <data name="InvalidSourceType" xml:space="preserve">
+    <value>Invalid or missing source type</value>
+  </data>
+  <data name="AvailableHeadersRetrievedSuccessfully" xml:space="preserve">
+    <value>Available headers retrieved successfully</value>
+  </data>
+  <data name="AvailableHeadersRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving available headers</value>
+  </data>
   <data name="PPackageRetrievedSuccessfully" xml:space="preserve">
     <value>Package information retrieved successfully</value>
   </data>

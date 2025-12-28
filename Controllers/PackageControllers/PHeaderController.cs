@@ -72,6 +72,13 @@ namespace WMS_WEBAPI.Controllers
             var result = await _pHeaderService.SoftDeleteAsync(id);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("available-for-mapping/{sourceType}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<object>>>> GetAvailableHeadersForMapping(string sourceType)
+        {
+            var result = await _pHeaderService.GetAvailableHeadersForMappingAsync(sourceType);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
 

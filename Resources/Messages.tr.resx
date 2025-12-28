@@ -2523,6 +2523,18 @@
   <data name="PHeaderNotFound" xml:space="preserve">
     <value>Paket başlık bulunamadı</value>
   </data>
+  <data name="PHeaderPackingNoAlreadyExists" xml:space="preserve">
+    <value>Paketleme numarası zaten mevcut. Lütfen farklı bir paketleme numarası kullanın</value>
+  </data>
+  <data name="InvalidSourceType" xml:space="preserve">
+    <value>Geçersiz veya eksik kaynak tipi</value>
+  </data>
+  <data name="AvailableHeadersRetrievedSuccessfully" xml:space="preserve">
+    <value>Uygun başlıklar başarıyla getirildi</value>
+  </data>
+  <data name="AvailableHeadersRetrievalError" xml:space="preserve">
+    <value>Uygun başlıklar getirilirken hata oluştu</value>
+  </data>
   <data name="PPackageRetrievedSuccessfully" xml:space="preserve">
     <value>Paket bilgileri başarıyla getirildi</value>
   </data>

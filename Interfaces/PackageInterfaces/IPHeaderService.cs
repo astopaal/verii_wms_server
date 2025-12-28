@@ -12,6 +12,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<PHeaderDto>> CreateAsync(CreatePHeaderDto createDto);
         Task<ApiResponse<PHeaderDto>> UpdateAsync(long id, UpdatePHeaderDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
+        Task<ApiResponse<IEnumerable<object>>> GetAvailableHeadersForMappingAsync(string sourceType);
     }
 }
 
