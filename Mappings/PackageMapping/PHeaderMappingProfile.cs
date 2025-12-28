@@ -26,6 +26,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CarrierId, opt => opt.MapFrom(src => src.CarrierId))
                 .ForMember(dest => dest.CarrierServiceType, opt => opt.MapFrom(src => src.CarrierServiceType))
                 .ForMember(dest => dest.TrackingNo, opt => opt.MapFrom(src => src.TrackingNo))
+                .ForMember(dest => dest.IsMatched, opt => opt.MapFrom(src => src.IsMatched))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate))
                 .ForMember(dest => dest.DeletedDate, opt => opt.MapFrom(src => src.DeletedDate))
@@ -44,6 +45,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.IsMatched, opt => opt.MapFrom(src => src.IsMatched ?? false))
                 .ForMember(dest => dest.Packages, opt => opt.Ignore());
 
             CreateMap<UpdatePHeaderDto, PHeader>()
@@ -55,6 +57,7 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.IsMatched, opt => opt.MapFrom(src => src.IsMatched ?? false))
                 .ForMember(dest => dest.Packages, opt => opt.Ignore());
         }
     }

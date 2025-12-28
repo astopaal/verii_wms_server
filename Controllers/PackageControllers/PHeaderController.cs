@@ -79,6 +79,18 @@ namespace WMS_WEBAPI.Controllers
             var result = await _pHeaderService.GetAvailableHeadersForMappingAsync(sourceType);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("{pHeaderId}/match-plines")]
+        public async Task<ActionResult<ApiResponse<bool>>> MatchPlinesWithMatchedStatus(long pHeaderId, [FromBody] MatchPlinesRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), ModelState?.ToString() ?? string.Empty, 400));
+            }
+
+            var result = await _pHeaderService.MatchPlinesWithMatchedStatus(pHeaderId, request.IsMatched);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
 

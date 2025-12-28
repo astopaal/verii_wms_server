@@ -80,6 +80,11 @@ namespace WMS_WEBAPI.Data.Configuration
                 .HasMaxLength(100)
                 .HasColumnName("TrackingNo");
 
+            builder.Property(x => x.IsMatched)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("IsMatched");
+
             builder.HasIndex(x => x.PackingNo)
                 .IsUnique()
                 .HasDatabaseName("IX_PHeader_PackingNo");

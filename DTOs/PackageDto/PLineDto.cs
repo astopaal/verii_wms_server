@@ -17,8 +17,8 @@ namespace WMS_WEBAPI.DTOs
         [MaxLength(200)]
         public string? StockName { get; set; }
 
-        [Required, MaxLength(50)]
-        public string YapKod { get; set; } = null!;
+        [MaxLength(50)]
+        public string? YapKod { get; set; }
 
         [MaxLength(200)]
         public string? YapAcik { get; set; }
@@ -55,8 +55,8 @@ namespace WMS_WEBAPI.DTOs
         [Required, MaxLength(50)]
         public string StockCode { get; set; } = null!;
 
-        [Required, MaxLength(50)]
-        public string YapKod { get; set; } = null!;
+        [MaxLength(50)]
+        public string? YapKod { get; set; }
 
         [Required]
         public decimal Quantity { get; set; }

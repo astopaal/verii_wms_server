@@ -210,19 +210,86 @@ namespace WMS_WEBAPI.Services
                     return ApiResponse<IEnumerable<WiImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("WiHeaderNotFound"), _localizationService.GetLocalizedString("WiHeaderNotFound"), 404);
                 }
 
-                var importLines = await _unitOfWork.WiImportLines.FindAsync(x => x.HeaderId == headerId && !x.IsDeleted);
-                var items = new List<WiImportLineWithRoutesDto>();
+                var importLines = await _unitOfWork.WiImportLines
+                    .AsQueryable()
+                    .Where(x => x.HeaderId == headerId && !x.IsDeleted)
+                    .ToListAsync();
 
-                foreach (var il in importLines)
+                if (!importLines.Any())
                 {
-                    var routes = await _unitOfWork.WiRoutes.FindAsync(r => r.ImportLineId == il.Id && !r.IsDeleted);
-                    var dto = new WiImportLineWithRoutesDto
-                    {
-                        ImportLine = _mapper.Map<WiImportLineDto>(il),
-                        Routes = _mapper.Map<List<WiRouteDto>>(routes)
-                    };
-                    items.Add(dto);
+                    return ApiResponse<IEnumerable<WiImportLineWithRoutesDto>>.SuccessResult(
+                        Array.Empty<WiImportLineWithRoutesDto>(),
+                        _localizationService.GetLocalizedString("WiImportLineRetrievedSuccessfully"));
                 }
+
+                // 1. Tüm routes'ları tek sorguda çek - N+1 problemi çözüldü
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+                var routes = await _unitOfWork.WiRoutes
+                    .AsQueryable()
+                    .Where(r => importLineIds.Contains(r.ImportLineId) && !r.IsDeleted)
+                    .ToListAsync();
+
+                // 2. Routes'ları ImportLineId'ye göre Dictionary'de grupla - O(1) lookup için
+                var routesByImportLineId = routes
+                    .GroupBy(r => r.ImportLineId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // 3. Package bilgilerini al ve Dictionary'de sakla - Join ile optimize edilmiş
+                Dictionary<long, (long? PackageLineId, string? PackageNo, long? packageHeaderId)> packageInfoDict = new();
+                if (routes.Count > 0)
+                {
+                    var routeIds = routes.Select(r => r.Id).ToList();
+                    var packageInfoList = await (
+                        from pl in _unitOfWork.PLines.AsQueryable()
+                        join p in _unitOfWork.PPackages.AsQueryable() on pl.PackageId equals p.Id
+                        join ph in _unitOfWork.PHeaders.AsQueryable() on p.PackingHeaderId equals ph.Id
+                        where !pl.IsDeleted
+                              && !p.IsDeleted
+                              && !ph.IsDeleted
+                              && pl.SourceRouteId.HasValue
+                              && routeIds.Contains(pl.SourceRouteId.Value)
+                              && ph.SourceHeaderId == headerId
+                              && ph.SourceType == PHeaderSourceType.WI
+                        select new
+                        {
+                            RouteId = pl.SourceRouteId!.Value,
+                            PackageLineId = pl.Id,
+                            PackageNo = p.PackageNo,
+                            packageHeaderId = ph.Id
+                        }
+                    ).ToListAsync();
+
+                    packageInfoDict = packageInfoList
+                        .GroupBy(x => x.RouteId)
+                        .ToDictionary(g => g.Key, g => (g?.First().PackageLineId, g?.First().PackageNo, g?.First().packageHeaderId));
+                }
+
+                // 4. Dictionary'leri kullanarak DTO'ları oluştur - O(1) lookup
+                var items = importLines.Select(importLine =>
+                {
+                    var importLineDto = _mapper.Map<WiImportLineDto>(importLine);
+
+                    var routeDtos = routesByImportLineId
+                        .GetValueOrDefault(importLine.Id, new List<WiRoute>())
+                        .Select(route =>
+                        {
+                            var routeDto = _mapper.Map<WiRouteDto>(route);
+                            if (packageInfoDict.TryGetValue(route.Id, out var packageInfo))
+                            {
+                                routeDto.PackageLineId = packageInfo.PackageLineId;
+                                routeDto.PackageNo = packageInfo.PackageNo;
+                                routeDto.PackageHeaderId = packageInfo.packageHeaderId;
+                            }
+                            return routeDto;
+                        })
+                        .ToList();
+
+                    return new WiImportLineWithRoutesDto
+                    {
+                        ImportLine = importLineDto,
+                        Routes = routeDtos
+                    };
+                }).ToList();
 
                 var importLineDtos = items.Select(i => i.ImportLine).ToList();
                 var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
@@ -544,5 +611,6 @@ namespace WMS_WEBAPI.Services
                 return ApiResponse<WiImportLineDto>.ErrorResult(_localizationService.GetLocalizedString("WiImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
+
     }
 }

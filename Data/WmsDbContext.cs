@@ -220,66 +220,7 @@ namespace WMS_WEBAPI.Data
 
             // InventoryCount configurations temporarily disabled
                         
-            // GoodReciptFunctions - Function olduğu için HasNoKey kullanıyoruz
-            modelBuilder.Entity<FN_GoodsOpenOrders_Header>().HasNoKey().ToFunction("RII_FN_GR_OPENORDERS_HEADER");
-            modelBuilder.Entity<FN_GoodsOpenOrders_Line>().HasNoKey().ToFunction("RII_FN_GR_OPENORDERS_LINE");
 
-            // WtFunctions temporarily disabled
-            modelBuilder.Entity<FN_TransferOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_TransferOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
-
-            modelBuilder.Entity<FN_SitOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_SitOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_SrtOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_SrtOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
-
-            // WarehouseInbound Functions
-            modelBuilder.Entity<FN_WiOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_WiOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
-
-            // WarehouseOutbound Functions
-            modelBuilder.Entity<FN_WoOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_WoOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
-
-            // Shipping Functions
-            modelBuilder.Entity<FN_ShOpenOrder_Header>(entity =>
-            {
-                entity.HasNoKey();
-            });
-            modelBuilder.Entity<FN_ShOpenOrder_Line>(entity =>
-            {
-                entity.HasNoKey();
-            });
         }
     }
 }

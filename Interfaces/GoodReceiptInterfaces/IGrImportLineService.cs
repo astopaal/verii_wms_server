@@ -15,6 +15,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<GrImportLineDto>> UpdateAsync(long id, UpdateGrImportLineDto updateDto);
         Task<ApiResponse<bool>> SoftDeleteAsync(long id);
         Task<ApiResponse<GrImportLineDto>> AddBarcodeBasedonAssignedOrderAsync(AddGrImportBarcodeRequestDto request);
+        Task<ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>> GetCollectedBarcodesByHeaderIdAsync(long headerId);
     }
 }
 

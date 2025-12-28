@@ -8,9 +8,10 @@ namespace WMS_WEBAPI.DTOs
         public long HeaderId { get; set; }
     }
 
-    public class GrImportLineWithRoutesDto : GrImportLineDto
+    public class GrImportLineWithRoutesDto
     {
-        public List<GrRouteDto> Routes { get; set; } = new List<GrRouteDto>();
+        public GrImportLineDto ImportLine { get; set; } = null!;
+        public List<GrRouteDto> Routes { get; set; } = new();
     }
 
     public class CreateGrImportLineDto : BaseImportLineCreateDto

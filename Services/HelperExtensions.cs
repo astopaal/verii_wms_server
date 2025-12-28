@@ -116,7 +116,11 @@ namespace WMS_WEBAPI.Services
 
         public static IQueryable<T> ApplyPagination<T>(this IQueryable<T> query, int page, int pageSize)
         {
-            return query.Skip((page - 1) * pageSize).Take(pageSize);
+            // Page 0-based: page 0 = first page (skip 0), page 1 = second page (skip pageSize)
+            // Page 1-based: page 1 = first page (skip 0), page 2 = second page (skip pageSize)
+            // Support both: if page is 0, treat as 0-based, otherwise treat as 1-based
+            int skip = page == 0 ? 0 : (page - 1) * pageSize;
+            return query.Skip(skip).Take(pageSize);
         }
     }
 }

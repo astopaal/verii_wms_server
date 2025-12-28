@@ -43,6 +43,8 @@ namespace WMS_WEBAPI.DTOs
 
         [MaxLength(100)]
         public string? TrackingNo { get; set; }
+
+        public bool IsMatched { get; set; }
     }
 
     public class CreatePHeaderDto
@@ -82,6 +84,8 @@ namespace WMS_WEBAPI.DTOs
 
         [MaxLength(100)]
         public string? TrackingNo { get; set; }
+
+        public bool? IsMatched { get; set; }
     }
 
     public class UpdatePHeaderDto
@@ -121,6 +125,14 @@ namespace WMS_WEBAPI.DTOs
 
         [MaxLength(100)]
         public string? TrackingNo { get; set; }
+
+        public bool? IsMatched { get; set; }
+    }
+
+    public class MatchPlinesRequestDto
+    {
+        [Required]
+        public bool IsMatched { get; set; }
     }
 }
 

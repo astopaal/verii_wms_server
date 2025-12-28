@@ -124,27 +124,229 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var items = await _unitOfWork.GrImportLines
+                var header = await _unitOfWork.GrHeaders.GetByIdAsync(headerId);
+                if (header == null || header.IsDeleted)
+                {
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderNotFound"), _localizationService.GetLocalizedString("GrHeaderNotFound"), 404);
+                }
+
+                var importLines = await _unitOfWork.GrImportLines
                     .AsQueryable()
                     .Where(x => x.HeaderId == headerId && !x.IsDeleted)
-                    .Include(x => x.Routes.Where(r => !r.IsDeleted))
                     .ToListAsync();
 
-                var dtos = _mapper.Map<IEnumerable<GrImportLineWithRoutesDto>>(items);
-
-                var enrichedResp = await _erpService.PopulateStockNamesAsync(dtos);
-                if (!enrichedResp.Success)
+                if (!importLines.Any())
                 {
-                return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(enrichedResp.Message, enrichedResp.ExceptionMessage, enrichedResp.StatusCode);
-            }
-                
-                dtos = enrichedResp.Data ?? dtos;
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.SuccessResult(
+                        Array.Empty<GrImportLineWithRoutesDto>(),
+                        _localizationService.GetLocalizedString("GrImportLineRetrievedSuccessfully"));
+                }
 
-                return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("GrImportLineRetrievedSuccessfully"));
+                // 1. Tüm routes'ları tek sorguda çek - N+1 problemi çözüldü
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+                var routes = await _unitOfWork.GrRoutes
+                    .AsQueryable()
+                    .Where(r => importLineIds.Contains(r.ImportLineId) && !r.IsDeleted)
+                    .ToListAsync();
+
+                // 2. Routes'ları ImportLineId'ye göre Dictionary'de grupla - O(1) lookup için
+                var routesByImportLineId = routes
+                    .GroupBy(r => r.ImportLineId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // 3. Package bilgilerini al ve Dictionary'de sakla - Join ile optimize edilmiş
+                Dictionary<long, (long? PackageLineId, string? PackageNo, long? packageHeaderId)> packageInfoDict = new();
+                if (routes.Count > 0)
+                {
+                    var routeIds = routes.Select(r => r.Id).ToList();
+                    var packageInfoList = await (
+                        from pl in _unitOfWork.PLines.AsQueryable()
+                        join p in _unitOfWork.PPackages.AsQueryable() on pl.PackageId equals p.Id
+                        join ph in _unitOfWork.PHeaders.AsQueryable() on p.PackingHeaderId equals ph.Id
+                        where !pl.IsDeleted
+                              && !p.IsDeleted
+                              && !ph.IsDeleted
+                              && pl.SourceRouteId.HasValue
+                              && routeIds.Contains(pl.SourceRouteId.Value)
+                              && ph.SourceHeaderId == headerId
+                              && ph.SourceType == PHeaderSourceType.GR
+                        select new
+                        {
+                            RouteId = pl.SourceRouteId!.Value,
+                            PackageLineId = pl.Id,
+                            PackageNo = p.PackageNo,
+                            packageHeaderId = ph.Id
+                        }
+                    ).ToListAsync();
+
+                    packageInfoDict = packageInfoList
+                        .GroupBy(x => x.RouteId)
+                        .ToDictionary(g => g.Key, g => (g?.First().PackageLineId, g?.First().PackageNo, g?.First().packageHeaderId));
+                }
+
+                // 4. Dictionary'leri kullanarak DTO'ları oluştur - O(1) lookup
+                var items = importLines.Select(importLine =>
+                {
+                    var importLineDto = _mapper.Map<GrImportLineDto>(importLine);
+
+                    var routeDtos = routesByImportLineId
+                        .GetValueOrDefault(importLine.Id, new List<GrRoute>())
+                        .Select(route =>
+                        {
+                            var routeDto = _mapper.Map<GrRouteDto>(route);
+                            if (packageInfoDict.TryGetValue(route.Id, out var packageInfo))
+                            {
+                                routeDto.PackageLineId = packageInfo.PackageLineId;
+                                routeDto.PackageNo = packageInfo.PackageNo;
+                                routeDto.PackageHeaderId = packageInfo.packageHeaderId;
+                            }
+                            return routeDto;
+                        })
+                        .ToList();
+
+                    return new GrImportLineWithRoutesDto
+                    {
+                        ImportLine = importLineDto,
+                        Routes = routeDtos
+                    };
+                }).ToList();
+
+                var importLineDtos = items.Select(i => i.ImportLine).ToList();
+                var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+                var enrichedList = enriched.Data?.ToList() ?? importLineDtos;
+                for (int i = 0; i < items.Count && i < enrichedList.Count; i++)
+                {
+                    items[i].ImportLine = enrichedList[i];
+                }
+
+                return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.SuccessResult(items, _localizationService.GetLocalizedString("GrImportLineRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
                 return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLineRetrievalError"), ex.Message, 500);
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>> GetCollectedBarcodesByHeaderIdAsync(long headerId)
+        {
+            try
+            {
+                var header = await _unitOfWork.GrHeaders.GetByIdAsync(headerId);
+                if (header == null || header.IsDeleted)
+                {
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderNotFound"), _localizationService.GetLocalizedString("GrHeaderNotFound"), 404);
+                }
+
+                var importLines = await _unitOfWork.GrImportLines
+                    .AsQueryable()
+                    .Where(x => x.HeaderId == headerId && !x.IsDeleted)
+                    .ToListAsync();
+
+                if (!importLines.Any())
+                {
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.SuccessResult(
+                        Array.Empty<GrImportLineWithRoutesDto>(),
+                        _localizationService.GetLocalizedString("GrImportLineRetrievedSuccessfully"));
+                }
+
+                // 1. Tüm routes'ları tek sorguda çek - N+1 problemi çözüldü
+                var importLineIds = importLines.Select(il => il.Id).ToList();
+                var routes = await _unitOfWork.GrRoutes
+                    .AsQueryable()
+                    .Where(r => importLineIds.Contains(r.ImportLineId) && !r.IsDeleted)
+                    .ToListAsync();
+
+                // 2. Routes'ları ImportLineId'ye göre Dictionary'de grupla - O(1) lookup için
+                var routesByImportLineId = routes
+                    .GroupBy(r => r.ImportLineId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // 3. Package bilgilerini al ve Dictionary'de sakla - Join ile optimize edilmiş
+                Dictionary<long, (long? PackageLineId, string? PackageNo, long? packageHeaderId)> packageInfoDict = new();
+                if (routes.Count > 0)
+                {
+                    var routeIds = routes.Select(r => r.Id).ToList();
+                    var packageInfoList = await (
+                        from pl in _unitOfWork.PLines.AsQueryable()
+                        join p in _unitOfWork.PPackages.AsQueryable() on pl.PackageId equals p.Id
+                        join ph in _unitOfWork.PHeaders.AsQueryable() on p.PackingHeaderId equals ph.Id
+                        where !pl.IsDeleted
+                              && !p.IsDeleted
+                              && !ph.IsDeleted
+                              && pl.SourceRouteId.HasValue
+                              && routeIds.Contains(pl.SourceRouteId.Value)
+                              && ph.SourceHeaderId == headerId
+                              && ph.SourceType == PHeaderSourceType.GR
+                        select new
+                        {
+                            RouteId = pl.SourceRouteId!.Value,
+                            PackageLineId = pl.Id,
+                            PackageNo = p.PackageNo,
+                            packageHeaderId = ph.Id
+                        }
+                    ).ToListAsync();
+
+                    packageInfoDict = packageInfoList
+                        .GroupBy(x => x.RouteId)
+                        .ToDictionary(g => g.Key, g => (g?.First().PackageLineId, g?.First().PackageNo, g?.First().packageHeaderId));
+                }
+
+                // 4. Dictionary'leri kullanarak DTO'ları oluştur - O(1) lookup
+                var items = importLines.Select(importLine =>
+                {
+                    var importLineDto = _mapper.Map<GrImportLineDto>(importLine);
+
+                    var routeDtos = routesByImportLineId
+                        .GetValueOrDefault(importLine.Id, new List<GrRoute>())
+                        .Select(route =>
+                        {
+                            var routeDto = _mapper.Map<GrRouteDto>(route);
+                            if (packageInfoDict.TryGetValue(route.Id, out var packageInfo))
+                            {
+                                routeDto.PackageLineId = packageInfo.PackageLineId;
+                                routeDto.PackageNo = packageInfo.PackageNo;
+                                routeDto.PackageHeaderId = packageInfo.packageHeaderId;
+                            }
+                            return routeDto;
+                        })
+                        .ToList();
+
+                    return new GrImportLineWithRoutesDto
+                    {
+                        ImportLine = importLineDto,
+                        Routes = routeDtos
+                    };
+                }).ToList();
+
+                var importLineDtos = items.Select(i => i.ImportLine).ToList();
+                var enriched = await _erpService.PopulateStockNamesAsync(importLineDtos);
+                if (!enriched.Success)
+                {
+                    return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(
+                        enriched.Message,
+                        enriched.ExceptionMessage,
+                        enriched.StatusCode
+                    );
+                }
+                var enrichedList = enriched.Data?.ToList() ?? importLineDtos;
+                for (int i = 0; i < items.Count && i < enrichedList.Count; i++)
+                {
+                    items[i].ImportLine = enrichedList[i];
+                }
+
+                return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.SuccessResult(items, _localizationService.GetLocalizedString("GrImportLineRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>.ErrorResult(_localizationService.GetLocalizedString("GrImportLineErrorOccurred"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -511,7 +713,7 @@ namespace WMS_WEBAPI.Services
                                 .OrderByDescending(x => x.Remaining)
                                 .FirstOrDefault();
 
-                            if (bestLine != default && bestLine.LineId > 0)
+                            if (bestLine.LineId > 0)
                             {
                                 selectedLineId = bestLine.LineId;
                             }
@@ -546,8 +748,8 @@ namespace WMS_WEBAPI.Services
                             {
                                 HeaderId = request.HeaderId,
                                 LineId = selectedLineId.Value,
-                                StockCode = request.StockCode,
-                                YapKod = request.YapKod
+                                StockCode = request.StockCode ?? reqStock,
+                                YapKod = request.YapKod ?? reqYap
                             };
                             importLine = _mapper.Map<GrImportLine>(createImportLineDto);
                             await _unitOfWork.GrImportLines.AddAsync(importLine);

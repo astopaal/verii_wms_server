@@ -62,6 +62,13 @@ namespace WMS_WEBAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("goodReceiptOrderCollectedBarcodes/{headerId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<GrImportLineWithRoutesDto>>>> GoodReceiptOrderCollectedBarcodes(long headerId)
+        {
+            var result = await _grImportLineService.GetCollectedBarcodesByHeaderIdAsync(headerId);
+            return StatusCode(result.StatusCode, result);
+        }
+
         /// <summary>
         /// Line ID'ye göre GrImportLine kayıtlarını getirir
         /// </summary>

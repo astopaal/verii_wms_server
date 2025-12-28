@@ -54,6 +54,9 @@ namespace WMS_WEBAPI.Models
         [MaxLength(100)]
         public string? TrackingNo { get; set; }
 
+        // Eşleşme durumu
+        public bool IsMatched { get; set; } = false;
+
         // Navigasyon özellikleri
         public virtual ICollection<PPackage> Packages { get; set; } = new List<PPackage>();
     }

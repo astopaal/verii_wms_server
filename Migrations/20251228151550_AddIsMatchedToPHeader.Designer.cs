@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS_WEBAPI.Data;
 
@@ -11,9 +12,11 @@ using WMS_WEBAPI.Data;
 namespace WMS_WEBAPI.Migrations
 {
     [DbContext(typeof(WmsDbContext))]
-    partial class WmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251228151550_AddIsMatchedToPHeader")]
+    partial class AddIsMatchedToPHeader
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +38,840 @@ namespace WMS_WEBAPI.Migrations
                     b.HasIndex("UserGroupMatchesId");
 
                     b.ToTable("RII_MOBIL_USER_PAGE_GROUP_MATCH", (string)null);
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_GoodsOpenOrders_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable((string)null);
+
+                    b.ToFunction("RII_FN_GR_OPENORDERS_HEADER");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_GoodsOpenOrders_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToFunction("RII_FN_GR_OPENORDERS_LINE");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_ShOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_ShOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_ShOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_ShOpenOrder_Line");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_SitOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_SitOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_SitOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_SitOpenOrder_Line");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_SrtOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_SrtOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_SrtOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_SrtOpenOrder_Line");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_TransferOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_TransferOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_TransferOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_TransferOpenOrder_Line");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_WiOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_WiOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_WiOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_WiOpenOrder_Line");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_WoOpenOrder_Header", b =>
+                {
+                    b.Property<short?>("BranchCode")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<short?>("TargetWh")
+                        .HasColumnType("smallint");
+
+                    b.ToTable("FN_WoOpenOrder_Header");
+                });
+
+            modelBuilder.Entity("WMS_WEBAPI.Models.FN_WoOpenOrder_Line", b =>
+                {
+                    b.Property<int>("BranchCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DeliveredQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<DateTime?>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("OrderedQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PlannedQtyAllocated")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("RemainingForImport")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RemainingHamax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SiparisNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("StockCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StockName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TargetWh")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YapAcik")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YapKod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("FN_WoOpenOrder_Line");
                 });
 
             modelBuilder.Entity("WMS_WEBAPI.Models.GrHeader", b =>
@@ -2048,6 +2885,7 @@ namespace WMS_WEBAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("YapKod")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("YapKod");

@@ -21,19 +21,8 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
                 .ApplyFullUserNames<GrImportLine, GrImportLineDto>();
 
-            CreateMap<GrImportLine, GrImportLineWithRoutesDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))
-                .ForMember(dest => dest.HeaderId, opt => opt.MapFrom(src => src.HeaderId))
-                .ForMember(dest => dest.StockCode, opt => opt.MapFrom(src => src.StockCode))
-                .ForMember(dest => dest.Description1, opt => opt.MapFrom(src => src.Description1))
-                .ForMember(dest => dest.Description2, opt => opt.MapFrom(src => src.Description2))
-                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
-                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => src.UpdatedDate))
-                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
-                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
-                .ForMember(dest => dest.Routes, opt => opt.MapFrom(src => src.Routes.Where(r => !r.IsDeleted)))
-                .ApplyFullUserNames<GrImportLine, GrImportLineWithRoutesDto>();
+            // GrImportLineWithRoutesDto artık composition pattern kullanıyor, mapping gerekmiyor
+            // Service katmanında manuel olarak oluşturuluyor
 
             CreateMap<CreateGrImportLineDto, GrImportLine>()
                 .ForMember(dest => dest.LineId, opt => opt.MapFrom(src => src.LineId))

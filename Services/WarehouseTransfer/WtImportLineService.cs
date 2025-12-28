@@ -211,7 +211,7 @@ namespace WMS_WEBAPI.Services
 
                     return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtImportLineDeletedSuccessfully"));
                 }
-                catch (Exception ex)
+                catch
                 {
                     await tx.RollbackAsync();
                     throw;
@@ -639,8 +639,8 @@ namespace WMS_WEBAPI.Services
                             {
                                 HeaderId = request.HeaderId,
                                 LineId = selectedLineId.Value,
-                                StockCode = request.StockCode,
-                                YapKod = request.YapKod
+                                StockCode = request.StockCode ?? reqStock,
+                                YapKod = request.YapKod ?? reqYap
                             };
                             importLine = _mapper.Map<WtImportLine>(createImportLineDto);
                             await _unitOfWork.WtImportLines.AddAsync(importLine);

@@ -23,8 +23,8 @@ namespace WMS_WEBAPI.Models
         [Required, MaxLength(50)]
         public string StockCode { get; set; } = null!;
 
-        [Required, MaxLength(50)]
-        public string YapKod { get; set; } = null!;
+        [MaxLength(50)]
+        public string? YapKod { get; set; }
 
         [Required, Column(TypeName = "decimal(18,6)")]
         public decimal Quantity { get; set; }

@@ -9,6 +9,9 @@ namespace WMS_WEBAPI.DTOs
         public string? YapKod { get; set; }
         public int Priority { get; set; }
         public string? Description { get; set; }
+        public long? PackageLineId { get; set; }
+        public string? PackageNo { get; set; }
+        public long? PackageHeaderId { get; set; }
     }
 
     public class CreateSitRouteDto : BaseRouteCreateDto

@@ -32,6 +32,9 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
+                if (request.PageNumber < 0) request.PageNumber = 0;
+                if (request.PageSize < 1) request.PageSize = 20;
+
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
                 var query = _unitOfWork.WtHeaders.AsQueryable()
                     .Where(x => !x.IsDeleted && x.BranchCode == branchCode);
@@ -46,6 +49,13 @@ namespace WMS_WEBAPI.Services
                     .ToListAsync();
 
                 var dtos = _mapper.Map<List<WtHeaderDto>>(items);
+
+                var enrichedWarehouse = await _erpService.PopulateWarehouseNamesAsync(dtos);
+                if (!enrichedWarehouse.Success)
+                {
+                    return ApiResponse<PagedResponse<WtHeaderDto>>.ErrorResult(enrichedWarehouse.Message, enrichedWarehouse.ExceptionMessage, enrichedWarehouse.StatusCode);
+                }
+                dtos = enrichedWarehouse.Data?.ToList() ?? dtos;
 
                 var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(dtos);
                 if (!enrichedCustomer.Success)

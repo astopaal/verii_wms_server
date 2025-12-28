@@ -40,7 +40,6 @@ namespace WMS_WEBAPI.Data.Configuration
                 .HasColumnName("StockCode");
 
             builder.Property(x => x.YapKod)
-                .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("YapKod");
 
