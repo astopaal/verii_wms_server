@@ -12,6 +12,7 @@ namespace WMS_WEBAPI.DTOs
         public string? PhoneNumber { get; set; }
         public string Role { get; set; } = string.Empty;
         public bool IsEmailConfirmed { get; set; }
+        public bool IsActive { get; set; }
         public DateTime? LastLoginDate { get; set; }
         public string FullName { get; set; } = string.Empty;
     }
