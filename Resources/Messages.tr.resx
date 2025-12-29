@@ -78,6 +78,9 @@
   <data name="AuthUserRetrievedSuccessfully" xml:space="preserve">
     <value>Kimlik doğrulama kullanıcısı başarıyla getirildi</value>
   </data>
+  <data name="ActiveUsersRetrievedSuccessfully" xml:space="preserve">
+    <value>Aktif kullanıcılar başarıyla getirildi</value>
+  </data>
   <data name="Error.User.InvalidCredentials" xml:space="preserve">
     <value>Geçersiz kullanıcı adı veya şifre</value>
   </data>
