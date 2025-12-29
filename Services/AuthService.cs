@@ -177,6 +177,23 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<IEnumerable<UserDto>>> GetActiveUsersAsync()
+        {
+            try
+            {
+                var users = await _unitOfWork.Users.AsQueryable()
+                    .Include(u => u.RoleNavigation)
+                    .Where(u => u.IsActive == true)
+                    .ToListAsync();
+                var dtos = users.Select(MapToUserDto).ToList();
+                return ApiResponse<IEnumerable<UserDto>>.SuccessResult(dtos, _localizationService.GetLocalizedString("ActiveUsersRetrievedSuccessfully"));
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<IEnumerable<UserDto>>.ErrorResult(_localizationService.GetLocalizedString("AuthErrorOccurred"), ex.Message ?? string.Empty, 500);
+            }
+        }
+
         public async Task<ApiResponse<string>> RequestPasswordResetAsync(ForgotPasswordRequest request)
         {
             try
@@ -324,6 +341,7 @@ namespace WMS_WEBAPI.Services
                 PhoneNumber = user.PhoneNumber,
                 Role = user.RoleNavigation?.Title ?? "User",
                 IsEmailConfirmed = user.IsEmailConfirmed,
+                IsActive = user.IsActive,
                 LastLoginDate = user.LastLoginDate,
                 FullName = user.FullName
             };
