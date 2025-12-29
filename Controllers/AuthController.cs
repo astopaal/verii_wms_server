@@ -47,6 +47,14 @@ namespace WMS_WEBAPI.Controllers
         }
 
         [Authorize]
+        [HttpGet("users/active")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<UserDto>>>> GetActiveUsers()
+        {
+            var result = await _authService.GetActiveUsersAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [Authorize]
         [HttpGet("user/{id}")]
         public async Task<ActionResult<ApiResponse<UserDto>>> GetUserById(long id)
         {
