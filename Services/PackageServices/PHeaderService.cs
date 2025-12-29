@@ -119,8 +119,7 @@ namespace WMS_WEBAPI.Services
 
                     if (existingHeader != null)
                     {
-                        var errorMessage = _localizationService.GetLocalizedString("PHeaderPackingNoAlreadyExists") 
-                            ?? $"Packing number '{createDto.PackingNo}' already exists";
+                        var errorMessage = _localizationService.GetLocalizedString("PHeaderPackingNoAlreadyExists");
                         return ApiResponse<PHeaderDto>.ErrorResult(errorMessage, errorMessage, 400);
                     }
                 }
@@ -190,6 +189,12 @@ namespace WMS_WEBAPI.Services
                 {
                     var nf = _localizationService.GetLocalizedString("PHeaderNotFound");
                     return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                }
+
+                if (header.IsMatched)
+                {
+                    var errorMsg = _localizationService.GetLocalizedString("PHeaderCannotDeleteWhenMatched");
+                    return ApiResponse<bool>.ErrorResult(errorMsg, errorMsg, 400);
                 }
 
                 await _unitOfWork.PHeaders.SoftDelete(id);
@@ -350,8 +355,8 @@ namespace WMS_WEBAPI.Services
                         {
                             await _unitOfWork.RollbackTransactionAsync();
                             return ApiResponse<bool>.ErrorResult(
-                                _localizationService.GetLocalizedString("InvalidSourceType") ?? "Invalid source type or missing source header",
-                                "Invalid source type or missing source header",
+                                _localizationService.GetLocalizedString("InvalidSourceType"),
+                                _localizationService.GetLocalizedString("InvalidSourceType"),
                                 400);
                         }
 
@@ -360,8 +365,8 @@ namespace WMS_WEBAPI.Services
                         {
                             await _unitOfWork.RollbackTransactionAsync();
                             return ApiResponse<bool>.ErrorResult(
-                                _localizationService.GetLocalizedString("SourceHeaderIdNotFound") ?? "Source header ID is required",
-                                "Source header ID is required",
+                                _localizationService.GetLocalizedString("SourceHeaderIdNotFound"),
+                                _localizationService.GetLocalizedString("SourceHeaderIdNotFound"),
                                 400);
                         }
 
@@ -375,8 +380,8 @@ namespace WMS_WEBAPI.Services
                         {
                             await _unitOfWork.RollbackTransactionAsync();
                             return ApiResponse<bool>.ErrorResult(
-                                _localizationService.GetLocalizedString("SourceHeaderNotFound") ?? "Source header not found",
-                                "Source header not found",
+                                _localizationService.GetLocalizedString("SourceHeaderNotFound"),
+                                _localizationService.GetLocalizedString("SourceHeaderNotFound"),
                                 404);
                         }
 
@@ -470,7 +475,7 @@ namespace WMS_WEBAPI.Services
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
                                     return ApiResponse<bool>.ErrorResult(
-                                        _localizationService.GetLocalizedString("PLineSerialNotMatch") ?? "PLine SerialNo does not match any LineSerial",
+                                        _localizationService.GetLocalizedString("PLineSerialNotMatch"),
                                         $"PLine Id {pline.Id}: SerialNo ({serialNo}) does not match any LineSerial",
                                         404);
                                 }
@@ -510,9 +515,7 @@ namespace WMS_WEBAPI.Services
                                 if (!allowMore && totalRouteQuantityAfterAdd > totalLineSerialQuantity + 0.000001m)
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    var firstLine = matchingLines[0];
-                                    var localizedMessage = _localizationService.GetLocalizedString("PLineQuantityCannotBeGreater") ?? 
-                                        $"Quantity cannot be greater than LineSerial total. LineSerial: {totalLineSerialQuantity}, Route after add: {totalRouteQuantityAfterAdd}";
+                                    var localizedMessage = _localizationService.GetLocalizedString("PLineQuantityCannotBeGreater");
                                     var exceptionMessage = $"Serial {serialNo} (StockCode: {plineStockCode}, YapKod: {plineYapKod}): Route total after add ({totalRouteQuantityAfterAdd}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
                                     return ApiResponse<bool>.ErrorResult(localizedMessage, exceptionMessage, 400);
                                 }
@@ -557,9 +560,7 @@ namespace WMS_WEBAPI.Services
                                 if (!allowMore && totalRouteQuantityAfterAdd > totalLineSerialQuantity + 0.000001m)
                                 {
                                     await _unitOfWork.RollbackTransactionAsync();
-                                    var firstLine = matchingLines[0];
-                                    var localizedMessage = _localizationService.GetLocalizedString("PLineQuantityCannotBeGreater") ?? 
-                                        $"Quantity cannot be greater than LineSerial total. LineSerial: {totalLineSerialQuantity}, Route after add: {totalRouteQuantityAfterAdd}";
+                                    var localizedMessage = _localizationService.GetLocalizedString("PLineQuantityCannotBeGreater");
                                     var exceptionMessage = $"StockCode: {plineStockCode}, YapKod: {plineYapKod}: Route total after add ({totalRouteQuantityAfterAdd}) cannot be greater than LineSerial total ({totalLineSerialQuantity})";
                                     return ApiResponse<bool>.ErrorResult(localizedMessage, exceptionMessage, 400);
                                 }
@@ -574,7 +575,7 @@ namespace WMS_WEBAPI.Services
                             if (hasSerialInLineSerials && hasRequestSerial)
                             {
                                 var linesWithSerial = lineSerials
-                                    .Where(ls => ls != null && ((ls.SerialNo ?? "").Trim() == serialNo))
+                                    .Where(ls => ls != null && ((ls?.SerialNo ?? "").Trim() == serialNo))
                                     .Select(ls => (long)(ls.LineId ?? 0))
                                     .Distinct()
                                     .ToList();
@@ -603,9 +604,9 @@ namespace WMS_WEBAPI.Services
                                     decimal lineSerialTotal = 0;
                                     foreach (var ls in lineSerials)
                                     {
-                                        if (ls != null && (ls.LineId ?? 0) == lineId)
+                                        if (ls != null && (ls?.LineId ?? 0) == lineId)
                                         {
-                                            lineSerialTotal += (decimal)(ls.Quantity ?? 0);
+                                            lineSerialTotal += (decimal)(ls?.Quantity ?? 0);
                                         }
                                     }
 
@@ -616,9 +617,9 @@ namespace WMS_WEBAPI.Services
                                     decimal routeTotal = 0;
                                     foreach (var r in allRoutes)
                                     {
-                                        if (r != null && !(r.IsDeleted ?? false) && r.ImportLine != null && !(r.ImportLine.IsDeleted ?? false) && (r.ImportLine.LineId ?? 0) == lineId)
+                                        if (r != null && !(r?.IsDeleted ?? false) && r?.ImportLine != null && !(r?.ImportLine?.IsDeleted ?? false) && (r?.ImportLine?.LineId ?? 0) == lineId)
                                         {
-                                            routeTotal += (decimal)(r.Quantity ?? 0);
+                                            routeTotal += (decimal)(r?.Quantity ?? 0);
                                         }
                                     }
 
@@ -647,8 +648,8 @@ namespace WMS_WEBAPI.Services
                             {
                                 await _unitOfWork.RollbackTransactionAsync();
                                 return ApiResponse<bool>.ErrorResult(
-                                    _localizationService.GetLocalizedString("PLineNoMatchingLine") ?? "No matching line found",
-                                    "No matching line found",
+                                    _localizationService.GetLocalizedString("PLineNoMatchingLine"),
+                                    _localizationService.GetLocalizedString("PLineNoMatchingLine"),
                                     400);
                             }
 
@@ -713,6 +714,25 @@ namespace WMS_WEBAPI.Services
                         // Bağlantıyı kes - Route'ları soft delete et
                         if (routeRepository != null)
                         {
+                        dynamic headerRepo = headerRepository;
+                        dynamic? sourceHeader = null;
+                        if (pHeader.SourceHeaderId.HasValue && headerRepository != null)
+                        {
+                            sourceHeader = await headerRepo.GetByIdAsync(pHeader.SourceHeaderId.Value);
+                        }
+                        
+                        // Source header var olmalı, silinmemiş ve tamamlanmamış olmalı
+                        if (sourceHeader == null || 
+                            (sourceHeader?.IsDeleted ?? false == true) || 
+                            (sourceHeader?.IsCompleted ?? false == true))
+                        {
+                            await _unitOfWork.RollbackTransactionAsync();
+                            return ApiResponse<bool>.ErrorResult(
+                                _localizationService.GetLocalizedString("MatchedSourceHeaderMustBeActiveAndIncomplete"),
+                                _localizationService.GetLocalizedString("MatchedSourceHeaderMustBeActiveAndIncomplete"),
+                                400);
+                        }
+
                             foreach (var pline in plines)
                             {
                                 if (pline.SourceRouteId.HasValue)
@@ -742,7 +762,7 @@ namespace WMS_WEBAPI.Services
 
                     return ApiResponse<bool>.SuccessResult(
                         true,
-                        _localizationService.GetLocalizedString("PHeaderMatchedSuccessfully") ?? "PHeader matched status updated successfully");
+                        _localizationService.GetLocalizedString("PHeaderMatchedSuccessfully"));
                 }
                 catch
                 {
@@ -753,7 +773,7 @@ namespace WMS_WEBAPI.Services
             catch (Exception ex)
             {
                 return ApiResponse<bool>.ErrorResult(
-                    _localizationService.GetLocalizedString("PHeaderErrorOccurred") ?? "An error occurred",
+                    _localizationService.GetLocalizedString("PHeaderErrorOccurred"),
                     ex.Message,
                     500);
             }
@@ -766,8 +786,8 @@ namespace WMS_WEBAPI.Services
                 if (string.IsNullOrWhiteSpace(sourceType))
                 {
                     return ApiResponse<IEnumerable<object>>.ErrorResult(
-                        _localizationService.GetLocalizedString("InvalidSourceType") ?? "Source type is required",
-                        "Source type is required",
+                        _localizationService.GetLocalizedString("InvalidSourceType"),
+                        _localizationService.GetLocalizedString("InvalidSourceType"),
                         400);
                 }
 
@@ -795,12 +815,12 @@ namespace WMS_WEBAPI.Services
 
                 return ApiResponse<IEnumerable<object>>.SuccessResult(
                     result,
-                    _localizationService.GetLocalizedString("AvailableHeadersRetrievedSuccessfully") ?? "Available headers retrieved successfully");
+                    _localizationService.GetLocalizedString("AvailableHeadersRetrievedSuccessfully"));
             }
             catch (Exception ex)
             {
                 return ApiResponse<IEnumerable<object>>.ErrorResult(
-                    _localizationService.GetLocalizedString("AvailableHeadersRetrievalError") ?? "Error occurred while retrieving available headers",
+                    _localizationService.GetLocalizedString("AvailableHeadersRetrievalError"),
                     ex.Message,
                     500);
             }
