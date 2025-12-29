@@ -2523,6 +2523,12 @@
   <data name="PHeaderSoftDeletionError" xml:space="preserve">
     <value>Paket başlık silinirken hata oluştu</value>
   </data>
+  <data name="PHeaderCannotDeleteWhenMatched" xml:space="preserve">
+    <value>Eşleşmeli işlem tamamlanmadıysa bağlantıyı kesip silebilirsiniz</value>
+  </data>
+  <data name="MatchedSourceHeaderMustBeActiveAndIncomplete" xml:space="preserve">
+    <value>Kaynak başlık mevcut olmalı, silinmemiş ve tamamlanmamış olmalıdır</value>
+  </data>
   <data name="PHeaderNotFound" xml:space="preserve">
     <value>Paket başlık bulunamadı</value>
   </data>
@@ -2594,6 +2600,30 @@
   </data>
   <data name="PLineNotFound" xml:space="preserve">
     <value>Paket satır bulunamadı</value>
+  </data>
+  <data name="SourceHeaderIdNotFound" xml:space="preserve">
+    <value>Kaynak başlık ID'si gereklidir</value>
+  </data>
+  <data name="SourceHeaderNotFound" xml:space="preserve">
+    <value>Kaynak başlık bulunamadı</value>
+  </data>
+  <data name="PLineStockCodeAndYapKodNotMatch" xml:space="preserve">
+    <value>StokKodu ve YapKod, Kaynak Başlıktaki hiçbir Satırla eşleşmiyor</value>
+  </data>
+  <data name="PLineSerialNotMatch" xml:space="preserve">
+    <value>Seri numarası hiçbir Satır Serisi ile eşleşmiyor</value>
+  </data>
+  <data name="PLineQuantityCannotBeGreater" xml:space="preserve">
+    <value>Miktar, Satır Serisi toplamından büyük olamaz</value>
+  </data>
+  <data name="PLineNoMatchingLine" xml:space="preserve">
+    <value>Eşleşen satır bulunamadı</value>
+  </data>
+  <data name="PHeaderMatchedSuccessfully" xml:space="preserve">
+    <value>Paket başlık eşleşme durumu başarıyla güncellendi</value>
+  </data>
+  <data name="PHeaderErrorOccurred" xml:space="preserve">
+    <value>Paket başlık işlenirken bir hata oluştu</value>
   </data>
   <!-- #endregion Package -->
 

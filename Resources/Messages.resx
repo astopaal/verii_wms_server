@@ -2688,6 +2688,12 @@
   <data name="PHeaderSoftDeletionError" xml:space="preserve">
     <value>Error occurred while soft deleting Package Header</value>
   </data>
+  <data name="PHeaderCannotDeleteWhenMatched" xml:space="preserve">
+    <value>You can disconnect and delete the connection if the matched process is not completed</value>
+  </data>
+  <data name="MatchedSourceHeaderMustBeActiveAndIncomplete" xml:space="preserve">
+    <value>Source header must exist, not be deleted, and not be completed</value>
+  </data>
   <data name="PHeaderNotFound" xml:space="preserve">
     <value>Package Header not found</value>
   </data>
@@ -2759,6 +2765,30 @@
   </data>
   <data name="PLineNotFound" xml:space="preserve">
     <value>Package Line not found</value>
+  </data>
+  <data name="SourceHeaderIdNotFound" xml:space="preserve">
+    <value>Source header ID is required</value>
+  </data>
+  <data name="SourceHeaderNotFound" xml:space="preserve">
+    <value>Source header not found</value>
+  </data>
+  <data name="PLineStockCodeAndYapKodNotMatch" xml:space="preserve">
+    <value>StockCode and YapKod do not match any Line in SourceHeader</value>
+  </data>
+  <data name="PLineSerialNotMatch" xml:space="preserve">
+    <value>SerialNo does not match any LineSerial</value>
+  </data>
+  <data name="PLineQuantityCannotBeGreater" xml:space="preserve">
+    <value>Quantity cannot be greater than LineSerial total</value>
+  </data>
+  <data name="PLineNoMatchingLine" xml:space="preserve">
+    <value>No matching line found</value>
+  </data>
+  <data name="PHeaderMatchedSuccessfully" xml:space="preserve">
+    <value>Package Header matched status updated successfully</value>
+  </data>
+  <data name="PHeaderErrorOccurred" xml:space="preserve">
+    <value>An error occurred while processing Package Header</value>
   </data>
   <!-- #endregion Package -->
 
