@@ -19,8 +19,9 @@ namespace WMS_WEBAPI.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IErpService _erpService;
         private readonly IGoodReciptFunctionsService _goodReceiptFunctionsService;
+        private readonly INotificationService _notificationService;
 
-        public GrHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService, IGoodReciptFunctionsService goodReceiptFunctionsService)
+        public GrHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService, IGoodReciptFunctionsService goodReceiptFunctionsService, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -28,17 +29,19 @@ namespace WMS_WEBAPI.Services
             _httpContextAccessor = httpContextAccessor;
             _erpService = erpService;
             _goodReceiptFunctionsService = goodReceiptFunctionsService;
+            _notificationService = notificationService;
         }
 
         public async Task<ApiResponse<PagedResponse<GrHeaderDto>>> GetPagedAsync(PagedRequest request)
         {
             try
             {
-                if (request.PageNumber < 1) request.PageNumber = 1;
+                if (request.PageNumber < 0) request.PageNumber = 0;
                 if (request.PageSize < 1) request.PageSize = 20;
 
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var query = _unitOfWork.GrHeaders.AsQueryable().Where(x => x.BranchCode == branchCode);
+                var query = _unitOfWork.GrHeaders.AsQueryable()
+                    .Where(x => !x.IsDeleted && x.BranchCode == branchCode);
                 query = query.ApplyFilters(request.Filters);
 
                 bool desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
@@ -62,7 +65,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
+                return ApiResponse<PagedResponse<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -71,7 +74,7 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var branchCode = _httpContextAccessor.HttpContext?.Items["BranchCode"] as string ?? "0";
-                var grHeaders = await _unitOfWork.GrHeaders.FindAsync(x => x.BranchCode == branchCode);
+                var grHeaders = await _unitOfWork.GrHeaders.FindAsync(x => !x.IsDeleted && x.BranchCode == branchCode);
                 var grHeaderDtos = _mapper.Map<List<GrHeaderDto>>(grHeaders);
 
                 var enrichedCustomer = await _erpService.PopulateCustomerNamesAsync(grHeaderDtos);
@@ -85,7 +88,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500);
+                return ApiResponse<IEnumerable<GrHeaderDto>>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -94,7 +97,7 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var grHeader = await _unitOfWork.GrHeaders.GetByIdAsync(id);
-                if (grHeader == null)
+                if (grHeader == null || grHeader.IsDeleted)
                 {
                     var nf = _localizationService.GetLocalizedString("GrHeaderNotFound");
                     return ApiResponse<GrHeaderDto?>.ErrorResult(nf, nf, 404);
@@ -111,14 +114,25 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrHeaderDto?>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message, 500, "Error retrieving GrHeader data");
+                return ApiResponse<GrHeaderDto?>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderRetrievalError"), ex.Message ?? string.Empty, 500);
             }
         }
         public async Task<ApiResponse<GrHeaderDto>> CreateAsync(CreateGrHeaderDto createDto)
         {
             try
             {
+                if (createDto == null)
+                {
+                    return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), _localizationService.GetLocalizedString("RequestOrHeaderMissing"), 400);
+                }
+                if (string.IsNullOrWhiteSpace(createDto.BranchCode) || string.IsNullOrWhiteSpace(createDto.CustomerCode))
+                {
+                    return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), _localizationService.GetLocalizedString("HeaderFieldsMissing"), 400);
+                }
+
                 var grHeader = _mapper.Map<GrHeader>(createDto);
+                grHeader.CreatedDate = DateTime.UtcNow;
+                grHeader.IsDeleted = false;
 
                 await _unitOfWork.GrHeaders.AddAsync(grHeader);
                 await _unitOfWork.SaveChangesAsync();
@@ -136,7 +150,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"),ex.Message,500);
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderCreationError"),ex.Message ?? string.Empty,500);
             }
         }
 
@@ -145,7 +159,7 @@ namespace WMS_WEBAPI.Services
             try
             {
                 var grHeader = await _unitOfWork.GrHeaders.GetByIdAsync(id);
-                if (grHeader == null)
+                if (grHeader == null || grHeader.IsDeleted)
                 {
                     var nf = _localizationService.GetLocalizedString("GrHeaderNotFound");
                     return ApiResponse<GrHeaderDto>.ErrorResult(nf, nf, 404);
@@ -153,6 +167,7 @@ namespace WMS_WEBAPI.Services
 
                 // Map updateDto to grHeader
                 _mapper.Map(updateDto, grHeader);
+                grHeader.UpdatedDate = DateTime.UtcNow;
 
                 _unitOfWork.GrHeaders.Update(grHeader);
                 await _unitOfWork.SaveChangesAsync();
@@ -170,7 +185,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderUpdateError"), ex.Message, 500);
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderUpdateError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -178,14 +193,21 @@ namespace WMS_WEBAPI.Services
         {
             try
             {
-                var grHeader = await _unitOfWork.GrHeaders.GetByIdAsync(id);
-                if (grHeader == null)
+                var exists = await _unitOfWork.GrHeaders.ExistsAsync(id);
+                if (!exists)
                 {
-                    var nf = _localizationService.GetLocalizedString("GrHeaderNotFound");
-                    return ApiResponse<bool>.ErrorResult(nf, nf, 404);
+                    var notFound = _localizationService.GetLocalizedString("GrHeaderNotFound");
+                    return ApiResponse<bool>.ErrorResult(notFound, notFound, 404);
                 }
 
-                await _unitOfWork.GrHeaders.SoftDelete(grHeader.Id);
+                var importLines = await _unitOfWork.GrImportLines.FindAsync(x => x.HeaderId == id && !x.IsDeleted);
+                if (importLines.Any())
+                {
+                    var msg = _localizationService.GetLocalizedString("GrHeaderImportLinesExist");
+                    return ApiResponse<bool>.ErrorResult(msg, msg, 400);
+                }
+
+                await _unitOfWork.GrHeaders.SoftDelete(id);
                 await _unitOfWork.SaveChangesAsync();
 
                 return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("GrHeaderDeletedSuccessfully"));
@@ -193,7 +215,7 @@ namespace WMS_WEBAPI.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderSoftDeletionError"), ex.Message, 500);
+                return ApiResponse<bool>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderSoftDeletionError"), ex.Message ?? string.Empty, 500);
             }
         }
 
@@ -839,6 +861,126 @@ namespace WMS_WEBAPI.Services
             }
         }
 
+        public async Task<ApiResponse<GrHeaderDto>> GenerateGoodReceiptOrderAsync(GenerateGoodReceiptOrderRequestDto request)
+        {
+            try
+            {
+                using (var tx = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var header = _mapper.Map<GrHeader>(request.Header);
+                        await _unitOfWork.GrHeaders.AddAsync(header);
+                        await _unitOfWork.SaveChangesAsync();
+
+                        var lineKeyToId = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+
+                        if (request.Lines != null && request.Lines.Count > 0)
+                        {
+                            var lines = new List<GrLine>(request.Lines.Count);
+                            foreach (var l in request.Lines)
+                            {
+                                var line = _mapper.Map<GrLine>(l);
+                                line.HeaderId = header.Id;
+                                lines.Add(line);
+                            }
+                            await _unitOfWork.GrLines.AddRangeAsync(lines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            for (int i = 0; i < request.Lines.Count; i++)
+                            {
+                                var key = request.Lines[i].ClientKey;
+                                var id = lines[i].Id;
+                                if (!string.IsNullOrWhiteSpace(key))
+                                {
+                                    lineKeyToId[key] = id;
+                                }
+                            }
+                        }
+
+                        if (request.LineSerials != null && request.LineSerials.Count > 0)
+                        {
+                            var serials = new List<GrLineSerial>(request.LineSerials.Count);
+                            foreach (var s in request.LineSerials)
+                            {
+                                long lineId = 0;
+                                if (!string.IsNullOrWhiteSpace(s.LineClientKey))
+                                {
+                                    if (!lineKeyToId.TryGetValue(s.LineClientKey, out lineId))
+                                    {
+                                        await _unitOfWork.RollbackTransactionAsync();
+                                        return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("GrHeaderLineClientKeyNotFound"), 400);
+                                    }
+                                }
+                                else
+                                {
+                                    await _unitOfWork.RollbackTransactionAsync();
+                                    return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderInvalidCorrelationKey"), _localizationService.GetLocalizedString("GrHeaderLineReferenceMissing"), 400);
+                                }
+
+                                var serial = _mapper.Map<GrLineSerial>(s);
+                                serial.LineId = lineId;
+                                serials.Add(serial);
+                            }
+                            await _unitOfWork.GrLineSerials.AddRangeAsync(serials);
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+
+                        List<Notification> createdNotifications = new List<Notification>();
+                        
+                        if (request.TerminalLines != null && request.TerminalLines.Count > 0)
+                        {
+                            var tlines = new List<GrTerminalLine>(request.TerminalLines.Count);
+                            foreach (var t in request.TerminalLines)
+                            {
+                                var tline = _mapper.Map<GrTerminalLine>(t);
+                                tline.HeaderId = header.Id;
+                                tlines.Add(tline);
+                            }
+                            await _unitOfWork.GrTerminalLines.AddRangeAsync(tlines);
+                            await _unitOfWork.SaveChangesAsync();
+
+                            // Create and add notifications for each terminal line
+                            var orderNumber = header.Id.ToString();
+                            createdNotifications = await _notificationService.CreateAndAddNotificationsForTerminalLinesAsync(
+                                tlines,
+                                orderNumber,
+                                NotificationEntityType.GRHeader,
+                                "GR_HEADER",
+                                "GrHeaderNotificationTitle",
+                                "GrHeaderNotificationMessage"
+                            );
+                            
+                            // Save notifications to database (they will be committed with transaction)
+                            if (createdNotifications.Count > 0)
+                            {
+                                await _unitOfWork.SaveChangesAsync();
+                            }
+                        }
+
+                        await _unitOfWork.CommitTransactionAsync();
+
+                        // Publish SignalR notifications after transaction is committed
+                        if (createdNotifications.Count > 0)
+                        {
+                            await _notificationService.PublishSignalRNotificationsForCreatedNotificationsAsync(createdNotifications);
+                        }
+
+                        var dto = _mapper.Map<GrHeaderDto>(header);
+                        return ApiResponse<GrHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("GrHeaderGenerateCompletedSuccessfully"));
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("GrHeaderGenerateError"), ex.Message ?? string.Empty, 500);
+            }
+        }
 
          
     }

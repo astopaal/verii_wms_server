@@ -131,6 +131,18 @@ namespace WMS_WEBAPI.Controllers
             var result = await _grHeaderService.BulkCreateAsync(request);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPost("generate")]
+        public async Task<ActionResult<ApiResponse<GrHeaderDto>>> GenerateOrder([FromBody] GenerateGoodReceiptOrderRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, ApiResponse<GrHeaderDto>.ErrorResult(_localizationService.GetLocalizedString("InvalidModelState"), ModelState?.ToString() ?? string.Empty, 400));
+            }
+
+            var result = await _grHeaderService.GenerateGoodReceiptOrderAsync(request);
+            return StatusCode(result.StatusCode, result);
+        }
         
     }
 }

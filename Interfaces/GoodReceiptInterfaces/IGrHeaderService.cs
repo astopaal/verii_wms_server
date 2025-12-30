@@ -21,6 +21,7 @@ namespace WMS_WEBAPI.Interfaces
         Task<ApiResponse<GrAssignedOrderLinesDto>> GetAssignedOrderLinesAsync(long headerId);
         Task<ApiResponse<PagedResponse<GrHeaderDto>>> GetCompletedAwaitingErpApprovalPagedAsync(PagedRequest request);
         Task<ApiResponse<GrHeaderDto>> SetApprovalAsync(long id, bool approved);
+        Task<ApiResponse<GrHeaderDto>> GenerateGoodReceiptOrderAsync(GenerateGoodReceiptOrderRequestDto request);
 
     }
 }
