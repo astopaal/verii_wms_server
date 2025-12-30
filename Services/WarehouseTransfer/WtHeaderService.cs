@@ -18,14 +18,16 @@ namespace WMS_WEBAPI.Services
         private readonly ILocalizationService _localizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IErpService _erpService;
+        private readonly INotificationService _notificationService;
 
-        public WtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService)
+        public WtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
             _httpContextAccessor = httpContextAccessor;
             _erpService = erpService;
+            _notificationService = notificationService;
         }
 
         public async Task<ApiResponse<PagedResponse<WtHeaderDto>>> GetPagedAsync(PagedRequest request)
@@ -376,16 +378,59 @@ namespace WMS_WEBAPI.Services
                     }
                 }
 
-                entity.IsCompleted = true;
-                entity.CompletionDate = DateTime.UtcNow;
-                
-                // Set IsPendingApproval based on parameter requirement
-                entity.IsPendingApproval = wtParameter!= null && wtParameter.RequireApprovalBeforeErp;
+                // ============================================
+                // TRANSACTION: Start transaction for write operations
+                // ============================================
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    entity.IsCompleted = true;
+                    entity.CompletionDate = DateTime.UtcNow;
+                    
+                    // Set IsPendingApproval based on parameter requirement
+                    entity.IsPendingApproval = wtParameter!= null && wtParameter.RequireApprovalBeforeErp;
 
-                _unitOfWork.WtHeaders.Update(entity);
-                await _unitOfWork.SaveChangesAsync();
+                    _unitOfWork.WtHeaders.Update(entity);
 
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtHeaderCompletedSuccessfully"));
+                    // Create notification for the user who created the order
+                    Notification? notification = null;
+                    if (entity.CreatedBy.HasValue)
+                    {
+                        var orderNumber = entity.Id.ToString();
+                        notification = new Notification
+                        {
+                            Title = _localizationService.GetLocalizedString("WtDoneNotificationTitle", orderNumber),
+                            Message = _localizationService.GetLocalizedString("WtDoneNotificationMessage", orderNumber),
+                            TitleKey = "WtDoneNotificationTitle",
+                            MessageKey = "WtDoneNotificationMessage",
+                            Channel = NotificationChannel.Web,
+                            Severity = NotificationSeverity.Info,
+                            RecipientUserId = entity.CreatedBy.Value,
+                            RelatedEntityType = NotificationEntityType.WTDone,
+                            RelatedEntityId = entity.Id,
+                            DeliveredAt = DateTime.UtcNow
+                        };
+
+                        await _unitOfWork.Notifications.AddAsync(notification);
+                    }
+
+                    // Single SaveChanges for both header update and notification
+                    await _unitOfWork.SaveChangesAsync();
+                    await _unitOfWork.CommitTransactionAsync();
+
+                    // Publish SignalR notification after transaction is committed
+                    if (notification != null)
+                    {
+                        await _notificationService.PublishSignalRNotificationsAsync(new[] { notification });
+                    }
+
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("WtHeaderCompletedSuccessfully"));
+                }
+                catch
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -648,6 +693,8 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.SaveChangesAsync();
                         }
 
+                        List<Notification> createdNotifications = new List<Notification>();
+                        
                         if (request.TerminalLines != null && request.TerminalLines.Count > 0)
                         {
                             var tlines = new List<WtTerminalLine>(request.TerminalLines.Count);
@@ -659,9 +706,32 @@ namespace WMS_WEBAPI.Services
                             }
                             await _unitOfWork.WtTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
+
+                            // Create and add notifications for each terminal line
+                            var orderNumber = header.Id.ToString();
+                            createdNotifications = await _notificationService.CreateAndAddNotificationsForTerminalLinesAsync(
+                                tlines,
+                                orderNumber,
+                                NotificationEntityType.WTHeader,
+                                "WT_HEADER",
+                                "WtHeaderNotificationTitle",
+                                "WtHeaderNotificationMessage"
+                            );
+                            
+                            // Save notifications to database (they will be committed with transaction)
+                            if (createdNotifications.Count > 0)
+                            {
+                                await _unitOfWork.SaveChangesAsync();
+                            }
                         }
 
                         await _unitOfWork.CommitTransactionAsync();
+
+                        // Publish SignalR notifications after transaction is committed
+                        if (createdNotifications.Count > 0)
+                        {
+                            await _notificationService.PublishSignalRNotificationsForCreatedNotificationsAsync(createdNotifications);
+                        }
 
                         var dto = _mapper.Map<WtHeaderDto>(header);
                         return ApiResponse<WtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("WtHeaderGenerateCompletedSuccessfully"));
