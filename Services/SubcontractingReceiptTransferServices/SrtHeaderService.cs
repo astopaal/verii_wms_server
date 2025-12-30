@@ -16,14 +16,16 @@ namespace WMS_WEBAPI.Services
         private readonly ILocalizationService _localizationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IErpService _erpService;
+        private readonly INotificationService _notificationService;
 
-        public SrtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService)
+        public SrtHeaderService(IUnitOfWork unitOfWork, IMapper mapper, ILocalizationService localizationService, IHttpContextAccessor httpContextAccessor, IErpService erpService, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _localizationService = localizationService;
             _httpContextAccessor = httpContextAccessor;
             _erpService = erpService;
+            _notificationService = notificationService;
         }
 
         public async Task<ApiResponse<IEnumerable<SrtHeaderDto>>> GetAllAsync()
@@ -768,6 +770,8 @@ namespace WMS_WEBAPI.Services
                             await _unitOfWork.SaveChangesAsync();
                         }
 
+                        List<Notification> createdNotifications = new List<Notification>();
+                        
                         if (request.TerminalLines != null && request.TerminalLines.Count > 0)
                         {
                             var tlines = new List<SrtTerminalLine>(request.TerminalLines.Count);
@@ -779,9 +783,32 @@ namespace WMS_WEBAPI.Services
                             }
                             await _unitOfWork.SrtTerminalLines.AddRangeAsync(tlines);
                             await _unitOfWork.SaveChangesAsync();
+
+                            // Create and add notifications for each terminal line
+                            var orderNumber = header.Id.ToString();
+                            createdNotifications = await _notificationService.CreateAndAddNotificationsForTerminalLinesAsync(
+                                tlines,
+                                orderNumber,
+                                NotificationEntityType.SRTHeader,
+                                "SRT_HEADER",
+                                "SrtHeaderNotificationTitle",
+                                "SrtHeaderNotificationMessage"
+                            );
+                            
+                            // Save notifications to database (they will be committed with transaction)
+                            if (createdNotifications.Count > 0)
+                            {
+                                await _unitOfWork.SaveChangesAsync();
+                            }
                         }
 
                         await _unitOfWork.CommitTransactionAsync();
+
+                        // Publish SignalR notifications after transaction is committed
+                        if (createdNotifications.Count > 0)
+                        {
+                            await _notificationService.PublishSignalRNotificationsForCreatedNotificationsAsync(createdNotifications);
+                        }
 
                         var dto = _mapper.Map<SrtHeaderDto>(header);
                         return ApiResponse<SrtHeaderDto>.SuccessResult(dto, _localizationService.GetLocalizedString("SrtHeaderGenerateCompletedSuccessfully"));
