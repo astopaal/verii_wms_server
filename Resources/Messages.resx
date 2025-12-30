@@ -396,6 +396,33 @@
   <data name="GrLineGetByHeaderIdError" xml:space="preserve">
     <value>Error occurred while retrieving Goods Receipt Lines by Header ID</value>
   </data>
+  <data name="GrHeaderImportLinesExist" xml:space="preserve">
+    <value>Collected items exist for this order; remove them before deletion</value>
+  </data>
+  <data name="GrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key provided</value>
+  </data>
+  <data name="GrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Line group GUID not found</value>
+  </data>
+  <data name="GrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Line client key not found</value>
+  </data>
+  <data name="GrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Line reference (client key or group GUID) is missing</value>
+  </data>
+  <data name="GrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Goods receipt order generated successfully</value>
+  </data>
+  <data name="GrHeaderGenerateError" xml:space="preserve">
+    <value>Error occurred while generating goods receipt order</value>
+  </data>
+  <data name="GrHeaderNotificationTitle" xml:space="preserve">
+    <value>Goods Receipt Order #{0} Opened</value>
+  </data>
+  <data name="GrHeaderNotificationMessage" xml:space="preserve">
+    <value>Goods receipt order number {0} has been assigned to you.</value>
+  </data>
   <!-- #endregion GrHeader -->
 
   <!-- #region GrImportDocument -->
@@ -837,6 +864,12 @@
   <data name="PrHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Production Header updated successfully</value>
   </data>
+  <data name="PrHeaderNotificationTitle" xml:space="preserve">
+    <value>Production Order #{0} Opened</value>
+  </data>
+  <data name="PrHeaderNotificationMessage" xml:space="preserve">
+    <value>Production order number {0} has been assigned to you.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -1107,6 +1140,12 @@
   <data name="PtHeaderUpdatedSuccessfully" xml:space="preserve">
     <value>Production Transfer Header updated successfully</value>
   </data>
+  <data name="PtHeaderNotificationTitle" xml:space="preserve">
+    <value>Production Transfer Order #{0} Opened</value>
+  </data>
+  <data name="PtHeaderNotificationMessage" xml:space="preserve">
+    <value>Production transfer order number {0} has been assigned to you.</value>
+  </data>
   <!-- #endregion PtHeader -->
 
   <!-- #region PtImportLine -->
@@ -1325,6 +1364,12 @@
   </data>
   <data name="ShHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Shipping Header information retrieved successfully</value>
+  </data>
+  <data name="ShHeaderNotificationTitle" xml:space="preserve">
+    <value>Shipment Order #{0} Opened</value>
+  </data>
+  <data name="ShHeaderNotificationMessage" xml:space="preserve">
+    <value>Shipment order number {0} has been assigned to you.</value>
   </data>
   <data name="ShHeaderRouteGroupGuidNotFound" xml:space="preserve">
     <value>RouteGroupGuid not found</value>
@@ -1710,6 +1755,12 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Subcontracting Issue Transfer header not found</value>
   </data>
+  <data name="SitHeaderNotificationTitle" xml:space="preserve">
+    <value>Subcontracting Issue Transfer Order #{0} Opened</value>
+  </data>
+  <data name="SitHeaderNotificationMessage" xml:space="preserve">
+    <value>Subcontracting issue transfer order number {0} has been assigned to you.</value>
+  </data>
   <data name="SitHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Subcontracting Issue Transfer header information</value>
   </data>
@@ -1901,6 +1952,12 @@
   </data>
   <data name="SrtHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Subcontracting Receipt Transfer Header information</value>
+  </data>
+  <data name="SrtHeaderNotificationTitle" xml:space="preserve">
+    <value>Subcontracting Receipt Transfer Order #{0} Opened</value>
+  </data>
+  <data name="SrtHeaderNotificationMessage" xml:space="preserve">
+    <value>Subcontracting receipt transfer order number {0} has been assigned to you.</value>
   </data>
   <data name="SrtHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Subcontracting Receipt Transfer Header information retrieved successfully</value>
@@ -2109,6 +2166,12 @@
   <data name="WiHeaderImportLinesExist" xml:space="preserve">
     <value>Collected items exist for this order; remove them before deletion</value>
   </data>
+  <data name="WiHeaderNotificationTitle" xml:space="preserve">
+    <value>Warehouse Inbound Order #{0} Opened</value>
+  </data>
+  <data name="WiHeaderNotificationMessage" xml:space="preserve">
+    <value>Warehouse inbound order number {0} has been assigned to you.</value>
+  </data>
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Warehouse Inbound Header not found</value>
   </data>
@@ -2273,6 +2336,12 @@
   </data>
   <data name="WoHeaderRetrievalError" xml:space="preserve">
     <value>Error occurred while retrieving Warehouse Outbound Header information</value>
+  </data>
+  <data name="WoHeaderNotificationTitle" xml:space="preserve">
+    <value>Warehouse Outbound Order #{0} Opened</value>
+  </data>
+  <data name="WoHeaderNotificationMessage" xml:space="preserve">
+    <value>Warehouse outbound order number {0} has been assigned to you.</value>
   </data>
   <data name="WoHeaderRetrievedSuccessfully" xml:space="preserve">
     <value>Warehouse Outbound Header information retrieved successfully</value>
@@ -2528,6 +2597,18 @@
   </data>
   <data name="WtHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
     <value>Line {0} (StockCode: {1}, YapKod: {2}): All order items must be collected. Route quantity is 0.</value>
+  </data>
+  <data name="WtHeaderNotificationTitle" xml:space="preserve">
+    <value>Warehouse Transfer Order #{0} Opened</value>
+  </data>
+  <data name="WtHeaderNotificationMessage" xml:space="preserve">
+    <value>Warehouse Transfer order number {0} has been assigned to you.</value>
+  </data>
+  <data name="WtDoneNotificationTitle" xml:space="preserve">
+    <value>Warehouse Transfer Order #{0} Completed</value>
+  </data>
+  <data name="WtDoneNotificationMessage" xml:space="preserve">
+    <value>Your warehouse transfer order number {0} has been completed.</value>
   </data>
   <!-- #endregion WtHeader -->
 

@@ -207,6 +207,12 @@
   <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
     <value>Referencia de línea (clave de cliente o GUID de grupo) faltante</value>
   </data>
+  <data name="PrHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Producción #{0} Abierta</value>
+  </data>
+  <data name="PrHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de producción número {0} ha sido asignada a usted.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -272,6 +278,12 @@
   </data>
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Encabezado de transferencia de producción no encontrado</value>
+  </data>
+  <data name="PtHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Transferencia de Producción #{0} Abierta</value>
+  </data>
+  <data name="PtHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de transferencia de producción número {0} ha sido asignada a usted.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -345,6 +357,12 @@
   <data name="ShHeaderNotFound" xml:space="preserve">
     <value>Encabezado de envío no encontrado</value>
   </data>
+  <data name="ShHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Envío #{0} Abierta</value>
+  </data>
+  <data name="ShHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de envío número {0} ha sido asignada a usted.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -411,6 +429,12 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Encabezado de subcontratación salida no encontrado</value>
   </data>
+  <data name="SitHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Transferencia de Subcontratación Salida #{0} Abierta</value>
+  </data>
+  <data name="SitHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de transferencia de subcontratación salida número {0} ha sido asignada a usted.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -473,6 +497,12 @@
   </data>
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Encabezado de subcontratación recepción no encontrado</value>
+  </data>
+  <data name="SrtHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Transferencia de Subcontratación Recepción #{0} Abierta</value>
+  </data>
+  <data name="SrtHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de transferencia de subcontratación recepción número {0} ha sido asignada a usted.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -540,6 +570,12 @@
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Encabezado de entrada de almacén no encontrado</value>
   </data>
+  <data name="WiHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Entrada de Almacén #{0} Abierta</value>
+  </data>
+  <data name="WiHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de entrada de almacén número {0} ha sido asignada a usted.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -606,6 +642,12 @@
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Encabezado de salida de almacén no encontrado</value>
   </data>
+  <data name="WoHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Salida de Almacén #{0} Abierta</value>
+  </data>
+  <data name="WoHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de salida de almacén número {0} ha sido asignada a usted.</value>
+  </data>
   <!-- #endregion WoHeader -->
 
   <!-- #region WoImportLine -->
@@ -645,6 +687,18 @@
   <!-- #endregion WtFunction -->
 
   <!-- #region WtHeader -->
+  <data name="WtHeaderNotificationTitle" xml:space="preserve">
+    <value>Orden de Transferencia de Almacén #{0} Abierta</value>
+  </data>
+  <data name="WtHeaderNotificationMessage" xml:space="preserve">
+    <value>La orden de transferencia de almacén número {0} ha sido asignada a usted.</value>
+  </data>
+  <data name="WtDoneNotificationTitle" xml:space="preserve">
+    <value>Orden de Transferencia de Almacén #{0} Completada</value>
+  </data>
+  <data name="WtDoneNotificationMessage" xml:space="preserve">
+    <value>Su orden de transferencia de almacén número {0} ha sido completada.</value>
+  </data>
   <!-- #endregion WtHeader -->
 
   <!-- #region WtImportLine -->

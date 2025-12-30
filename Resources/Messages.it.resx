@@ -207,6 +207,12 @@
   <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
     <value>Riferimento riga (chiave client o GUID gruppo) mancante</value>
   </data>
+  <data name="PrHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Produzione #{0} Aperto</value>
+  </data>
+  <data name="PrHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di produzione numero {0} ti è stato assegnato.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -272,6 +278,12 @@
   </data>
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Trasferimento Produzione non trovata</value>
+  </data>
+  <data name="PtHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Trasferimento Produzione #{0} Aperto</value>
+  </data>
+  <data name="PtHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di trasferimento produzione numero {0} ti è stato assegnato.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -345,6 +357,12 @@
   <data name="ShHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Spedizione non trovata</value>
   </data>
+  <data name="ShHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Spedizione #{0} Aperto</value>
+  </data>
+  <data name="ShHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di spedizione numero {0} ti è stato assegnato.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -411,6 +429,12 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Sottofornitura Uscita non trovata</value>
   </data>
+  <data name="SitHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Trasferimento Subappalto Uscita #{0} Aperto</value>
+  </data>
+  <data name="SitHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di trasferimento subappalto uscita numero {0} ti è stato assegnato.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -473,6 +497,12 @@
   </data>
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Sottofornitura Ricezione non trovata</value>
+  </data>
+  <data name="SrtHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Trasferimento Subappalto Ricezione #{0} Aperto</value>
+  </data>
+  <data name="SrtHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di trasferimento subappalto ricezione numero {0} ti è stato assegnato.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -540,6 +570,12 @@
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Magazzino Entrata non trovata</value>
   </data>
+  <data name="WiHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Entrata Magazzino #{0} Aperto</value>
+  </data>
+  <data name="WiHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di entrata magazzino numero {0} ti è stato assegnato.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -606,6 +642,12 @@
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Intestazione di Magazzino Uscita non trovata</value>
   </data>
+  <data name="WoHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Uscita Magazzino #{0} Aperto</value>
+  </data>
+  <data name="WoHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di uscita magazzino numero {0} ti è stato assegnato.</value>
+  </data>
   <!-- #endregion WoHeader -->
 
   <!-- #region WoImportLine -->
@@ -645,6 +687,18 @@
   <!-- #endregion WtFunction -->
 
   <!-- #region WtHeader -->
+  <data name="WtHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine di Trasferimento Magazzino #{0} Aperto</value>
+  </data>
+  <data name="WtHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di trasferimento magazzino numero {0} è stato assegnato a te.</value>
+  </data>
+  <data name="WtDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine di Trasferimento Magazzino #{0} Completato</value>
+  </data>
+  <data name="WtDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di trasferimento magazzino numero {0} è stato completato.</value>
+  </data>
   <!-- #endregion WtHeader -->
 
   <!-- #region WtImportLine -->

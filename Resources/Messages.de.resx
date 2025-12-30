@@ -207,6 +207,12 @@
   <data name="PrHeaderLineReferenceMissing" xml:space="preserve">
     <value>Zeilenreferenz (Client-Schlüssel oder Gruppen-GUID) fehlt</value>
   </data>
+  <data name="PrHeaderNotificationTitle" xml:space="preserve">
+    <value>Produktionsauftrag #{0} geöffnet</value>
+  </data>
+  <data name="PrHeaderNotificationMessage" xml:space="preserve">
+    <value>Produktionsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -272,6 +278,12 @@
   </data>
   <data name="PtHeaderNotFound" xml:space="preserve">
     <value>Produktionsübertrag Kopf nicht gefunden</value>
+  </data>
+  <data name="PtHeaderNotificationTitle" xml:space="preserve">
+    <value>Produktionstransferauftrag #{0} geöffnet</value>
+  </data>
+  <data name="PtHeaderNotificationMessage" xml:space="preserve">
+    <value>Produktionstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -345,6 +357,12 @@
   <data name="ShHeaderNotFound" xml:space="preserve">
     <value>Versand Kopf nicht gefunden</value>
   </data>
+  <data name="ShHeaderNotificationTitle" xml:space="preserve">
+    <value>Versandauftrag #{0} geöffnet</value>
+  </data>
+  <data name="ShHeaderNotificationMessage" xml:space="preserve">
+    <value>Versandauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -411,6 +429,12 @@
   <data name="SitHeaderNotFound" xml:space="preserve">
     <value>Untervergabe Ausgabe Kopf nicht gefunden</value>
   </data>
+  <data name="SitHeaderNotificationTitle" xml:space="preserve">
+    <value>Unterauftragnehmer-Ausgangstransferauftrag #{0} geöffnet</value>
+  </data>
+  <data name="SitHeaderNotificationMessage" xml:space="preserve">
+    <value>Unterauftragnehmer-Ausgangstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -473,6 +497,12 @@
   </data>
   <data name="SrtHeaderNotFound" xml:space="preserve">
     <value>Untervergabe Eingang Kopf nicht gefunden</value>
+  </data>
+  <data name="SrtHeaderNotificationTitle" xml:space="preserve">
+    <value>Unterauftragnehmer-Empfangstransferauftrag #{0} geöffnet</value>
+  </data>
+  <data name="SrtHeaderNotificationMessage" xml:space="preserve">
+    <value>Unterauftragnehmer-Empfangstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -540,6 +570,12 @@
   <data name="WiHeaderNotFound" xml:space="preserve">
     <value>Wareneingang Kopf nicht gefunden</value>
   </data>
+  <data name="WiHeaderNotificationTitle" xml:space="preserve">
+    <value>Wareneingangsauftrag #{0} geöffnet</value>
+  </data>
+  <data name="WiHeaderNotificationMessage" xml:space="preserve">
+    <value>Wareneingangsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -606,6 +642,12 @@
   <data name="WoHeaderNotFound" xml:space="preserve">
     <value>Warenausgang Kopf nicht gefunden</value>
   </data>
+  <data name="WoHeaderNotificationTitle" xml:space="preserve">
+    <value>Warenausgangsauftrag #{0} geöffnet</value>
+  </data>
+  <data name="WoHeaderNotificationMessage" xml:space="preserve">
+    <value>Warenausgangsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
   <!-- #endregion WoHeader -->
 
   <!-- #region WoImportLine -->
@@ -645,6 +687,18 @@
   <!-- #endregion WtFunction -->
 
   <!-- #region WtHeader -->
+  <data name="WtHeaderNotificationTitle" xml:space="preserve">
+    <value>Lagerübertragungsauftrag #{0} geöffnet</value>
+  </data>
+  <data name="WtHeaderNotificationMessage" xml:space="preserve">
+    <value>Lagerübertragungsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
+  <data name="WtDoneNotificationTitle" xml:space="preserve">
+    <value>Lagerübertragungsauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="WtDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Lagerübertragungsauftrag Nummer {0} wurde abgeschlossen.</value>
+  </data>
   <!-- #endregion WtHeader -->
 
   <!-- #region WtImportLine -->
