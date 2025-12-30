@@ -12,8 +12,14 @@ namespace WMS_WEBAPI.Data.Configuration
 
             builder.Property(x => x.Title).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Message).IsRequired().HasMaxLength(2000);
-            builder.Property(x => x.Channel).IsRequired();
-            builder.Property(x => x.Severity).IsRequired(false);
+            builder.Property(x => x.TitleKey).IsRequired(false).HasMaxLength(200);
+            builder.Property(x => x.MessageKey).IsRequired(false).HasMaxLength(200);
+            builder.Property(x => x.Channel)
+                .IsRequired()
+                .HasConversion<byte>(); // Convert enum to byte for database
+            builder.Property(x => x.Severity)
+                .IsRequired(false)
+                .HasConversion<byte?>(); // Convert enum to byte for database
             builder.Property(x => x.IsRead).HasDefaultValue(false);
 
             builder.Property(x => x.ScheduledAt).IsRequired(false);
@@ -32,11 +38,6 @@ namespace WMS_WEBAPI.Data.Configuration
             builder.HasOne(x => x.RecipientUser)
                 .WithMany()
                 .HasForeignKey(x => x.RecipientUserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(x => x.RecipientTerminalUser)
-                .WithMany()
-                .HasForeignKey(x => x.RecipientTerminalUserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
