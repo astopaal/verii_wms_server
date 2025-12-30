@@ -307,13 +307,21 @@ builder.Services.AddAuthentication(options =>
                 return;
             }
             
-            // Kullanıcının aktif session'ı var mı kontrol et
+            // Token'ı hem Authorization header'dan hem de query parameter'dan al (SignalR için)
             var authHeader = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            var accessToken = context.HttpContext.Request.Query["access_token"].FirstOrDefault();
+            
             string? rawToken = null;
             if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
             {
                 rawToken = authHeader.Substring("Bearer ".Length).Trim();
             }
+            else if (!string.IsNullOrEmpty(accessToken))
+            {
+                // SignalR için query parameter'dan token al
+                rawToken = accessToken;
+            }
+            
             string? tokenHash = null;
             if (!string.IsNullOrEmpty(rawToken))
             {
@@ -327,8 +335,11 @@ builder.Services.AddAuthentication(options =>
                 tokenHash = builderStr.ToString();
             }
 
+            // Session kontrolü: Token hash ile eşleşen aktif session ara
             var session = await db.UserSessions
-                .FirstOrDefaultAsync(s => s.UserId.ToString() == userId && s.RevokedAt == null && (tokenHash != null && s.Token == tokenHash));
+                .FirstOrDefaultAsync(s => s.UserId.ToString() == userId 
+                    && s.RevokedAt == null 
+                    && (tokenHash != null && s.Token == tokenHash));
             
             if (session == null)
             {
@@ -407,8 +418,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Endpoint mapping
-app.MapControllers();
+// SignalR hubs must be mapped before MapControllers() for proper routing
 app.MapHub<AuthHub>("/authHub");
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapControllers();
 
 app.Run();
