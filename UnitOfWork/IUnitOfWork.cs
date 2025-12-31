@@ -9,6 +9,7 @@ namespace WMS_WEBAPI.UnitOfWork
     {
         // Repository properties
         IGenericRepository<User> Users { get; }
+        IGenericRepository<UserDetail> UserDetails { get; }
         IGenericRepository<BaseEntity> BaseEntities { get; }
         IGenericRepository<BaseHeaderEntity> BaseHeaderEntities { get; }
         

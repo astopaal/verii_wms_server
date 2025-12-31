@@ -18,6 +18,17 @@ namespace WMS_WEBAPI.Mappings
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+            // UserDetail mappings
+            CreateMap<UserDetail, UserDetailDto>()
+                .ApplyFullUserNames();
+            
+            CreateMap<CreateUserDetailDto, UserDetail>()
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+            
+            CreateMap<UpdateUserDetailDto, UserDetail>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 

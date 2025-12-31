@@ -6442,6 +6442,74 @@ namespace WMS_WEBAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("WMS_WEBAPI.Models.UserDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Height")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("Weight")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DeletedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_RII_USER_DETAIL_UserId");
+
+                    b.ToTable("RII_USER_DETAIL", (string)null);
+                });
+
             modelBuilder.Entity("WMS_WEBAPI.Models.UserSession", b =>
                 {
                     b.Property<long>("Id")
@@ -10434,6 +10502,38 @@ namespace WMS_WEBAPI.Migrations
                     b.Navigation("UpdatedByUser");
                 });
 
+            modelBuilder.Entity("WMS_WEBAPI.Models.UserDetail", b =>
+                {
+                    b.HasOne("WMS_WEBAPI.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("WMS_WEBAPI.Models.User", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedBy")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("WMS_WEBAPI.Models.User", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("WMS_WEBAPI.Models.User", "User")
+                        .WithOne("UserDetail")
+                        .HasForeignKey("WMS_WEBAPI.Models.UserDetail", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("DeletedByUser");
+
+                    b.Navigation("UpdatedByUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WMS_WEBAPI.Models.UserSession", b =>
                 {
                     b.HasOne("WMS_WEBAPI.Models.User", "CreatedByUser")
@@ -11268,6 +11368,8 @@ namespace WMS_WEBAPI.Migrations
             modelBuilder.Entity("WMS_WEBAPI.Models.User", b =>
                 {
                     b.Navigation("Sessions");
+
+                    b.Navigation("UserDetail");
                 });
 
             modelBuilder.Entity("WMS_WEBAPI.Models.WiHeader", b =>

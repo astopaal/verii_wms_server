@@ -9,6 +9,7 @@ namespace WMS_WEBAPI.Data
         public WmsDbContext(DbContextOptions<WmsDbContext> options) : base(options) { }
 
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserDetail> UserDetails { get; set; }
         public virtual DbSet<UserSession> UserSessions { get; set; }
         public virtual DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
         public DbSet<GrHeader> GrHeaders { get; set; }
@@ -123,6 +124,7 @@ namespace WMS_WEBAPI.Data
 
             // Apply configurations
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserDetailConfiguration());
             modelBuilder.ApplyConfiguration(new UserSessionConfiguration());
             modelBuilder.ApplyConfiguration(new PasswordResetRequestConfiguration());
             modelBuilder.ApplyConfiguration(new GrHeaderConfiguration());

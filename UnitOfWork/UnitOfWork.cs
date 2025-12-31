@@ -16,6 +16,7 @@ namespace WMS_WEBAPI.UnitOfWork
 
         // Repository instances
         private IGenericRepository<User>? _users;
+        private IGenericRepository<UserDetail>? _userDetails;
         private IGenericRepository<BaseEntity>? _baseEntities;
         private IGenericRepository<BaseHeaderEntity>? _baseHeaderEntities;
         
@@ -137,6 +138,9 @@ namespace WMS_WEBAPI.UnitOfWork
 
         public IGenericRepository<User> Users =>
             _users ??= new GenericRepository<User>(_context, _httpContextAccessor);
+
+        public IGenericRepository<UserDetail> UserDetails =>
+            _userDetails ??= new GenericRepository<UserDetail>(_context, _httpContextAccessor);
 
         public IGenericRepository<BaseEntity> BaseEntities =>
             _baseEntities ??= new GenericRepository<BaseEntity>(_context, _httpContextAccessor);

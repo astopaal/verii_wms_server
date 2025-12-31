@@ -2873,4 +2873,70 @@
   </data>
   <!-- #endregion Package -->
 
+  <!-- #region UserDetail -->
+  <data name="UserDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>User detail retrieved successfully</value>
+  </data>
+  <data name="UserDetailRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving user detail</value>
+  </data>
+  <data name="UserDetailCreatedSuccessfully" xml:space="preserve">
+    <value>User detail created successfully</value>
+  </data>
+  <data name="UserDetailCreationError" xml:space="preserve">
+    <value>Error occurred while creating user detail</value>
+  </data>
+  <data name="UserDetailUpdatedSuccessfully" xml:space="preserve">
+    <value>User detail updated successfully</value>
+  </data>
+  <data name="UserDetailUpdateError" xml:space="preserve">
+    <value>Error occurred while updating user detail</value>
+  </data>
+  <data name="UserDetailDeletedSuccessfully" xml:space="preserve">
+    <value>User detail deleted successfully</value>
+  </data>
+  <data name="UserDetailDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting user detail</value>
+  </data>
+  <data name="UserDetailNotFound" xml:space="preserve">
+    <value>User detail not found</value>
+  </data>
+  <data name="UserDetailAlreadyExists" xml:space="preserve">
+    <value>User detail already exists for this user</value>
+  </data>
+  <data name="FileRequired" xml:space="preserve">
+    <value>File is required</value>
+  </data>
+  <data name="FileSizeExceeded" xml:space="preserve">
+    <value>File size exceeds the maximum allowed size</value>
+  </data>
+  <data name="InvalidFileFormat" xml:space="preserve">
+    <value>Invalid file format. Allowed formats: JPG, JPEG, PNG, GIF, WEBP</value>
+  </data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve">
+    <value>File uploaded successfully</value>
+  </data>
+  <data name="FileUploadError" xml:space="preserve">
+    <value>Error occurred while uploading file</value>
+  </data>
+  <data name="FileDeletedSuccessfully" xml:space="preserve">
+    <value>File deleted successfully</value>
+  </data>
+  <data name="FileDeletionError" xml:space="preserve">
+    <value>Error occurred while deleting file</value>
+  </data>
+  <data name="InvalidFileUrl" xml:space="preserve">
+    <value>Invalid file URL format</value>
+  </data>
+  <data name="NoFileToDelete" xml:space="preserve">
+    <value>No file to delete</value>
+  </data>
+  <data name="ProfilePictureUploadedSuccessfully" xml:space="preserve">
+    <value>Profile picture uploaded successfully</value>
+  </data>
+  <data name="ProfilePictureDeletedSuccessfully" xml:space="preserve">
+    <value>Profile picture deleted successfully</value>
+  </data>
+  <!-- #endregion UserDetail -->
+
 </root>

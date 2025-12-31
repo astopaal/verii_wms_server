@@ -2681,4 +2681,70 @@
   </data>
   <!-- #endregion Package -->
 
+  <!-- #region UserDetail -->
+  <data name="UserDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı detayı başarıyla alındı</value>
+  </data>
+  <data name="UserDetailRetrievalError" xml:space="preserve">
+    <value>Kullanıcı detayı alınırken hata oluştu</value>
+  </data>
+  <data name="UserDetailCreatedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı detayı başarıyla oluşturuldu</value>
+  </data>
+  <data name="UserDetailCreationError" xml:space="preserve">
+    <value>Kullanıcı detayı oluşturulurken hata oluştu</value>
+  </data>
+  <data name="UserDetailUpdatedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı detayı başarıyla güncellendi</value>
+  </data>
+  <data name="UserDetailUpdateError" xml:space="preserve">
+    <value>Kullanıcı detayı güncellenirken hata oluştu</value>
+  </data>
+  <data name="UserDetailDeletedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı detayı başarıyla silindi</value>
+  </data>
+  <data name="UserDetailDeletionError" xml:space="preserve">
+    <value>Kullanıcı detayı silinirken hata oluştu</value>
+  </data>
+  <data name="UserDetailNotFound" xml:space="preserve">
+    <value>Kullanıcı detayı bulunamadı</value>
+  </data>
+  <data name="UserDetailAlreadyExists" xml:space="preserve">
+    <value>Bu kullanıcı için zaten bir kullanıcı detayı mevcut</value>
+  </data>
+  <data name="FileRequired" xml:space="preserve">
+    <value>Dosya gereklidir</value>
+  </data>
+  <data name="FileSizeExceeded" xml:space="preserve">
+    <value>Dosya boyutu izin verilen maksimum boyutu aşıyor</value>
+  </data>
+  <data name="InvalidFileFormat" xml:space="preserve">
+    <value>Geçersiz dosya formatı. İzin verilen formatlar: JPG, JPEG, PNG, GIF, WEBP</value>
+  </data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve">
+    <value>Dosya başarıyla yüklendi</value>
+  </data>
+  <data name="FileUploadError" xml:space="preserve">
+    <value>Dosya yüklenirken hata oluştu</value>
+  </data>
+  <data name="FileDeletedSuccessfully" xml:space="preserve">
+    <value>Dosya başarıyla silindi</value>
+  </data>
+  <data name="FileDeletionError" xml:space="preserve">
+    <value>Dosya silinirken hata oluştu</value>
+  </data>
+  <data name="InvalidFileUrl" xml:space="preserve">
+    <value>Geçersiz dosya URL formatı</value>
+  </data>
+  <data name="NoFileToDelete" xml:space="preserve">
+    <value>Silinecek dosya yok</value>
+  </data>
+  <data name="ProfilePictureUploadedSuccessfully" xml:space="preserve">
+    <value>Profil resmi başarıyla yüklendi</value>
+  </data>
+  <data name="ProfilePictureDeletedSuccessfully" xml:space="preserve">
+    <value>Profil resmi başarıyla silindi</value>
+  </data>
+  <!-- #endregion UserDetail -->
+
 </root>

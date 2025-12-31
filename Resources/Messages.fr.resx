@@ -716,4 +716,70 @@
   <!-- #region WtTerminalLine -->
   <!-- #endregion WtTerminalLine -->
 
+  <!-- #region UserDetail -->
+  <data name="UserDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>Détails de l'utilisateur récupérés avec succès</value>
+  </data>
+  <data name="UserDetailRetrievalError" xml:space="preserve">
+    <value>Erreur lors de la récupération des détails de l'utilisateur</value>
+  </data>
+  <data name="UserDetailCreatedSuccessfully" xml:space="preserve">
+    <value>Détails de l'utilisateur créés avec succès</value>
+  </data>
+  <data name="UserDetailCreationError" xml:space="preserve">
+    <value>Erreur lors de la création des détails de l'utilisateur</value>
+  </data>
+  <data name="UserDetailUpdatedSuccessfully" xml:space="preserve">
+    <value>Détails de l'utilisateur mis à jour avec succès</value>
+  </data>
+  <data name="UserDetailUpdateError" xml:space="preserve">
+    <value>Erreur lors de la mise à jour des détails de l'utilisateur</value>
+  </data>
+  <data name="UserDetailDeletedSuccessfully" xml:space="preserve">
+    <value>Détails de l'utilisateur supprimés avec succès</value>
+  </data>
+  <data name="UserDetailDeletionError" xml:space="preserve">
+    <value>Erreur lors de la suppression des détails de l'utilisateur</value>
+  </data>
+  <data name="UserDetailNotFound" xml:space="preserve">
+    <value>Détails de l'utilisateur introuvables</value>
+  </data>
+  <data name="UserDetailAlreadyExists" xml:space="preserve">
+    <value>Des détails d'utilisateur existent déjà pour cet utilisateur</value>
+  </data>
+  <data name="FileRequired" xml:space="preserve">
+    <value>Le fichier est requis</value>
+  </data>
+  <data name="FileSizeExceeded" xml:space="preserve">
+    <value>La taille du fichier dépasse la taille maximale autorisée</value>
+  </data>
+  <data name="InvalidFileFormat" xml:space="preserve">
+    <value>Format de fichier invalide. Formats autorisés : JPG, JPEG, PNG, GIF, WEBP</value>
+  </data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve">
+    <value>Fichier téléchargé avec succès</value>
+  </data>
+  <data name="FileUploadError" xml:space="preserve">
+    <value>Erreur lors du téléchargement du fichier</value>
+  </data>
+  <data name="FileDeletedSuccessfully" xml:space="preserve">
+    <value>Fichier supprimé avec succès</value>
+  </data>
+  <data name="FileDeletionError" xml:space="preserve">
+    <value>Erreur lors de la suppression du fichier</value>
+  </data>
+  <data name="InvalidFileUrl" xml:space="preserve">
+    <value>Format d'URL de fichier invalide</value>
+  </data>
+  <data name="NoFileToDelete" xml:space="preserve">
+    <value>Aucun fichier à supprimer</value>
+  </data>
+  <data name="ProfilePictureUploadedSuccessfully" xml:space="preserve">
+    <value>Photo de profil téléchargée avec succès</value>
+  </data>
+  <data name="ProfilePictureDeletedSuccessfully" xml:space="preserve">
+    <value>Photo de profil supprimée avec succès</value>
+  </data>
+  <!-- #endregion UserDetail -->
+
 </root>

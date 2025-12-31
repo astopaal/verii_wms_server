@@ -16,6 +16,7 @@ using WMS_WEBAPI.Hubs;
 using System.Security.Claims;
 using Hangfire;
 using Hangfire.SqlServer;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -198,6 +199,10 @@ builder.Services.AddScoped<BackgroundJobService>();
 
 // Register Notification Services
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
+// Register User Detail Services
+builder.Services.AddScoped<IUserDetailService, UserDetailService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddScoped<IResetPasswordEmailJob, WMS_WEBAPI.Services.Jobs.ResetPasswordEmailJob>();
 
 // Register Package Services
@@ -404,6 +409,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors("DevCors");
+
+// Static files for uploaded images - wwwroot folder (default)
+app.UseStaticFiles();
+
+// Static files for uploads folder (project root/uploads)
+// This serves files from project root/uploads folder at /uploads URL path
+var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "uploads");
+if (Directory.Exists(uploadsPath))
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+        RequestPath = "/uploads"
+    });
+}
 
 // Hangfire Dashboard
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
