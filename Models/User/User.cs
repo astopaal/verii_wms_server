@@ -48,6 +48,7 @@ namespace WMS_WEBAPI.Models
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}".Trim();
 
+        public virtual UserDetail? UserDetail { get; set; }
         public virtual ICollection<UserSession> Sessions { get; set; } = new List<UserSession>();
     }
 }
