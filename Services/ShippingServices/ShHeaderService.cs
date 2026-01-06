@@ -344,16 +344,68 @@ namespace WMS_WEBAPI.Services
                     }
                 }
 
-                entity.IsCompleted = true;
-                entity.CompletionDate = DateTime.UtcNow;
-                
-                // Set IsPendingApproval based on parameter requirement
-                entity.IsPendingApproval = shParameter != null && shParameter.RequireApprovalBeforeErp;
+                // ============================================
+                // TRANSACTION: Start transaction for write operations
+                // ============================================
+                using var tx = await _unitOfWork.BeginTransactionAsync();
+                try
+                {
+                    entity.IsCompleted = true;
+                    entity.CompletionDate = DateTime.UtcNow;
+                    
+                    // Set IsPendingApproval based on parameter requirement
+                    entity.IsPendingApproval = shParameter != null && shParameter.RequireApprovalBeforeErp;
+                    _unitOfWork.ShHeaders.Update(entity);
 
-                _unitOfWork.ShHeaders.Update(entity);
-                await _unitOfWork.SaveChangesAsync();
+                    // Update package status to Shipped
+                    var package = _unitOfWork.PHeaders.AsQueryable()
+                        .Where(p => p.SourceHeaderId == entity.Id && !p.IsDeleted && p.SourceType == PHeaderSourceType.SH)
+                        .FirstOrDefault();
+                    if (package != null)
+                    {
+                        package.Status = PHeaderStatus.Shipped;
+                        _unitOfWork.PHeaders.Update(package);
+                    }
 
-                return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShHeaderCompletedSuccessfully"));
+                    // Create notification for the user who created the order
+                    Notification? notification = null;
+                    if (entity.CreatedBy.HasValue)
+                    {
+                        var orderNumber = entity.Id.ToString();
+                        notification = new Notification
+                        {
+                            Title = _localizationService.GetLocalizedString("ShDoneNotificationTitle", orderNumber),
+                            Message = _localizationService.GetLocalizedString("ShDoneNotificationMessage", orderNumber),
+                            TitleKey = "ShDoneNotificationTitle",
+                            MessageKey = "ShDoneNotificationMessage",
+                            Channel = NotificationChannel.Web,
+                            Severity = NotificationSeverity.Info,
+                            RecipientUserId = entity.CreatedBy.Value,
+                            RelatedEntityType = NotificationEntityType.SHDone,
+                            RelatedEntityId = entity.Id,
+                            DeliveredAt = DateTime.UtcNow
+                        };
+
+                        await _unitOfWork.Notifications.AddAsync(notification);
+                    }
+
+                    // Single SaveChanges for both header update and notification
+                    await _unitOfWork.SaveChangesAsync();
+                    await _unitOfWork.CommitTransactionAsync();
+
+                    // Publish SignalR notification after transaction is committed
+                    if (notification != null)
+                    {
+                        await _notificationService.PublishSignalRNotificationsAsync(new[] { notification });
+                    }
+
+                    return ApiResponse<bool>.SuccessResult(true, _localizationService.GetLocalizedString("ShHeaderCompletedSuccessfully"));
+                }
+                catch
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

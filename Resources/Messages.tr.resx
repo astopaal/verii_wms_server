@@ -249,6 +249,24 @@
   <data name="LineReferenceMissing" xml:space="preserve">
     <value>Satır referansı eksik</value>
   </data>
+  <data name="RequestOrHeaderMissing" xml:space="preserve">
+    <value>İstek veya başlık eksik</value>
+  </data>
+  <data name="HeaderFieldsMissing" xml:space="preserve">
+    <value>Gerekli başlık alanları eksik</value>
+  </data>
+  <data name="HeaderInsertFailed" xml:space="preserve">
+    <value>Başlık veritabanına eklenemedi</value>
+  </data>
+  <data name="HeaderKeyNotFound" xml:space="preserve">
+    <value>Başlık anahtarı bulunamadı</value>
+  </data>
+  <data name="ImportLineKeyNotFound" xml:space="preserve">
+    <value>İçe aktarma satırı anahtarı bulunamadı</value>
+  </data>
+  <data name="InvalidCorrelationKey" xml:space="preserve">
+    <value>Geçersiz korelasyon anahtarı sağlandı</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
@@ -294,6 +312,30 @@
   <data name="StokRetrievedSuccessfully" xml:space="preserve">
     <value>Stok bilgileri başarıyla getirildi</value>
   </data>
+  <data name="StokBarcodeRetrievalError" xml:space="preserve">
+    <value>Stok barkod bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="StokBarcodeRetrievedSuccessfully" xml:space="preserve">
+    <value>Stok barkod bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="BranchesRetrievalError" xml:space="preserve">
+    <value>Şube bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="BranchesRetrievedSuccessfully" xml:space="preserve">
+    <value>Şube bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievalError" xml:space="preserve">
+    <value>Depo ve raf bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievedSuccessfully" xml:space="preserve">
+    <value>Depo ve raf bilgileri başarıyla getirildi</value>
+  </data>
+  <data name="StockWarehouseRetrievalError" xml:space="preserve">
+    <value>Stok depo bilgileri getirilirken hata oluştu</value>
+  </data>
+  <data name="StockWarehouseRetrievedSuccessfully" xml:space="preserve">
+    <value>Stok depo bilgileri başarıyla getirildi</value>
+  </data>
   <!-- #endregion ErpService -->
 
   <!-- #region GrFunction -->
@@ -314,6 +356,12 @@
   <!-- #region GrHeader -->
   <data name="GrHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Mal Kabul Başlığı başarıyla oluşturuldu</value>
+  </data>
+  <data name="GrHeaderCreationError" xml:space="preserve">
+    <value>Mal Kabul Başlığı oluşturulurken hata oluştu</value>
+  </data>
+  <data name="GrHeaderCreateError" xml:space="preserve">
+    <value>Mal Kabul Başlığı oluşturulurken hata oluştu</value>
   </data>
   <data name="GrHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Mal Kabul Başlığı başarıyla silindi</value>
@@ -353,6 +401,18 @@
   </data>
   <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
     <value>Satır {0} (Stok Kodu: {1}, YapKod: {2}): Emirdeki tüm kalemlere toplama yapılmış olmalı. Route miktarı 0.</value>
+  </data>
+  <data name="GrHeaderNotificationTitle" xml:space="preserve">
+    <value>Mal Kabul Emri #{0} Açıldı</value>
+  </data>
+  <data name="GrHeaderNotificationMessage" xml:space="preserve">
+    <value>Mal kabul emri numarası {0} size atandı.</value>
+  </data>
+  <data name="GrDoneNotificationTitle" xml:space="preserve">
+    <value>Mal Kabul Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="GrDoneNotificationMessage" xml:space="preserve">
+    <value>Mal kabul emri numaranız {0} tamamlandı.</value>
   </data>
   <!-- #endregion GrHeader -->
 
@@ -780,6 +840,12 @@
   <data name="PrHeaderNotificationMessage" xml:space="preserve">
     <value>Üretim emri numarası {0} olan emir size atandı.</value>
   </data>
+  <data name="PrDoneNotificationTitle" xml:space="preserve">
+    <value>Üretim Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="PrDoneNotificationMessage" xml:space="preserve">
+    <value>Üretim emri numaranız {0} tamamlandı.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -1020,6 +1086,15 @@
   <data name="PtHeaderNotificationMessage" xml:space="preserve">
     <value>Üretim transfer emri numarası {0} olan emir size atandı.</value>
   </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Toplu üretim transfer emri oluşturulurken hata oluştu</value>
+  </data>
+  <data name="PtDoneNotificationTitle" xml:space="preserve">
+    <value>Üretim Transfer Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="PtDoneNotificationMessage" xml:space="preserve">
+    <value>Üretim transfer emri numaranız {0} tamamlandı.</value>
+  </data>
   <!-- #endregion PtHeader -->
 
   <!-- #region PtImportLine -->
@@ -1184,6 +1259,15 @@
   </data>
   <data name="ShHeaderCompletionError" xml:space="preserve">
     <value>Sevkiyat Başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Toplu sevkiyat oluşturulurken hata oluştu</value>
+  </data>
+  <data name="ShDoneNotificationTitle" xml:space="preserve">
+    <value>Sevkiyat Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="ShDoneNotificationMessage" xml:space="preserve">
+    <value>Sevkiyat emri numaranız {0} tamamlandı.</value>
   </data>
   <data name="ShHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Sevkiyat Başlık başarıyla oluşturuldu</value>
@@ -1602,8 +1686,17 @@
   <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık başarıyla tamamlandı</value>
   </data>
+  <data name="SitHeaderCompletionError" xml:space="preserve">
+    <value>Alt yüklenici çıkış başlık tamamlanırken hata oluştu</value>
+  </data>
   <data name="SitHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık başarıyla oluşturuldu</value>
+  </data>
+  <data name="SitDoneNotificationTitle" xml:space="preserve">
+    <value>Alt Yüklenici Çıkış Transfer Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="SitDoneNotificationMessage" xml:space="preserve">
+    <value>Alt yüklenici çıkış transfer emri numaranız {0} tamamlandı.</value>
   </data>
   <data name="SitHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici çıkış başlık başarıyla silindi</value>
@@ -1793,6 +1886,33 @@
   </data>
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Geçersiz korelasyon anahtarı sağlandı</value>
+  </data>
+  <data name="SrtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Satır grup GUID bulunamadı</value>
+  </data>
+  <data name="SrtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Satır istemci anahtarı bulunamadı</value>
+  </data>
+  <data name="SrtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Satır referansı (istemci anahtarı veya grup GUID) eksik</value>
+  </data>
+  <data name="SrtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Alt yüklenici kabul transfer emri başarıyla oluşturuldu</value>
+  </data>
+  <data name="SrtHeaderGenerateError" xml:space="preserve">
+    <value>Alt yüklenici kabul transfer emri oluşturulurken hata oluştu</value>
+  </data>
+  <data name="SrtHeaderBulkCreateError" xml:space="preserve">
+    <value>Toplu alt yüklenici kabul transfer emri oluşturulurken hata oluştu</value>
+  </data>
+  <data name="SrtDoneNotificationTitle" xml:space="preserve">
+    <value>Alt Yüklenici Kabul Transfer Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="SrtDoneNotificationMessage" xml:space="preserve">
+    <value>Alt yüklenici kabul transfer emri numaranız {0} tamamlandı.</value>
   </data>
   <data name="SrtHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Alt yüklenici kabul transfer başlık başarıyla oluşturuldu</value>
@@ -2004,8 +2124,17 @@
   <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Depo Giriş Başlık başarıyla tamamlandı</value>
   </data>
+  <data name="WiHeaderCompletionError" xml:space="preserve">
+    <value>Depo Giriş Başlık tamamlanırken hata oluştu</value>
+  </data>
   <data name="WiHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Depo Giriş Başlık başarıyla oluşturuldu</value>
+  </data>
+  <data name="WiDoneNotificationTitle" xml:space="preserve">
+    <value>Depo Giriş Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="WiDoneNotificationMessage" xml:space="preserve">
+    <value>Depo giriş emri numaranız {0} tamamlandı.</value>
   </data>
   <data name="WiHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Depo Giriş Başlık başarıyla silindi</value>
@@ -2129,6 +2258,12 @@
   </data>
   <data name="WoHeaderCompletionError" xml:space="preserve">
     <value>Depo çıkış başlık tamamlanırken hata oluştu</value>
+  </data>
+  <data name="WoDoneNotificationTitle" xml:space="preserve">
+    <value>Depo Çıkış Emri #{0} Tamamlandı</value>
+  </data>
+  <data name="WoDoneNotificationMessage" xml:space="preserve">
+    <value>Depo çıkış emri numaranız {0} tamamlandı.</value>
   </data>
   <data name="WoHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Depo çıkış başlık başarıyla oluşturuldu</value>
@@ -2746,5 +2881,23 @@
     <value>Profil resmi başarıyla silindi</value>
   </data>
   <!-- #endregion UserDetail -->
+
+  <!-- #region UserAuthority -->
+  <data name="UserAuthorityRetrievedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı yetkisi başarıyla getirildi</value>
+  </data>
+  <data name="UserAuthorityNotFound" xml:space="preserve">
+    <value>Kullanıcı yetkisi bulunamadı</value>
+  </data>
+  <data name="UserAuthorityCreatedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı yetkisi başarıyla oluşturuldu</value>
+  </data>
+  <data name="UserAuthorityUpdatedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı yetkisi başarıyla güncellendi</value>
+  </data>
+  <data name="UserAuthorityDeletedSuccessfully" xml:space="preserve">
+    <value>Kullanıcı yetkisi başarıyla silindi</value>
+  </data>
+  <!-- #endregion UserAuthority -->
 
 </root>

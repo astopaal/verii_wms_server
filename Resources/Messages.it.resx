@@ -78,9 +78,93 @@
   <data name="LineReferenceMissing" xml:space="preserve">
     <value>Riferimento della riga mancante</value>
   </data>
+  <data name="RequestOrHeaderMissing" xml:space="preserve">
+    <value>Richiesta o intestazione mancante</value>
+  </data>
+  <data name="HeaderFieldsMissing" xml:space="preserve">
+    <value>Campi intestazione richiesti mancanti</value>
+  </data>
+  <data name="HeaderInsertFailed" xml:space="preserve">
+    <value>Impossibile inserire l'intestazione nel database</value>
+  </data>
+  <data name="HeaderKeyNotFound" xml:space="preserve">
+    <value>Chiave intestazione non trovata</value>
+  </data>
+  <data name="ImportLineKeyNotFound" xml:space="preserve">
+    <value>Chiave riga di importazione non trovata</value>
+  </data>
+  <data name="InvalidCorrelationKey" xml:space="preserve">
+    <value>Chiave di correlazione non valida fornita</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
+  <data name="CariRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni cliente</value>
+  </data>
+  <data name="CariRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni cliente recuperate con successo</value>
+  </data>
+  <data name="CustomerOrderRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni ordine cliente</value>
+  </data>
+  <data name="CustomerOrderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni ordine cliente recuperate con successo</value>
+  </data>
+  <data name="DepoRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni magazzino</value>
+  </data>
+  <data name="DepoRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni magazzino recuperate con successo</value>
+  </data>
+  <data name="OnHandQuantityRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni quantità disponibile</value>
+  </data>
+  <data name="OnHandQuantityRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni quantità disponibile recuperate con successo</value>
+  </data>
+  <data name="OrderDetailRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni dettaglio ordine</value>
+  </data>
+  <data name="OrderDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni dettaglio ordine recuperate con successo</value>
+  </data>
+  <data name="ProjeRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni progetto</value>
+  </data>
+  <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni progetto recuperate con successo</value>
+  </data>
+  <data name="StokRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni stock</value>
+  </data>
+  <data name="StokRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni stock recuperate con successo</value>
+  </data>
+  <data name="StokBarcodeRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni codice a barre stock</value>
+  </data>
+  <data name="StokBarcodeRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni codice a barre stock recuperate con successo</value>
+  </data>
+  <data name="BranchesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni filiali</value>
+  </data>
+  <data name="BranchesRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni filiali recuperate con successo</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni magazzino e scaffali</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni magazzino e scaffali recuperate con successo</value>
+  </data>
+  <data name="StockWarehouseRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni magazzino stock</value>
+  </data>
+  <data name="StockWarehouseRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni magazzino stock recuperate con successo</value>
+  </data>
   <!-- #endregion ErpService -->
 
   <!-- #region GrFunction -->
@@ -110,6 +194,102 @@
   </data>
   <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
     <value>Ordini di ricevimento merci completati in attesa di approvazione ERP recuperati con successo</value>
+  </data>
+  <data name="GrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione ricevimento merci completata con successo</value>
+  </data>
+  <data name="GrHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Riga {0} (Codice Stock: {1}, YapKod: {2}): Il totale LineSerial ({3}) deve corrispondere esattamente al totale Route ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Riga {0} (Codice Stock: {1}, YapKod: {2}): Il totale LineSerial ({3}) non può essere maggiore del totale Route ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Riga {0} (Codice Stock: {1}, YapKod: {2}): Il totale LineSerial ({3}) non può essere minore del totale Route ({4})</value>
+  </data>
+  <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Riga {0} (Codice Stock: {1}, YapKod: {2}): Tutti gli articoli dell'ordine devono essere raccolti. La quantità Route è 0.</value>
+  </data>
+  <data name="GrHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Intestazione ricevimento merci creata con successo</value>
+  </data>
+  <data name="GrHeaderCreationError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderCreateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Intestazione ricevimento merci eliminata con successo</value>
+  </data>
+  <data name="GrHeaderDeletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'eliminazione dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderNotFound" xml:space="preserve">
+    <value>Intestazione ricevimento merci non trovata</value>
+  </data>
+  <data name="GrHeaderNotFoundForLine" xml:space="preserve">
+    <value>Intestazione ricevimento merci non trovata per questa riga</value>
+  </data>
+  <data name="GrHeaderRetrievalError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle informazioni intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informazioni intestazione ricevimento merci recuperate con successo</value>
+  </data>
+  <data name="GrHeaderSoftDeletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'eliminazione soft dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderUpdateError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento dell'intestazione ricevimento merci</value>
+  </data>
+  <data name="GrHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Intestazione ricevimento merci aggiornata con successo</value>
+  </data>
+  <data name="GrImportDocumentGetByHeaderIdError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero dei documenti di importazione per ID intestazione</value>
+  </data>
+  <data name="GrImportDocumentInvalidHeaderId" xml:space="preserve">
+    <value>ID intestazione non valido fornito</value>
+  </data>
+  <data name="GrLineGetByHeaderIdError" xml:space="preserve">
+    <value>Si è verificato un errore durante il recupero delle righe ricevimento merci per ID intestazione</value>
+  </data>
+  <data name="GrHeaderImportLinesExist" xml:space="preserve">
+    <value>Articoli raccolti esistono per questo ordine; rimuoverli prima dell'eliminazione</value>
+  </data>
+  <data name="GrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Chiave di correlazione non valida fornita</value>
+  </data>
+  <data name="GrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID gruppo riga non trovato</value>
+  </data>
+  <data name="GrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Chiave client riga non trovata</value>
+  </data>
+  <data name="GrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Riferimento riga (chiave client o GUID gruppo) mancante</value>
+  </data>
+  <data name="GrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordine ricevimento merci generato con successo</value>
+  </data>
+  <data name="GrHeaderGenerateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la generazione dell'ordine ricevimento merci</value>
+  </data>
+  <data name="GrHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordine Ricevimento Merci #{0} Aperto</value>
+  </data>
+  <data name="GrHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordine di ricevimento merci numero {0} ti è stato assegnato.</value>
+  </data>
+  <data name="GrDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Ricevimento Merci #{0} Completato</value>
+  </data>
+  <data name="GrDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di ricevimento merci numero {0} è stato completato.</value>
   </data>
   <!-- #endregion GrHeader -->
 
@@ -213,6 +393,12 @@
   <data name="PrHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di produzione numero {0} ti è stato assegnato.</value>
   </data>
+  <data name="PrDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine di Produzione #{0} Completato</value>
+  </data>
+  <data name="PrDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di produzione numero {0} è stato completato.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -284,6 +470,15 @@
   </data>
   <data name="PtHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di trasferimento produzione numero {0} ti è stato assegnato.</value>
+  </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la generazione bulk degli ordini di trasferimento produzione</value>
+  </data>
+  <data name="PtDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Trasferimento Produzione #{0} Completato</value>
+  </data>
+  <data name="PtDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di trasferimento produzione numero {0} è stato completato.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -363,6 +558,18 @@
   <data name="ShHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di spedizione numero {0} ti è stato assegnato.</value>
   </data>
+  <data name="ShHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione Spedizione completata con successo</value>
+  </data>
+  <data name="ShHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione Spedizione</value>
+  </data>
+  <data name="ShDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine di Spedizione #{0} Completato</value>
+  </data>
+  <data name="ShDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di spedizione numero {0} è stato completato.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -435,6 +642,18 @@
   <data name="SitHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di trasferimento subappalto uscita numero {0} ti è stato assegnato.</value>
   </data>
+  <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione Sottofornitura Uscita completata con successo</value>
+  </data>
+  <data name="SitHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione Sottofornitura Uscita</value>
+  </data>
+  <data name="SitDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Trasferimento Subappalto Uscita #{0} Completato</value>
+  </data>
+  <data name="SitDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di trasferimento subappalto uscita numero {0} è stato completato.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -503,6 +722,39 @@
   </data>
   <data name="SrtHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di trasferimento subappalto ricezione numero {0} ti è stato assegnato.</value>
+  </data>
+  <data name="SrtHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione Sottofornitura Ricezione completata con successo</value>
+  </data>
+  <data name="SrtHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione Sottofornitura Ricezione</value>
+  </data>
+  <data name="SrtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Chiave di correlazione non valida fornita</value>
+  </data>
+  <data name="SrtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID gruppo riga non trovato</value>
+  </data>
+  <data name="SrtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Chiave client riga non trovata</value>
+  </data>
+  <data name="SrtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Riferimento riga (chiave client o GUID gruppo) mancante</value>
+  </data>
+  <data name="SrtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordine di trasferimento subappalto ricezione creato con successo</value>
+  </data>
+  <data name="SrtHeaderGenerateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione dell'ordine di trasferimento subappalto ricezione</value>
+  </data>
+  <data name="SrtHeaderBulkCreateError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione in massa degli ordini di trasferimento subappalto ricezione</value>
+  </data>
+  <data name="SrtDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Trasferimento Subappalto Ricezione #{0} Completato</value>
+  </data>
+  <data name="SrtDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di trasferimento subappalto ricezione numero {0} è stato completato.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -576,6 +828,18 @@
   <data name="WiHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di entrata magazzino numero {0} ti è stato assegnato.</value>
   </data>
+  <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione Magazzino Entrata completata con successo</value>
+  </data>
+  <data name="WiHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione Magazzino Entrata</value>
+  </data>
+  <data name="WiDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Entrata Magazzino #{0} Completato</value>
+  </data>
+  <data name="WiDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di entrata magazzino numero {0} è stato completato.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -647,6 +911,18 @@
   </data>
   <data name="WoHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordine di uscita magazzino numero {0} ti è stato assegnato.</value>
+  </data>
+  <data name="WoHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Intestazione Magazzino Uscita completata con successo</value>
+  </data>
+  <data name="WoHeaderCompletionError" xml:space="preserve">
+    <value>Si è verificato un errore durante il completamento dell'intestazione Magazzino Uscita</value>
+  </data>
+  <data name="WoDoneNotificationTitle" xml:space="preserve">
+    <value>Ordine Uscita Magazzino #{0} Completato</value>
+  </data>
+  <data name="WoDoneNotificationMessage" xml:space="preserve">
+    <value>Il tuo ordine di uscita magazzino numero {0} è stato completato.</value>
   </data>
   <!-- #endregion WoHeader -->
 
@@ -781,5 +1057,23 @@
     <value>Foto del profilo eliminata con successo</value>
   </data>
   <!-- #endregion UserDetail -->
+
+  <!-- #region UserAuthority -->
+  <data name="UserAuthorityRetrievedSuccessfully" xml:space="preserve">
+    <value>Autorità utente recuperata con successo</value>
+  </data>
+  <data name="UserAuthorityNotFound" xml:space="preserve">
+    <value>Autorità utente non trovata</value>
+  </data>
+  <data name="UserAuthorityCreatedSuccessfully" xml:space="preserve">
+    <value>Autorità utente creata con successo</value>
+  </data>
+  <data name="UserAuthorityUpdatedSuccessfully" xml:space="preserve">
+    <value>Autorità utente aggiornata con successo</value>
+  </data>
+  <data name="UserAuthorityDeletedSuccessfully" xml:space="preserve">
+    <value>Autorità utente eliminata con successo</value>
+  </data>
+  <!-- #endregion UserAuthority -->
 
 </root>

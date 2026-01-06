@@ -30,6 +30,9 @@ namespace WMS_WEBAPI.Data.Configuration
             builder.Property(x => x.YapKod)
                 .HasMaxLength(20);
 
+            builder.Property(x => x.Quantity)
+                .HasColumnType("decimal(18,6)");
+
             builder.Property(x => x.SourceWarehouse)
                 .HasMaxLength(20);
 

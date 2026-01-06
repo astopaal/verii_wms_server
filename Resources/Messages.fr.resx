@@ -78,9 +78,93 @@
   <data name="LineReferenceMissing" xml:space="preserve">
     <value>Référence de la ligne manquante</value>
   </data>
+  <data name="RequestOrHeaderMissing" xml:space="preserve">
+    <value>Requête ou en-tête manquant</value>
+  </data>
+  <data name="HeaderFieldsMissing" xml:space="preserve">
+    <value>Champs d'en-tête requis manquants</value>
+  </data>
+  <data name="HeaderInsertFailed" xml:space="preserve">
+    <value>Échec de l'insertion de l'en-tête dans la base de données</value>
+  </data>
+  <data name="HeaderKeyNotFound" xml:space="preserve">
+    <value>Clé d'en-tête introuvable</value>
+  </data>
+  <data name="ImportLineKeyNotFound" xml:space="preserve">
+    <value>Clé de ligne d'importation introuvable</value>
+  </data>
+  <data name="InvalidCorrelationKey" xml:space="preserve">
+    <value>Clé de corrélation invalide fournie</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
+  <data name="CariRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations client</value>
+  </data>
+  <data name="CariRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations client récupérées avec succès</value>
+  </data>
+  <data name="CustomerOrderRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de commande client</value>
+  </data>
+  <data name="CustomerOrderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de commande client récupérées avec succès</value>
+  </data>
+  <data name="DepoRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations d'entrepôt</value>
+  </data>
+  <data name="DepoRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations d'entrepôt récupérées avec succès</value>
+  </data>
+  <data name="OnHandQuantityRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de quantité disponible</value>
+  </data>
+  <data name="OnHandQuantityRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de quantité disponible récupérées avec succès</value>
+  </data>
+  <data name="OrderDetailRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de détail de commande</value>
+  </data>
+  <data name="OrderDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de détail de commande récupérées avec succès</value>
+  </data>
+  <data name="ProjeRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de projet</value>
+  </data>
+  <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de projet récupérées avec succès</value>
+  </data>
+  <data name="StokRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de stock</value>
+  </data>
+  <data name="StokRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de stock récupérées avec succès</value>
+  </data>
+  <data name="StokBarcodeRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de code-barres de stock</value>
+  </data>
+  <data name="StokBarcodeRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de code-barres de stock récupérées avec succès</value>
+  </data>
+  <data name="BranchesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de succursales</value>
+  </data>
+  <data name="BranchesRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de succursales récupérées avec succès</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations d'entrepôt et d'étagères</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations d'entrepôt et d'étagères récupérées avec succès</value>
+  </data>
+  <data name="StockWarehouseRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations d'entrepôt de stock</value>
+  </data>
+  <data name="StockWarehouseRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations d'entrepôt de stock récupérées avec succès</value>
+  </data>
   <!-- #endregion ErpService -->
 
   <!-- #region GrFunction -->
@@ -110,6 +194,102 @@
   </data>
   <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
     <value>Ordres de réception de marchandises terminés en attente d'approbation ERP récupérés avec succès</value>
+  </data>
+  <data name="GrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête de réception de marchandises terminé avec succès</value>
+  </data>
+  <data name="GrHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Ligne {0} (Code Stock: {1}, YapKod: {2}): Le total LineSerial ({3}) doit correspondre exactement au total Route ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Ligne {0} (Code Stock: {1}, YapKod: {2}): Le total LineSerial ({3}) ne peut pas être supérieur au total Route ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Ligne {0} (Code Stock: {1}, YapKod: {2}): Le total LineSerial ({3}) ne peut pas être inférieur au total Route ({4})</value>
+  </data>
+  <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Ligne {0} (Code Stock: {1}, YapKod: {2}): Tous les articles de la commande doivent être collectés. La quantité Route est 0.</value>
+  </data>
+  <data name="GrHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>En-tête de réception de marchandises créé avec succès</value>
+  </data>
+  <data name="GrHeaderCreationError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderCreateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>En-tête de réception de marchandises supprimé avec succès</value>
+  </data>
+  <data name="GrHeaderDeletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la suppression de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderNotFound" xml:space="preserve">
+    <value>En-tête de réception de marchandises introuvable</value>
+  </data>
+  <data name="GrHeaderNotFoundForLine" xml:space="preserve">
+    <value>En-tête de réception de marchandises introuvable pour cette ligne</value>
+  </data>
+  <data name="GrHeaderRetrievalError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des informations de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Informations de l'en-tête de réception de marchandises récupérées avec succès</value>
+  </data>
+  <data name="GrHeaderSoftDeletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la suppression logicielle de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderUpdateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de l'en-tête de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>En-tête de réception de marchandises mis à jour avec succès</value>
+  </data>
+  <data name="GrImportDocumentGetByHeaderIdError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des documents d'importation par ID d'en-tête</value>
+  </data>
+  <data name="GrImportDocumentInvalidHeaderId" xml:space="preserve">
+    <value>ID d'en-tête invalide fourni</value>
+  </data>
+  <data name="GrLineGetByHeaderIdError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la récupération des lignes de réception de marchandises par ID d'en-tête</value>
+  </data>
+  <data name="GrHeaderImportLinesExist" xml:space="preserve">
+    <value>Des articles collectés existent pour cette commande; supprimez-les avant la suppression</value>
+  </data>
+  <data name="GrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Clé de corrélation invalide fournie</value>
+  </data>
+  <data name="GrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID du groupe de lignes introuvable</value>
+  </data>
+  <data name="GrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Clé client de ligne introuvable</value>
+  </data>
+  <data name="GrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Référence de ligne (clé client ou GUID de groupe) manquante</value>
+  </data>
+  <data name="GrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordre de réception de marchandises généré avec succès</value>
+  </data>
+  <data name="GrHeaderGenerateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la génération de l'ordre de réception de marchandises</value>
+  </data>
+  <data name="GrHeaderNotificationTitle" xml:space="preserve">
+    <value>Ordre de Réception de Marchandises #{0} Ouvert</value>
+  </data>
+  <data name="GrHeaderNotificationMessage" xml:space="preserve">
+    <value>L'ordre de réception de marchandises numéro {0} vous a été assigné.</value>
+  </data>
+  <data name="GrDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Réception de Marchandises #{0} Terminé</value>
+  </data>
+  <data name="GrDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de réception de marchandises numéro {0} a été terminé.</value>
   </data>
   <!-- #endregion GrHeader -->
 
@@ -213,6 +393,12 @@
   <data name="PrHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre de production numéro {0} vous a été assigné.</value>
   </data>
+  <data name="PrDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Production #{0} Terminé</value>
+  </data>
+  <data name="PrDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de production numéro {0} a été terminé.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -284,6 +470,15 @@
   </data>
   <data name="PtHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre de transfert de production numéro {0} vous a été assigné.</value>
+  </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la génération en masse des ordres de transfert de production</value>
+  </data>
+  <data name="PtDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Transfert de Production #{0} Terminé</value>
+  </data>
+  <data name="PtDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de transfert de production numéro {0} a été terminé.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -363,6 +558,21 @@
   <data name="ShHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre d'expédition numéro {0} vous a été assigné.</value>
   </data>
+  <data name="ShHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête d'expédition terminé avec succès</value>
+  </data>
+  <data name="ShHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête d'expédition</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création en masse d'expéditions</value>
+  </data>
+  <data name="ShDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre d'Expédition #{0} Terminé</value>
+  </data>
+  <data name="ShDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre d'expédition numéro {0} a été terminé.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -435,6 +645,18 @@
   <data name="SitHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre de transfert de sous-traitance sortie numéro {0} vous a été assigné.</value>
   </data>
+  <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête de sous-traitance sortie terminé avec succès</value>
+  </data>
+  <data name="SitHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête de sous-traitance sortie</value>
+  </data>
+  <data name="SitDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Transfert de Sous-traitance Sortie #{0} Terminé</value>
+  </data>
+  <data name="SitDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de transfert de sous-traitance sortie numéro {0} a été terminé.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -503,6 +725,39 @@
   </data>
   <data name="SrtHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre de transfert de sous-traitance réception numéro {0} vous a été assigné.</value>
+  </data>
+  <data name="SrtHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête de sous-traitance réception terminé avec succès</value>
+  </data>
+  <data name="SrtHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête de sous-traitance réception</value>
+  </data>
+  <data name="SrtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Clé de corrélation invalide fournie</value>
+  </data>
+  <data name="SrtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>GUID du groupe de lignes introuvable</value>
+  </data>
+  <data name="SrtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Clé client de ligne introuvable</value>
+  </data>
+  <data name="SrtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Référence de ligne (clé client ou GUID de groupe) manquante</value>
+  </data>
+  <data name="SrtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Ordre de transfert de sous-traitance réception créé avec succès</value>
+  </data>
+  <data name="SrtHeaderGenerateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de l'ordre de transfert de sous-traitance réception</value>
+  </data>
+  <data name="SrtHeaderBulkCreateError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création en masse des ordres de transfert de sous-traitance réception</value>
+  </data>
+  <data name="SrtDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Transfert de Sous-traitance Réception #{0} Terminé</value>
+  </data>
+  <data name="SrtDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de transfert de sous-traitance réception numéro {0} a été terminé.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -576,6 +831,18 @@
   <data name="WiHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre d'entrée d'entrepôt numéro {0} vous a été assigné.</value>
   </data>
+  <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête d'entrée d'entrepôt terminé avec succès</value>
+  </data>
+  <data name="WiHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête d'entrée d'entrepôt</value>
+  </data>
+  <data name="WiDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre d'Entrée d'Entrepôt #{0} Terminé</value>
+  </data>
+  <data name="WiDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre d'entrée d'entrepôt numéro {0} a été terminé.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -647,6 +914,18 @@
   </data>
   <data name="WoHeaderNotificationMessage" xml:space="preserve">
     <value>L'ordre de sortie d'entrepôt numéro {0} vous a été assigné.</value>
+  </data>
+  <data name="WoHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>En-tête de sortie d'entrepôt terminé avec succès</value>
+  </data>
+  <data name="WoHeaderCompletionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la finalisation de l'en-tête de sortie d'entrepôt</value>
+  </data>
+  <data name="WoDoneNotificationTitle" xml:space="preserve">
+    <value>Ordre de Sortie d'Entrepôt #{0} Terminé</value>
+  </data>
+  <data name="WoDoneNotificationMessage" xml:space="preserve">
+    <value>Votre ordre de sortie d'entrepôt numéro {0} a été terminé.</value>
   </data>
   <!-- #endregion WoHeader -->
 
@@ -781,5 +1060,23 @@
     <value>Photo de profil supprimée avec succès</value>
   </data>
   <!-- #endregion UserDetail -->
+
+  <!-- #region UserAuthority -->
+  <data name="UserAuthorityRetrievedSuccessfully" xml:space="preserve">
+    <value>Autorité utilisateur récupérée avec succès</value>
+  </data>
+  <data name="UserAuthorityNotFound" xml:space="preserve">
+    <value>Autorité utilisateur introuvable</value>
+  </data>
+  <data name="UserAuthorityCreatedSuccessfully" xml:space="preserve">
+    <value>Autorité utilisateur créée avec succès</value>
+  </data>
+  <data name="UserAuthorityUpdatedSuccessfully" xml:space="preserve">
+    <value>Autorité utilisateur mise à jour avec succès</value>
+  </data>
+  <data name="UserAuthorityDeletedSuccessfully" xml:space="preserve">
+    <value>Autorité utilisateur supprimée avec succès</value>
+  </data>
+  <!-- #endregion UserAuthority -->
 
 </root>

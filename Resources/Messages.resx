@@ -249,6 +249,24 @@
   <data name="LineReferenceMissing" xml:space="preserve">
     <value>Line reference is missing</value>
   </data>
+  <data name="RequestOrHeaderMissing" xml:space="preserve">
+    <value>Request or header is missing</value>
+  </data>
+  <data name="HeaderFieldsMissing" xml:space="preserve">
+    <value>Required header fields are missing</value>
+  </data>
+  <data name="HeaderInsertFailed" xml:space="preserve">
+    <value>Failed to insert header into database</value>
+  </data>
+  <data name="HeaderKeyNotFound" xml:space="preserve">
+    <value>Header key not found</value>
+  </data>
+  <data name="ImportLineKeyNotFound" xml:space="preserve">
+    <value>Import line key not found</value>
+  </data>
+  <data name="InvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key provided</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
@@ -293,6 +311,30 @@
   </data>
   <data name="StokRetrievedSuccessfully" xml:space="preserve">
     <value>Stock information retrieved successfully</value>
+  </data>
+  <data name="StokBarcodeRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving stock barcode information</value>
+  </data>
+  <data name="StokBarcodeRetrievedSuccessfully" xml:space="preserve">
+    <value>Stock barcode information retrieved successfully</value>
+  </data>
+  <data name="BranchesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving branches information</value>
+  </data>
+  <data name="BranchesRetrievedSuccessfully" xml:space="preserve">
+    <value>Branches information retrieved successfully</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving warehouse and shelves information</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievedSuccessfully" xml:space="preserve">
+    <value>Warehouse and shelves information retrieved successfully</value>
+  </data>
+  <data name="StockWarehouseRetrievalError" xml:space="preserve">
+    <value>Error occurred while retrieving stock warehouse information</value>
+  </data>
+  <data name="StockWarehouseRetrievedSuccessfully" xml:space="preserve">
+    <value>Stock warehouse information retrieved successfully</value>
   </data>
   <!-- #endregion ErpService -->
 
@@ -360,6 +402,9 @@
   <data name="GrHeaderCreationError" xml:space="preserve">
     <value>Error occurred while creating Goods Receipt Header</value>
   </data>
+  <data name="GrHeaderCreateError" xml:space="preserve">
+    <value>Error occurred while creating Goods Receipt Header</value>
+  </data>
   <data name="GrHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Goods Receipt Header deleted successfully</value>
   </data>
@@ -422,6 +467,12 @@
   </data>
   <data name="GrHeaderNotificationMessage" xml:space="preserve">
     <value>Goods receipt order number {0} has been assigned to you.</value>
+  </data>
+  <data name="GrDoneNotificationTitle" xml:space="preserve">
+    <value>Goods Receipt Order #{0} Completed</value>
+  </data>
+  <data name="GrDoneNotificationMessage" xml:space="preserve">
+    <value>Your goods receipt order number {0} has been completed.</value>
   </data>
   <!-- #endregion GrHeader -->
 
@@ -870,6 +921,12 @@
   <data name="PrHeaderNotificationMessage" xml:space="preserve">
     <value>Production order number {0} has been assigned to you.</value>
   </data>
+  <data name="PrDoneNotificationTitle" xml:space="preserve">
+    <value>Production Order #{0} Completed</value>
+  </data>
+  <data name="PrDoneNotificationMessage" xml:space="preserve">
+    <value>Your production order number {0} has been completed.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -1146,6 +1203,15 @@
   <data name="PtHeaderNotificationMessage" xml:space="preserve">
     <value>Production transfer order number {0} has been assigned to you.</value>
   </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Error occurred during bulk production transfer order generation</value>
+  </data>
+  <data name="PtDoneNotificationTitle" xml:space="preserve">
+    <value>Production Transfer Order #{0} Completed</value>
+  </data>
+  <data name="PtDoneNotificationMessage" xml:space="preserve">
+    <value>Your production transfer order number {0} has been completed.</value>
+  </data>
   <!-- #endregion PtHeader -->
 
   <!-- #region PtImportLine -->
@@ -1310,6 +1376,15 @@
   </data>
   <data name="ShHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Shipping Header</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Error occurred during bulk Shipping creation</value>
+  </data>
+  <data name="ShDoneNotificationTitle" xml:space="preserve">
+    <value>Shipment Order #{0} Completed</value>
+  </data>
+  <data name="ShDoneNotificationMessage" xml:space="preserve">
+    <value>Your shipment order number {0} has been completed.</value>
   </data>
   <data name="ShHeaderQuantityExactMatchRequired" xml:space="preserve">
     <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
@@ -1728,8 +1803,17 @@
   <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Header completed successfully</value>
   </data>
+  <data name="SitHeaderCompletionError" xml:space="preserve">
+    <value>Error occurred while completing Subcontracting Issue Header</value>
+  </data>
   <data name="SitHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Header created successfully</value>
+  </data>
+  <data name="SitDoneNotificationTitle" xml:space="preserve">
+    <value>Subcontracting Issue Transfer Order #{0} Completed</value>
+  </data>
+  <data name="SitDoneNotificationMessage" xml:space="preserve">
+    <value>Your subcontracting issue transfer order number {0} has been completed.</value>
   </data>
   <data name="SitHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Subcontracting Issue Header deleted successfully</value>
@@ -1919,6 +2003,33 @@
   </data>
   <data name="SrtHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Subcontracting Receipt Transfer header</value>
+  </data>
+  <data name="SrtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Invalid correlation key provided</value>
+  </data>
+  <data name="SrtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Line group GUID not found</value>
+  </data>
+  <data name="SrtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Line client key not found</value>
+  </data>
+  <data name="SrtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Line reference (client key or group GUID) is missing</value>
+  </data>
+  <data name="SrtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Subcontracting receipt transfer order generated successfully</value>
+  </data>
+  <data name="SrtHeaderGenerateError" xml:space="preserve">
+    <value>Error occurred while generating subcontracting receipt transfer order</value>
+  </data>
+  <data name="SrtHeaderBulkCreateError" xml:space="preserve">
+    <value>Error occurred during bulk subcontracting receipt transfer order creation</value>
+  </data>
+  <data name="SrtDoneNotificationTitle" xml:space="preserve">
+    <value>Subcontracting Receipt Transfer Order #{0} Completed</value>
+  </data>
+  <data name="SrtDoneNotificationMessage" xml:space="preserve">
+    <value>Your subcontracting receipt transfer order number {0} has been completed.</value>
   </data>
   <data name="SrtHeaderQuantityExactMatchRequired" xml:space="preserve">
     <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
@@ -2142,8 +2253,17 @@
   <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Header completed successfully</value>
   </data>
+  <data name="WiHeaderCompletionError" xml:space="preserve">
+    <value>Error occurred while completing Warehouse Inbound Header</value>
+  </data>
   <data name="WiHeaderCreatedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Header created successfully</value>
+  </data>
+  <data name="WiDoneNotificationTitle" xml:space="preserve">
+    <value>Warehouse Inbound Order #{0} Completed</value>
+  </data>
+  <data name="WiDoneNotificationMessage" xml:space="preserve">
+    <value>Your warehouse inbound order number {0} has been completed.</value>
   </data>
   <data name="WiHeaderDeletedSuccessfully" xml:space="preserve">
     <value>Warehouse Inbound Header deleted successfully</value>
@@ -2303,6 +2423,12 @@
   </data>
   <data name="WoHeaderCompletionError" xml:space="preserve">
     <value>Error occurred while completing Warehouse Outbound Header</value>
+  </data>
+  <data name="WoDoneNotificationTitle" xml:space="preserve">
+    <value>Warehouse Outbound Order #{0} Completed</value>
+  </data>
+  <data name="WoDoneNotificationMessage" xml:space="preserve">
+    <value>Your warehouse outbound order number {0} has been completed.</value>
   </data>
   <data name="WoHeaderQuantityExactMatchRequired" xml:space="preserve">
     <value>Line {0} (StockCode: {1}, YapKod: {2}): LineSerial total ({3}) must exactly match Route total ({4})</value>
@@ -2938,5 +3064,23 @@
     <value>Profile picture deleted successfully</value>
   </data>
   <!-- #endregion UserDetail -->
+
+  <!-- #region UserAuthority -->
+  <data name="UserAuthorityRetrievedSuccessfully" xml:space="preserve">
+    <value>User authority retrieved successfully</value>
+  </data>
+  <data name="UserAuthorityNotFound" xml:space="preserve">
+    <value>User authority not found</value>
+  </data>
+  <data name="UserAuthorityCreatedSuccessfully" xml:space="preserve">
+    <value>User authority created successfully</value>
+  </data>
+  <data name="UserAuthorityUpdatedSuccessfully" xml:space="preserve">
+    <value>User authority updated successfully</value>
+  </data>
+  <data name="UserAuthorityDeletedSuccessfully" xml:space="preserve">
+    <value>User authority deleted successfully</value>
+  </data>
+  <!-- #endregion UserAuthority -->
 
 </root>

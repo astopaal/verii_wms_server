@@ -78,9 +78,93 @@
   <data name="LineReferenceMissing" xml:space="preserve">
     <value>Zeilen-Referenz fehlt</value>
   </data>
+  <data name="RequestOrHeaderMissing" xml:space="preserve">
+    <value>Anfrage oder Kopfzeile fehlt</value>
+  </data>
+  <data name="HeaderFieldsMissing" xml:space="preserve">
+    <value>Erforderliche Kopfzeilenfelder fehlen</value>
+  </data>
+  <data name="HeaderInsertFailed" xml:space="preserve">
+    <value>Fehler beim Einfügen der Kopfzeile in die Datenbank</value>
+  </data>
+  <data name="HeaderKeyNotFound" xml:space="preserve">
+    <value>Kopfzeilen-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="ImportLineKeyNotFound" xml:space="preserve">
+    <value>Importzeilen-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="InvalidCorrelationKey" xml:space="preserve">
+    <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
+  </data>
   <!-- #endregion Common -->
 
   <!-- #region ErpService -->
+  <data name="CariRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Kundeninformationen</value>
+  </data>
+  <data name="CariRetrievedSuccessfully" xml:space="preserve">
+    <value>Kundeninformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="CustomerOrderRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Kundenauftragsinformationen</value>
+  </data>
+  <data name="CustomerOrderRetrievedSuccessfully" xml:space="preserve">
+    <value>Kundenauftragsinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="DepoRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Lagerinformationen</value>
+  </data>
+  <data name="DepoRetrievedSuccessfully" xml:space="preserve">
+    <value>Lagerinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="OnHandQuantityRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der verfügbaren Mengeninformationen</value>
+  </data>
+  <data name="OnHandQuantityRetrievedSuccessfully" xml:space="preserve">
+    <value>Verfügbare Mengeninformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="OrderDetailRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Auftragsdetailinformationen</value>
+  </data>
+  <data name="OrderDetailRetrievedSuccessfully" xml:space="preserve">
+    <value>Auftragsdetailinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="ProjeRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Projektinformationen</value>
+  </data>
+  <data name="ProjeRetrievedSuccessfully" xml:space="preserve">
+    <value>Projektinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="StokRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Bestandsinformationen</value>
+  </data>
+  <data name="StokRetrievedSuccessfully" xml:space="preserve">
+    <value>Bestandsinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="StokBarcodeRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Bestands-Barcode-Informationen</value>
+  </data>
+  <data name="StokBarcodeRetrievedSuccessfully" xml:space="preserve">
+    <value>Bestands-Barcode-Informationen erfolgreich abgerufen</value>
+  </data>
+  <data name="BranchesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Filialinformationen</value>
+  </data>
+  <data name="BranchesRetrievedSuccessfully" xml:space="preserve">
+    <value>Filialinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Lager- und Regalinformationen</value>
+  </data>
+  <data name="WarehouseAndShelvesRetrievedSuccessfully" xml:space="preserve">
+    <value>Lager- und Regalinformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="StockWarehouseRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Bestandslagerinformationen</value>
+  </data>
+  <data name="StockWarehouseRetrievedSuccessfully" xml:space="preserve">
+    <value>Bestandslagerinformationen erfolgreich abgerufen</value>
+  </data>
   <!-- #endregion ErpService -->
 
   <!-- #region GrFunction -->
@@ -110,6 +194,102 @@
   </data>
   <data name="GrHeaderCompletedAwaitingErpApprovalRetrievedSuccessfully" xml:space="preserve">
     <value>Abgeschlossene Wareneingang-Aufträge, die auf ERP-Genehmigung warten, erfolgreich abgerufen</value>
+  </data>
+  <data name="GrHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="GrHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderQuantityExactMatchRequired" xml:space="preserve">
+    <value>Zeile {0} (Bestandscode: {1}, YapKod: {2}): LineSerial-Gesamt ({3}) muss genau mit Route-Gesamt ({4}) übereinstimmen</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeGreater" xml:space="preserve">
+    <value>Zeile {0} (Bestandscode: {1}, YapKod: {2}): LineSerial-Gesamt ({3}) darf nicht größer sein als Route-Gesamt ({4})</value>
+  </data>
+  <data name="GrHeaderQuantityCannotBeLess" xml:space="preserve">
+    <value>Zeile {0} (Bestandscode: {1}, YapKod: {2}): LineSerial-Gesamt ({3}) darf nicht kleiner sein als Route-Gesamt ({4})</value>
+  </data>
+  <data name="GrHeaderAllOrderItemsMustBeCollected" xml:space="preserve">
+    <value>Zeile {0} (Bestandscode: {1}, YapKod: {2}): Alle Auftragspositionen müssen gesammelt werden. Route-Menge ist 0.</value>
+  </data>
+  <data name="GrHeaderCreatedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile erfolgreich erstellt</value>
+  </data>
+  <data name="GrHeaderCreationError" xml:space="preserve">
+    <value>Fehler beim Erstellen der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderCreateError" xml:space="preserve">
+    <value>Fehler beim Erstellen der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderDeletedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile erfolgreich gelöscht</value>
+  </data>
+  <data name="GrHeaderDeletionError" xml:space="preserve">
+    <value>Fehler beim Löschen der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderNotFound" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile nicht gefunden</value>
+  </data>
+  <data name="GrHeaderNotFoundForLine" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile für diese Zeile nicht gefunden</value>
+  </data>
+  <data name="GrHeaderRetrievalError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Wareneingang-Kopfzeileninformationen</value>
+  </data>
+  <data name="GrHeaderRetrievedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Kopfzeileninformationen erfolgreich abgerufen</value>
+  </data>
+  <data name="GrHeaderSoftDeletionError" xml:space="preserve">
+    <value>Fehler beim Soft-Löschen der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderUpdateError" xml:space="preserve">
+    <value>Fehler beim Aktualisieren der Wareneingang-Kopfzeile</value>
+  </data>
+  <data name="GrHeaderUpdatedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Kopfzeile erfolgreich aktualisiert</value>
+  </data>
+  <data name="GrImportDocumentGetByHeaderIdError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Importdokumente nach Kopfzeilen-ID</value>
+  </data>
+  <data name="GrImportDocumentInvalidHeaderId" xml:space="preserve">
+    <value>Ungültige Kopfzeilen-ID bereitgestellt</value>
+  </data>
+  <data name="GrLineGetByHeaderIdError" xml:space="preserve">
+    <value>Fehler beim Abrufen der Wareneingang-Zeilen nach Kopfzeilen-ID</value>
+  </data>
+  <data name="GrHeaderImportLinesExist" xml:space="preserve">
+    <value>Gesammelte Artikel existieren für diesen Auftrag; entfernen Sie sie vor dem Löschen</value>
+  </data>
+  <data name="GrHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
+  </data>
+  <data name="GrHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Zeilengruppen-GUID nicht gefunden</value>
+  </data>
+  <data name="GrHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Zeilen-Client-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="GrHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Zeilen-Referenz (Client-Schlüssel oder Gruppen-GUID) fehlt</value>
+  </data>
+  <data name="GrHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Wareneingang-Auftrag erfolgreich generiert</value>
+  </data>
+  <data name="GrHeaderGenerateError" xml:space="preserve">
+    <value>Fehler beim Generieren des Wareneingang-Auftrags</value>
+  </data>
+  <data name="GrHeaderNotificationTitle" xml:space="preserve">
+    <value>Wareneingang-Auftrag #{0} Geöffnet</value>
+  </data>
+  <data name="GrHeaderNotificationMessage" xml:space="preserve">
+    <value>Wareneingang-Auftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
+  <data name="GrDoneNotificationTitle" xml:space="preserve">
+    <value>Wareneingang-Auftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="GrDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Wareneingang-Auftrag Nummer {0} wurde abgeschlossen.</value>
   </data>
   <!-- #endregion GrHeader -->
 
@@ -213,6 +393,12 @@
   <data name="PrHeaderNotificationMessage" xml:space="preserve">
     <value>Produktionsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
+  <data name="PrDoneNotificationTitle" xml:space="preserve">
+    <value>Produktionsauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="PrDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Produktionsauftrag Nummer {0} wurde abgeschlossen.</value>
+  </data>
   <!-- #endregion PrHeader -->
 
   <!-- #region PrHeaderSerial -->
@@ -284,6 +470,15 @@
   </data>
   <data name="PtHeaderNotificationMessage" xml:space="preserve">
     <value>Produktionstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
+  <data name="PtHeaderBulkPtGenerateError" xml:space="preserve">
+    <value>Fehler bei der Massengenerierung von Produktionstransferaufträgen</value>
+  </data>
+  <data name="PtDoneNotificationTitle" xml:space="preserve">
+    <value>Produktionstransferauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="PtDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Produktionstransferauftrag Nummer {0} wurde abgeschlossen.</value>
   </data>
   <!-- #endregion PtHeader -->
 
@@ -363,6 +558,21 @@
   <data name="ShHeaderNotificationMessage" xml:space="preserve">
     <value>Versandauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
+  <data name="ShHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Versand-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="ShHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Versand-Kopfzeile</value>
+  </data>
+  <data name="ShHeaderBulkCreateError" xml:space="preserve">
+    <value>Fehler bei der Massenerstellung von Versandaufträgen</value>
+  </data>
+  <data name="ShDoneNotificationTitle" xml:space="preserve">
+    <value>Versandauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="ShDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Versandauftrag Nummer {0} wurde abgeschlossen.</value>
+  </data>
   <!-- #endregion ShHeader -->
 
   <!-- #region ShImportLine -->
@@ -435,6 +645,18 @@
   <data name="SitHeaderNotificationMessage" xml:space="preserve">
     <value>Unterauftragnehmer-Ausgangstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
+  <data name="SitHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Unterauftragnehmer-Ausgangs-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="SitHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Unterauftragnehmer-Ausgangs-Kopfzeile</value>
+  </data>
+  <data name="SitDoneNotificationTitle" xml:space="preserve">
+    <value>Unterauftragnehmer-Ausgangstransferauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="SitDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Unterauftragnehmer-Ausgangstransferauftrag Nummer {0} wurde abgeschlossen.</value>
+  </data>
   <!-- #endregion SitHeader -->
 
   <!-- #region SitImportLine -->
@@ -503,6 +725,39 @@
   </data>
   <data name="SrtHeaderNotificationMessage" xml:space="preserve">
     <value>Unterauftragnehmer-Empfangstransferauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
+  <data name="SrtHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Unterauftragnehmer-Empfangs-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="SrtHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Unterauftragnehmer-Empfangs-Kopfzeile</value>
+  </data>
+  <data name="SrtHeaderInvalidCorrelationKey" xml:space="preserve">
+    <value>Ungültiger Korrelationsschlüssel bereitgestellt</value>
+  </data>
+  <data name="SrtHeaderLineGroupGuidNotFound" xml:space="preserve">
+    <value>Zeilengruppen-GUID nicht gefunden</value>
+  </data>
+  <data name="SrtHeaderLineClientKeyNotFound" xml:space="preserve">
+    <value>Zeilen-Client-Schlüssel nicht gefunden</value>
+  </data>
+  <data name="SrtHeaderLineReferenceMissing" xml:space="preserve">
+    <value>Zeilen-Referenz (Client-Schlüssel oder Gruppen-GUID) fehlt</value>
+  </data>
+  <data name="SrtHeaderGenerateCompletedSuccessfully" xml:space="preserve">
+    <value>Unterauftragnehmer-Empfangstransferauftrag erfolgreich erstellt</value>
+  </data>
+  <data name="SrtHeaderGenerateError" xml:space="preserve">
+    <value>Fehler beim Erstellen des Unterauftragnehmer-Empfangstransferauftrags</value>
+  </data>
+  <data name="SrtHeaderBulkCreateError" xml:space="preserve">
+    <value>Fehler bei der Massenerstellung von Unterauftragnehmer-Empfangstransferaufträgen</value>
+  </data>
+  <data name="SrtDoneNotificationTitle" xml:space="preserve">
+    <value>Unterauftragnehmer-Empfangstransferauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="SrtDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Unterauftragnehmer-Empfangstransferauftrag Nummer {0} wurde abgeschlossen.</value>
   </data>
   <!-- #endregion SrtHeader -->
 
@@ -576,6 +831,18 @@
   <data name="WiHeaderNotificationMessage" xml:space="preserve">
     <value>Wareneingangsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
   </data>
+  <data name="WiHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Wareneingangs-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="WiHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Wareneingangs-Kopfzeile</value>
+  </data>
+  <data name="WiDoneNotificationTitle" xml:space="preserve">
+    <value>Wareneingangsauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="WiDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Wareneingangsauftrag Nummer {0} wurde abgeschlossen.</value>
+  </data>
   <!-- #endregion WiHeader -->
 
   <!-- #region WiImportLine -->
@@ -647,6 +914,18 @@
   </data>
   <data name="WoHeaderNotificationMessage" xml:space="preserve">
     <value>Warenausgangsauftrag Nummer {0} wurde Ihnen zugewiesen.</value>
+  </data>
+  <data name="WoHeaderCompletedSuccessfully" xml:space="preserve">
+    <value>Warenausgangs-Kopfzeile erfolgreich abgeschlossen</value>
+  </data>
+  <data name="WoHeaderCompletionError" xml:space="preserve">
+    <value>Fehler beim Abschließen der Warenausgangs-Kopfzeile</value>
+  </data>
+  <data name="WoDoneNotificationTitle" xml:space="preserve">
+    <value>Warenausgangsauftrag #{0} Abgeschlossen</value>
+  </data>
+  <data name="WoDoneNotificationMessage" xml:space="preserve">
+    <value>Ihr Warenausgangsauftrag Nummer {0} wurde abgeschlossen.</value>
   </data>
   <!-- #endregion WoHeader -->
 
@@ -781,5 +1060,23 @@
     <value>Profilbild erfolgreich gelöscht</value>
   </data>
   <!-- #endregion UserDetail -->
+
+  <!-- #region UserAuthority -->
+  <data name="UserAuthorityRetrievedSuccessfully" xml:space="preserve">
+    <value>Benutzerberechtigung erfolgreich abgerufen</value>
+  </data>
+  <data name="UserAuthorityNotFound" xml:space="preserve">
+    <value>Benutzerberechtigung nicht gefunden</value>
+  </data>
+  <data name="UserAuthorityCreatedSuccessfully" xml:space="preserve">
+    <value>Benutzerberechtigung erfolgreich erstellt</value>
+  </data>
+  <data name="UserAuthorityUpdatedSuccessfully" xml:space="preserve">
+    <value>Benutzerberechtigung erfolgreich aktualisiert</value>
+  </data>
+  <data name="UserAuthorityDeletedSuccessfully" xml:space="preserve">
+    <value>Benutzerberechtigung erfolgreich gelöscht</value>
+  </data>
+  <!-- #endregion UserAuthority -->
 
 </root>

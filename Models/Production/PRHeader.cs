@@ -17,11 +17,16 @@ namespace WMS_WEBAPI.Models
         [MaxLength(20)]
         public string? YapKod { get; set; }
 
+        // Üretim miktarı
+        [Column(TypeName = "decimal(18,6)")]
+        public decimal? Quantity { get; set; }
+
         [MaxLength(20)]
         public string? SourceWarehouse { get; set; }
 
         [MaxLength(20)]
         public string? TargetWarehouse { get; set; }
+
 
         public virtual ICollection<PrLine> Lines { get; set; } = new List<PrLine>();
         public virtual ICollection<PrHeaderSerial> HeaderSerials { get; set; } = new List<PrHeaderSerial>();

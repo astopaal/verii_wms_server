@@ -389,8 +389,17 @@ namespace WMS_WEBAPI.Services
                     
                     // Set IsPendingApproval based on parameter requirement
                     entity.IsPendingApproval = wtParameter!= null && wtParameter.RequireApprovalBeforeErp;
-
                     _unitOfWork.WtHeaders.Update(entity);
+
+                    // Update package status to Shipped
+                    var package = _unitOfWork.PHeaders.AsQueryable()
+                        .Where(p => p.SourceHeaderId == entity.Id && !p.IsDeleted && p.SourceType == PHeaderSourceType.WT)
+                        .FirstOrDefault();
+                    if (package != null)
+                    {
+                        package.Status = PHeaderStatus.Shipped;
+                        _unitOfWork.PHeaders.Update(package);
+                    }
 
                     // Create notification for the user who created the order
                     Notification? notification = null;
